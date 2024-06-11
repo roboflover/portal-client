@@ -16,23 +16,8 @@ export default function Exhibitions() {
     
       const fetchTodos = async () => {
         const data = await getTodos();
-        console.log(data)
         setTodos(data);
       };
-
-    // useEffect(() => {
-    //     const fetchMessage = async () => {
-    //         try {
-    //             const response = await fetch('/api');
-    //             const data = await response.json();
-    //             setMessage(data.message);
-    //         } catch (error) {
-    //             console.error('Error fetching the message:', error);
-    //         }
-    //     };
-
-    //     fetchMessage();
-    // }, [])
 
     return (
         <div>

@@ -10,8 +10,11 @@ export const Sidebar = () => {
           <li className="p-4 hover:bg-gray-700">
             <Link href="/admin/exhibitions">Exhibitions</Link>
           </li>
-          <li className="p-4 hover:bg-gray-700">
+          {/* <li className="p-4 hover:bg-gray-700">
             <Link href="/admin/gallery">Gallery</Link>
+          </li> */}
+          <li className="p-4 hover:bg-gray-700">
+            <Link href="/admin/projects">Проекты</Link>
           </li>
         </ul>
       </nav>

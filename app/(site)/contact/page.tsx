@@ -7,8 +7,7 @@ export const metadata: Metadata = {
 export default function Projects() {
     return (
         <div>Контакты
-            <p>portal@robobug.ru
-            </p>
+            <p>portal@robobug.ru</p>
         </div>
     )
 }

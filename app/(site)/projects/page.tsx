@@ -1,11 +1,27 @@
-import { Metadata } from 'next';
+// pages/exhibitions.tsx
 
-export const metadata: Metadata = {
-    title: 'Projects',
-}
+'use client'
+import { getTodos, updateTodo, deleteTodo, Todo } from '../../lib/projectsApi';
+import { useEffect, useState } from 'react';
+import TodoList from './TodoList';
 
-export default function Projects() {
+export default function Exhibitions() {
+    const [todos, setTodos] = useState<Todo[]>([]);
+
+    const [message, setMessage] = useState<string>('')
+
+    useEffect(() => {
+        fetchTodos();
+      }, []);
+    
+      const fetchTodos = async () => {
+        const data = await getTodos();
+        setTodos(data);
+      };
+
     return (
-        <div>Проекты</div>
+        <div>
+            <TodoList todos={todos}  />
+        </div>
     )
 }
