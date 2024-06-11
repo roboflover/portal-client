@@ -17,24 +17,6 @@ const Home: React.FC = () => {
     setTodos(data);
   };
 
-  // const handleToggleComplete = async (id: number, completed: boolean) => {
-  //   // Найти текущую задачу по id
-  //   const currentTodo = todos.find(todo => todo.id === id);
-
-  //   if (currentTodo) {
-  //     // Создать обновленный объект задачи с измененным isCompleted
-  //     const updatedTodo = {
-  //       ...currentTodo,
-  //       isCompleted: !currentTodo.isCompleted,
-  //     };
-  //     console.log(updatedTodo)
-  //     // Отправить обновленный объект на сервер
-  //     const updatedServerTodo = await updateTodo(id, updatedTodo);
-  //     // Обновить состояние с измененной задачей
-  //     setTodos(todos.map((todo) => (todo.id === id ? updatedServerTodo : todo)));
-  //   }
-  // };
-
   const handleDeleteTodo = async (id: number) => {
     await deleteTodo(id);
     setTodos(todos.filter((todo) => todo.id !== id));

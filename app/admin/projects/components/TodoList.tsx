@@ -24,6 +24,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos, onDelete }) => {
               >
                 {todo.description}
               </span>
+  
             )}
             {todo.imageUrl && (
               <img
@@ -32,6 +33,9 @@ const TodoList: React.FC<TodoListProps> = ({ todos, onDelete }) => {
                 className="mt-2 max-w-full h-auto rounded"
               />
             )}
+            <span className="block text-gray-500 text-sm mt-1">
+              Создано: {new Date(todo.createdAt).toLocaleString()}
+            </span>
           </div>
           <div className="flex space-x-2">
             <button

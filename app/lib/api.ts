@@ -8,8 +8,8 @@ export interface Todo {
   id: number;
   title: string;
   description: string,
-  // isCompleted: boolean;
   imageUrl: string;
+  createdAt: Date;
 }
 
 export const getTodos = async (): Promise<Todo[]> => {
