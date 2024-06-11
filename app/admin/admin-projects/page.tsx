@@ -5,8 +5,6 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 
-console.log(process.env.NEXT_PUBLIC_BASE_URL);
-
 
 interface FormValues {
   title: string;

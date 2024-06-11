@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/(auth)/context/AuthContext';
+import { log } from 'console';
 
 export default function Login() {
   const {isAuthenticated } = useAuth();
@@ -10,41 +11,73 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const router = useRouter();
   const { login, error } = useAuth();
+  const { role } = useAuth()
   const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Удаление куки при загрузке компонента
-    document.cookie = 'cookieName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+     document.cookie = 'cookieName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/profile');
+      //router.push('/profile');
     }
   }, [isAuthenticated, router]);
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
+
     try {
-      await login(email, password);
+      const rolePlayer = await login(email, password);
+      if (rolePlayer !== null) {
+        //setRole(rolePlayer);
+        localStorage.setItem('user', JSON.stringify({ email, role: rolePlayer }));
+        let value
+        // Get the value from local storage if it exists
+        value = localStorage.getItem("user") || "";
+        const user = JSON.parse(value);
+
+        // if (user.role === 'admin') {
+        //   router.push('/admin/dashboard');
+        // } else {
+        //   //alert('Invalid credentials');
+        // }
+      }
+      // let role:string = rolePlayer
+      // setRole(role);
+      // localStorage.setItem('user', JSON.stringify({ email, role }));
+
       setIsLoginSuccessful(true);
       setLoginError(null); // Очистка ошибки если логин успешен
     } catch (error) {
-      console.error('Login failed:', error);
+      //console.error('Login failed:', error);
       setIsLoginSuccessful(false);
       setLoginError('Login failed. Please check your credentials.');
     }
   };
 
+    // Ваша логика аутентификации здесь
+    // Пример:
+
+
+
   useEffect(() => {
-    if (isLoginSuccessful) {
+    if (isLoginSuccessful && role == 'user' ) {
       router.push('/profile');
-    }
+    } else if (isLoginSuccessful && role == 'admin' ) {
+      router.push('/admin/dashboard');
+    } else if (isLoginSuccessful && role == 'promoter' ) {
+      router.push('/profile');
+    } 
+
+
+
   }, [isLoginSuccessful, router]);
 
   return (
     <form onSubmit={handleLogin}>
+      <h2>Аккаунт</h2>
       <input
         type="email"
         placeholder="Email"

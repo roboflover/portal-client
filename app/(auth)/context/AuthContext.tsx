@@ -9,6 +9,7 @@ interface AuthContextProps {
   setIsAuthenticated: (value: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  role:  string | null;
   error: string | null;
   userId: number | null;
   setUserId: (id: number | null) => void;
@@ -20,6 +21,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
+  const [role, setRole] = useState<string | null>(null);
 
   // Проверка наличия токена доступа в куках при монтировании компонента
   useEffect(() => {
@@ -34,10 +36,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const response = await axios.post('http://localhost:3000/auth/login', { email, password });
       const { access_token } = response.data;
-
+      setRole(response.data.role)
       localStorage.setItem('access_token', access_token);
       Cookies.set('access_token', access_token, { expires: 7 });
       setIsAuthenticated(true);
+      return response.data.role
     } catch (error) {
       throw error;
       // if (axios.isAxiosError(error) && error.response?.status === 401) {
@@ -57,7 +60,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, login, logout, error, userId, setUserId }}>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, login, logout, role, error, userId, setUserId }}>
       {children}
     </AuthContext.Provider>
   );
@@ -65,7 +68,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  console.log(context)
+
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }

@@ -38,10 +38,10 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
           <Header toggleMenu={toggleMenu}  />
           <div className="min-h-screen flex">
           <main className="shadow-md flex-1 p-4 bg-gray-200 dark:bg-gray-900">{children}</main>
-          <div className="w-64 bg-gray-100 dark:bg-gray-800 p-4">
+          {/* <div className="w-64 bg-gray-100 dark:bg-gray-800 p-4">
             <SidebarMenu isOpen={isMenuOpen} toggleMenu={toggleMenu} />
             <Banner isOpen={isMenuOpen} toggleMenu={toggleMenu} />
-          </div>
+          </div> */}
           </div>
           <Footer />
          </div>

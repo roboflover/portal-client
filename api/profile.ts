@@ -7,6 +7,7 @@ interface UserProfile {
     id: string;
     email: string;
     name: string;
+    role: string;
     // Добавьте другие поля по мере необходимости
 }
 
