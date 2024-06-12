@@ -32,3 +32,5 @@ export function Logo() {
   )
 
 }
+
+<img alt="Logo" loading="lazy" width="100" height="100" decoding="async" data-nimg="1" srcset="/_next/image?url=https%3A%2F%2Fstorage.yandexcloud.net%2Frobobug-logo%2Flogo-dark-100px.png&amp;w=128&amp;q=75 1x, /_next/image?url=https%3A%2F%2Fstorage.yandexcloud.net%2Frobobug-logo%2Flogo-dark-100px.png&amp;w=256&amp;q=75 2x" src="/_next/image?url=https%3A%2F%2Fstorage.yandexcloud.net%2Frobobug-logo%2Flogo-dark-100px.png&amp;w=256&amp;q=75" style=""></img>

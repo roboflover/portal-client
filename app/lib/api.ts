@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000', // замените на ваш URL сервера
+  baseURL: 'http://77.222.43.158:8080', // замените на ваш URL сервера
 });
 
 export interface Todo {
