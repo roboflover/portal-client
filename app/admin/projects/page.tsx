@@ -13,7 +13,6 @@ const Home: React.FC = () => {
 
   const fetchTodos = async () => {
     const data = await getTodos();
-    console.log(data)
     setTodos(data);
   };
 

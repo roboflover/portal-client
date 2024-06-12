@@ -1,5 +1,6 @@
 import React from 'react';
 import { Todo } from '../../../lib/projectsApi';
+import Image from 'next/image';
 
 interface TodoListProps {
   todos: Todo[];
@@ -27,7 +28,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos, onDelete }) => {
   
             )}
             {todo.imageUrl && (
-              <img
+              <Image
                 src={todo.imageUrl}
                 alt={todo.title}
                 className="mt-2 max-w-full h-auto rounded"

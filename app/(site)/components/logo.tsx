@@ -1,7 +1,9 @@
 'use client'
 
 import { useTheme } from 'next-themes';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 export function Logo() {
   const { theme } = useTheme();
@@ -16,12 +18,17 @@ export function Logo() {
     }
 
     const logoSrc = theme === 'dark' 
-    ? 'assets/logo-dark-100px.png' 
-    : 'assets/logo-light-100px.png';
+    ? 'https://storage.yandexcloud.net/robobug-logo/logo-dark-100px.png' 
+    : 'https://storage.yandexcloud.net/robobug-logo/logo-light-100px.png';
     
     return (
 
-        <a href="/"><img src={logoSrc} alt={'Logo'}  /></a>
-    )
+      <Link href="/">
+      <a>
+        <Image src={logoSrc} alt="Logo" width={100} height={100} />
+      </a>
+    </Link>
+    
+  )
 
 }

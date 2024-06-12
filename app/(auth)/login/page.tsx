@@ -10,8 +10,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  const { login, error } = useAuth();
-  const { role } = useAuth()
+  const { login, error, role } = useAuth();
   const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
 
@@ -62,18 +61,17 @@ export default function Login() {
 
 
 
-  useEffect(() => {
-    if (isLoginSuccessful && role == 'user' ) {
-      router.push('/profile');
-    } else if (isLoginSuccessful && role == 'admin' ) {
-      router.push('/admin/dashboard');
-    } else if (isLoginSuccessful && role == 'promoter' ) {
-      router.push('/profile');
-    } 
-
-
-
-  }, [isLoginSuccessful, router]);
+    useEffect(() => {
+      if (isLoginSuccessful) {
+        if (role === 'user') {
+          router.push('/profile');
+        } else if (role === 'admin') {
+          router.push('/admin/dashboard');
+        } else if (role === 'promoter') {
+          router.push('/profile');
+        }
+      }
+    }, [isLoginSuccessful, role, router]); // Добавляем role в массив зависимостей
 
   return (
     <form onSubmit={handleLogin}>

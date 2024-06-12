@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { getTodos, updateTodo, deleteTodo, Todo } from '../../lib/api';
 import TodoList from './components/TodoList';
 import AddTodo from './components/AddTodo';
-import ImageUpload from './components/ImageUpload';
+// import ImageUpload from './components/ImageUpload';
 
 const Home: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -16,24 +16,6 @@ const Home: React.FC = () => {
     const data = await getTodos();
     setTodos(data);
   };
-
-  // const handleToggleComplete = async (id: number, completed: boolean) => {
-  //   // Найти текущую задачу по id
-  //   const currentTodo = todos.find(todo => todo.id === id);
-
-  //   if (currentTodo) {
-  //     // Создать обновленный объект задачи с измененным isCompleted
-  //     const updatedTodo = {
-  //       ...currentTodo,
-  //       isCompleted: !currentTodo.isCompleted,
-  //     };
-  //     console.log(updatedTodo)
-  //     // Отправить обновленный объект на сервер
-  //     const updatedServerTodo = await updateTodo(id, updatedTodo);
-  //     // Обновить состояние с измененной задачей
-  //     setTodos(todos.map((todo) => (todo.id === id ? updatedServerTodo : todo)));
-  //   }
-  // };
 
   const handleDeleteTodo = async (id: number) => {
     await deleteTodo(id);

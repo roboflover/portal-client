@@ -43,7 +43,7 @@ export default function Profile() {
         };
 
         getUserProfile();
-    }, []);
+    }, [logout, router, setIsAuthenticated]);
 
     return (
         <div>

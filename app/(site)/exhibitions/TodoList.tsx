@@ -1,5 +1,6 @@
 import React from 'react';
 import { Todo } from '../../lib/api';
+import Image from 'next/image';
 
 interface TodoListProps {
   todos: Todo[]
@@ -25,9 +26,11 @@ const TodoList: React.FC<TodoListProps> = ({ todos }) => {
             )}
             {todo.imageUrl && (
               <div className="flex justify-center mt-2">
-                <img
+               <Image
                   src={todo.imageUrl}
                   alt={todo.title}
+                  width={500} // Укажите подходящую ширину
+                  height={300} // Укажите подходящую высоту
                   className="max-w-full h-auto rounded"
                 />
               </div>
