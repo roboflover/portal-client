@@ -22,13 +22,11 @@ export function Logo() {
     : 'https://storage.yandexcloud.net/robobug-logo/logo-light-100px.png';
     
     return (
+      (<Link href="/">
 
-      <Link href="/">
-      <a>
         <Image src={logoSrc} alt="Logo" width={100} height={100} />
-      </a>
-    </Link>
-    
-  )
+
+      </Link>)
+    );
 
 }
