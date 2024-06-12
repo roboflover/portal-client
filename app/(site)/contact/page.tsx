@@ -7,6 +7,7 @@ export const metadata: Metadata = {
 export default function Projects() {
     return (
         <div>Контакты
+            обновление 12.06 - 10:30
             <p>portal@robobug.ru</p>
         </div>
     )
