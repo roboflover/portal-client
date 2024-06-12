@@ -42,7 +42,7 @@ export function Header({ toggleMenu }:ToggleMenuProps) {
             {isAuthenticated ? (
             <EnterToggle toggleMenu={toggleMenu} />
           ) : (
-            <Link href="/login" className="m-0 p-0"><Button className="mr-5" variant="outline" ><LogIn/></Button></Link>
+            <Link href="/login" className="m-0 p-0" legacyBehavior><Button className="mr-5" variant="outline" ><LogIn/></Button></Link>
           )}
             <ModeToggle/>
           </div>
