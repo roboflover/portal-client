@@ -29,10 +29,13 @@ const TodoList: React.FC<TodoListProps> = ({ todos, onDelete }) => {
             )}
             {todo.imageUrl && (
               <Image
-                src={todo.imageUrl}
-                alt={todo.title}
-                className="mt-2 max-w-full h-auto rounded"
-              />
+              src={todo.imageUrl}
+              alt={todo.title}
+              width={800} // Укажите ширину изображения
+              height={600} // Укажите высоту изображения
+              className="mt-2 max-w-full h-auto rounded"
+              priority={true}
+            />
             )}
             <span className="block text-gray-500 text-sm mt-1">
               Создано: {new Date(todo.createdAt).toLocaleString()}

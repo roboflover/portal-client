@@ -32,9 +32,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, []);
 
+  const host = process.env.NEXT_PUBLIC_SERVER
+
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', { email, password });
+      const response = await axios.post(`${host}/auth/login`, { email, password });
       const { access_token } = response.data;
       setRole(response.data.role)
       localStorage.setItem('access_token', access_token);

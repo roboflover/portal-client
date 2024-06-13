@@ -18,7 +18,12 @@ export const fetchUserProfile = async (): Promise<UserProfile> => {
         throw new Error('No token found');
     }
 
-    const response = await axios.get('http://localhost:3000/auth/profile', {
+    const host = process.env.SERVER_HOST
+    if (!host) {
+        throw new Error('Server host is not defined');
+    }
+
+    const response = await axios.get(host, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -26,3 +31,4 @@ export const fetchUserProfile = async (): Promise<UserProfile> => {
 
     return response.data;
 };
+

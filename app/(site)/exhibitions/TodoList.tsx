@@ -14,7 +14,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos }) => {
         <li key={todo.id} className="flex items-center justify-between p-2 border rounded bg-gray-800 text-white">
           <div className="flex-grow">
             <span className="block text-gray-500 text-sm">
-              Создано: {new Date(todo.createdAt).toLocaleString()}
+              {/* Создано: {new Date(todo.createdAt).toLocaleString()} */}
             </span>
             <span className="block line">
               {todo.title}
@@ -32,6 +32,8 @@ const TodoList: React.FC<TodoListProps> = ({ todos }) => {
                   width={500} // Укажите подходящую ширину
                   height={300} // Укажите подходящую высоту
                   className="max-w-full h-auto rounded"
+                  priority={true}
+                  style={{ width: 'auto', height: 'auto' }}
                 />
               </div>
             )}

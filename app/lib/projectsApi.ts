@@ -1,7 +1,9 @@
 import axios from 'axios';
+import { env } from 'process';
 
+const host = process.env.NEXT_PUBLIC_SERVER
 const api = axios.create({
-  baseURL: 'http://77.222.43.158:8080', // замените на ваш URL сервера
+  baseURL: host, // замените на ваш URL сервера
 });
 
 export interface Todo {
@@ -15,7 +17,7 @@ export interface Todo {
 
 export const getTodos = async (): Promise<Todo[]> => {
     try{
-        const response = await api.get('/project');
+      const response = await api.get('/project');
         return response.data;
     } catch (error) {
         console.error('Error fetching project:', error);

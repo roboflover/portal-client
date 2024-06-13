@@ -6,6 +6,8 @@ interface AddTodoProps {
 }
 
 const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
+  const host = process.env.NEXT_PUBLIC_SERVER
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -36,7 +38,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
     formData.append('title', selectedTitle); // Ключ 'title' для заголовка
   
     try {
-      await axios.post('http://localhost:3000/exhibition/upload', formData, {
+      await axios.post(`${host}/exhibition/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -14,16 +14,11 @@ const TodoList: React.FC<TodoListProps> = ({ todos }) => {
         <li key={todo.id} className="flex items-center justify-between p-2 border rounded bg-gray-800 text-white">
           <div className="flex-grow">
             <span className="block text-gray-500 text-sm">
-              Создано: {new Date(todo.createdAt).toLocaleString()}
+              {new Date(todo.createdAt).toLocaleString()}
             </span>
-            <span className="block line">
+            <span className="block font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl">
               {todo.title}
             </span>
-            {todo.description && (
-              <span className="block text-gray-400 line-through">
-                {todo.description}
-              </span>
-            )}
             {todo.imageUrl && (
               <div className="flex justify-center mt-2">
                 <Image
@@ -32,8 +27,15 @@ const TodoList: React.FC<TodoListProps> = ({ todos }) => {
                   width={500} // Укажите желаемую ширину
                   height={300} // Укажите желаемую высоту
                   className="max-w-full h-auto rounded"
+                  priority={true}
+                  style={{ width: 'auto', height: 'auto' }}
                 />
               </div>
+            )}
+            {todo.description && (
+              <span className="block text-gray-400">
+                {todo.description}
+              </span>
             )}
           </div>
         </li>

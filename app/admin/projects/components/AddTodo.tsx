@@ -6,6 +6,7 @@ interface AddTodoProps {
 }
 
 const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
+  const host = process.env.NEXT_PUBLIC_SERVER
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
@@ -13,6 +14,8 @@ const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [selectedTitle, setTitle] = useState<string>('');
+  const [selectedDescription, setDescription] = useState<string>('');
+
   const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,9 +39,10 @@ const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
     const formData = new FormData();
     formData.append('file', selectedFile); // Ключ 'file' для файла
     formData.append('title', selectedTitle); // Ключ 'title' для заголовка
-  
+    formData.append('description', selectedDescription); // Ключ 'title' для заголовка
+
     try {
-      await axios.post('http://localhost:3000/project/upload', formData, {
+      await axios.post(`${host}/project/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -57,6 +61,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
         fileInputRef.current.value = ''; // Очистка поля ввода
       }
       setTitle('');
+      setDescription('');
       onTodoAdded(); // Вызов callback функции после успешного добавления
     } catch (error) {
       console.log(error)
@@ -86,6 +91,14 @@ const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
           value={selectedTitle}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Введите новое задание"
+          required
+          className="border p-2 rounded w-full bg-gray-800 text-white placeholder-gray-500"
+        />
+        <input
+          type="text"
+          value={selectedDescription}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Введите описание"
           required
           className="border p-2 rounded w-full bg-gray-800 text-white placeholder-gray-500"
         />
