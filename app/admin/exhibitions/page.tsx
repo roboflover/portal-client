@@ -1,24 +1,24 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { getTodos, updateTodo, deleteTodo, Todo } from '../../lib/api';
+import { getProducts, updateProduct, deleteProduct, Product } from '../../lib/exhibitionsApi';
 import TodoList from './components/TodoList';
 import AddTodo from './components/AddTodo';
 // import ImageUpload from './components/ImageUpload';
 
 const Home: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Product[]>([]);
 
   useEffect(() => {
     fetchTodos();
   }, []);
 
   const fetchTodos = async () => {
-    const data = await getTodos();
+    const data = await getProducts();
     setTodos(data);
   };
 
   const handleDeleteTodo = async (id: number) => {
-    await deleteTodo(id);
+    await deleteProduct(id);
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 

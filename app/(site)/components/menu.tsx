@@ -27,7 +27,7 @@ export function Menu() {
     operationMenu = (
       <nav className="flex justify-center space-x-4 py-2 bg-gray-100 dark:bg-gray-900">
       {/* <Link href="/games" className={getLinkClass('/games')}>Игры</Link> */}
-      <Link href="/projects" className={getLinkClass('/projects')}>Новости</Link>
+      <Link href="/" className={getLinkClass('/')}>Новости</Link>
       <Link href="/exhibitions"  className={getLinkClass('/exhibitions')}>Выставки</Link>
       <Link href="/contact"  className={getLinkClass('/contact')}>Контакты</Link>
       </nav>

@@ -1,11 +1,28 @@
 import React from 'react';
-import { Todo } from '../../../lib/api';
+import { Product } from '../../../lib/exhibitionsApi';
 import Image from 'next/image';
 
 interface TodoListProps {
-  todos: Todo[];
+  todos: Product[];
   onDelete: (id: number) => void;
 }
+
+interface Image {
+  id: number;
+  url: string;
+  exhibitionId?: number;
+  projectId?: number;
+  productId?: number;
+}
+
+// interface Product {
+//   id: number;
+//   title: string;
+//   description?: string;
+//   images?: Image[];
+//     // price: number;
+//     createdAt: Date;
+// }
 
 const TodoList: React.FC<TodoListProps> = ({ todos, onDelete }) => {
 
@@ -18,16 +35,18 @@ const TodoList: React.FC<TodoListProps> = ({ todos, onDelete }) => {
             {todo.description && (
               <span className="block text-gray-400">{todo.description}</span>
             )}
-            {todo.imageUrl && (
-              <Image
-              src={todo.imageUrl}
-              alt={todo.title}
-              width={800} // Укажите ширину изображения
-              height={600} // Укажите высоту изображения
-              className="mt-2 max-w-full h-auto rounded"
-              priority={true}
-            />
-            )}
+            {todo.images && todo.images.map((image) => (
+                <div key={image.id} className="flex flex-col items-center">
+                  <Image
+                    src={image.url}
+                    alt={`Exhibition ${todo.title}`}
+                    width={800}
+                    height={600}
+                    className="max-w-full h-auto rounded"
+                    priority={true}
+                  />
+                </div>
+              ))}
             <span className="block text-gray-500 text-sm mt-1">
             Создано: {new Date(todo.createdAt).toLocaleString()}
             </span>

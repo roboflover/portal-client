@@ -46,7 +46,6 @@ export function Header({ toggleMenu }:ToggleMenuProps) {
           )}
             <ModeToggle/>
           </div>
-          
         </div>
         <Menu />
     </header>

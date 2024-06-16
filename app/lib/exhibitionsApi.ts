@@ -5,15 +5,25 @@ const api = axios.create({
   baseURL: host, // замените на ваш URL сервера
 });
 
-export interface Todo {
+export interface Product {
   id: number;
   title: string;
   description: string,
   imageUrl: string;
   createdAt: Date;
+  images?: Image[];
 }
 
-export const getTodos = async (): Promise<Todo[]> => {
+
+interface Image {
+  id: number;
+  url: string;
+  exhibitionId?: number;
+  projectId?: number;
+  productId?: number;
+}
+
+export const getProducts = async (): Promise<Product[]> => {
     try{
         const response = await api.get('/exhibition');
         return response.data;
@@ -23,16 +33,16 @@ export const getTodos = async (): Promise<Todo[]> => {
     }
 };
 
-export const createTodo = async (title: string): Promise<Todo> => {
+export const createProduct = async (title: string): Promise<Product> => {
   const response = await api.post('/exhibition', { title });
   return response.data;
 };
 
-export const updateTodo = async (id: number, data: Todo): Promise<Todo> => {
+export const updateProduct = async (id: number, data: Product): Promise<Product> => {
   const response = await api.patch(`/exhibition/${id}`, data);
   return response.data;
 };
 
-export const deleteTodo = async (id: number): Promise<void> => {
+export const deleteProduct = async (id: number): Promise<void> => {
   await api.delete(`/exhibition/${id}`);
 };

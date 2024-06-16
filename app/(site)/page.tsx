@@ -1,10 +1,27 @@
-'use client'
-import { Menu } from '@/app/(site)/components/menu'
-import { redirect } from 'next/navigation';
+// pages/exhibitions.tsx
 
-export default function Home() {
-  redirect('/projects');
-  return (
-          <div>Главная страница 000</div>
-  );
+'use client'
+import { getTodos, updateTodo, deleteTodo, Todo } from '../lib/projectsApi';
+import { useEffect, useState } from 'react';
+import TodoList from './components/TodoList';
+
+export default function Exhibitions() {
+    const [todos, setTodos] = useState<Todo[]>([]);
+
+    const [message, setMessage] = useState<string>('')
+
+    useEffect(() => {
+        fetchTodos();
+      }, []);
+    
+      const fetchTodos = async () => {
+        const data = await getTodos();
+        setTodos(data);
+      };
+
+    return (
+        <div>
+            <TodoList todos={todos}  />
+        </div>
+    )
 }

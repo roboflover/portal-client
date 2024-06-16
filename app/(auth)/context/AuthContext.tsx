@@ -1,15 +1,14 @@
-// AuthContext.tsx
-
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import {jwtDecode} from 'jwt-decode';
 
 interface AuthContextProps {
   isAuthenticated: boolean;
   setIsAuthenticated: (value: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  role:  string | null;
+  role: string | null;
   error: string | null;
   userId: number | null;
   setUserId: (id: number | null) => void;
@@ -28,29 +27,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const token = Cookies.get('access_token');
     if (token) {
       setIsAuthenticated(true); 
-      // fetchUserProfile(token);
+      const decodedToken: any = jwtDecode(token);
+      setUserId(decodedToken.sub); // Предполагается, что ID пользователя хранится в поле "id"
     }
   }, []);
 
-  const host = process.env.NEXT_PUBLIC_SERVER
+  const host = process.env.NEXT_PUBLIC_SERVER;
 
   const login = async (email: string, password: string) => {
     try {
       const response = await axios.post(`${host}/auth/login`, { email, password });
       const { access_token } = response.data;
-      setRole(response.data.role)
+      setRole(response.data.role);
       localStorage.setItem('access_token', access_token);
       Cookies.set('access_token', access_token, { expires: 7 });
       setIsAuthenticated(true);
-      return response.data.role
+
+      // const decodedToken: any = jwtDecode(access_token);
+      // setUserId(decodedToken.id); // Предполагается, что ID пользователя хранится в поле "id"
+
+      return response.data.role;
     } catch (error) {
       throw error;
-      // if (axios.isAxiosError(error) && error.response?.status === 401) {
-      //   setError('Unauthorized: Invalid email or password');
-      // } else {
-      //   setError('Login failed: An unknown error occurred');
-      // }
-      // setIsAuthenticated(false);
     }
   };
 

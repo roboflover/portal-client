@@ -24,7 +24,7 @@ export function Logo() {
     return (
       (<Link href="/">
 
-        <Image src={logoSrc} alt="Logo" width={100} height={100}                   priority={true}
+        <Image src={logoSrc} alt="Logo" width={50} height={50}                   priority={true}
                   style={{ width: 'auto', height: 'auto' }} />
 
       </Link>)

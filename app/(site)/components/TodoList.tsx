@@ -6,6 +6,16 @@ interface TodoListProps {
   todos: Todo[];
 }
 
+interface Image {
+  id: number;
+  url: string;
+  exhibitionId?: number;
+  projectId?: number;
+  productId?: number;
+}
+
+
+
 const TodoList: React.FC<TodoListProps> = ({ todos }) => {
 
   return (
@@ -19,19 +29,18 @@ const TodoList: React.FC<TodoListProps> = ({ todos }) => {
             <span className="block font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl">
               {todo.title}
             </span>
-            {todo.imageUrl && (
-              <div className="flex justify-center mt-2">
-                <Image
-                  src={todo.imageUrl}
-                  alt={todo.title}
-                  width={500} // Укажите желаемую ширину
-                  height={300} // Укажите желаемую высоту
-                  className="max-w-full h-auto rounded"
-                  priority={true}
-                  style={{ width: 'auto', height: 'auto' }}
-                />
-              </div>
-            )}
+            {todo.images && todo.images.map((image) => (
+                <div key={image.id} className="flex flex-col items-center">
+                  <Image
+                    src={image.url}
+                    alt={`Exhibition ${todo.title}`}
+                    width={800}
+                    height={600}
+                    className="max-w-full h-auto rounded"
+                    priority={true}
+                  />
+                </div>
+              ))}
             {todo.description && (
               <span className="block">
                 {todo.description}

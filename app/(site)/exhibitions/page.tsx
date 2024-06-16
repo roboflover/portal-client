@@ -1,28 +1,28 @@
 // pages/exhibitions.tsx
 
 'use client'
-import { getTodos, updateTodo, deleteTodo, Todo } from '../../lib/api';
+import { getProducts, updateProduct, deleteProduct, Product } from '../../lib/exhibitionsApi';
 import { useEffect, useState } from 'react';
-import TodoList from './TodoList';
+import ExhibitionsList from './components/ExhibitionsList';
 
 export default function Exhibitions() {
-    const [todos, setTodos] = useState<Todo[]>([]);
+    const [products, setЗroducts] = useState<Product[]>([]);
 
     const [message, setMessage] = useState<string>('')
 
     useEffect(() => {
-        fetchTodos();
+        fetchProducts();
       }, []);
     
-      const fetchTodos = async () => {
-        const data = await getTodos();
-        setTodos(data);
+      const fetchProducts = async () => {
+        const data = await getProducts();
+        setЗroducts(data);
       };
 
     return (
         <div>
-            <TodoList todos={todos}  />
-
+            <h2 className="text-3xl font-bold text-center">Предстоящие Выставки</h2>
+            <ExhibitionsList products={products}  />
         </div>
     )
 }

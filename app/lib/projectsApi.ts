@@ -6,14 +6,31 @@ const api = axios.create({
   baseURL: host, // замените на ваш URL сервера
 });
 
+interface Image {
+  id: number;
+  url: string;
+  exhibitionId?: number;
+  projectId?: number;
+  productId?: number;
+}
+
 export interface Todo {
   id: number;
   title: string;
-  description: string,
+  description?: string;
+  images?: Image[];
   createdAt: string,
-  // isCompleted: boolean;
-  imageUrl: string;
+    // price: number;
 }
+
+// export interface Todo {
+//   id: number;
+//   title: string;
+//   description: string,
+//   createdAt: string,
+//   // isCompleted: boolean;
+//   imageUrl: string;
+// }
 
 export const getTodos = async (): Promise<Todo[]> => {
     try{
