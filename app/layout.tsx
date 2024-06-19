@@ -15,7 +15,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
   
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang="ru" suppressHydrationWarning={true}>
       <head><title>Робоцветы</title>
       <!-- Yandex.Metrika counter -->
       <script type="text/javascript" >
