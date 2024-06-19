@@ -39,7 +39,6 @@ const ExhibitionsList: React.FC<ExhibitionsListProps> = ({ products }) => {
       [productId]: quantity,
     }));
   };
-  console.log(products)
 
   return (
     <ul className="space-y-4">

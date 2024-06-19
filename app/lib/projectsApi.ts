@@ -34,24 +34,24 @@ export interface Todo {
 
 export const getTodos = async (): Promise<Todo[]> => {
     try{
-      const response = await api.get('/project');
+      const response = await api.get('/news');
         return response.data;
     } catch (error) {
-        console.error('Error fetching project:', error);
+        console.error('Error fetching news:', error);
         throw error;
     }
 };
 
 export const createTodo = async (title: string): Promise<Todo> => {
-  const response = await api.post('/project', { title });
+  const response = await api.post('/news', { title });
   return response.data;
 };
 
 export const updateTodo = async (id: number, data: Todo): Promise<Todo> => {
-  const response = await api.patch(`/project/${id}`, data);
+  const response = await api.patch(`/news/${id}`, data);
   return response.data;
 };
 
 export const deleteTodo = async (id: number): Promise<void> => {
-  await api.delete(`/project/${id}`);
+  await api.delete(`/news/${id}`);
 };

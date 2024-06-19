@@ -25,7 +25,7 @@ const Home: React.FC = () => {
     <div className="max-w-lg mx-auto mt-10 p-4 bg-gray-900 text-white shadow-md rounded">
       {/* <h1 className="text-2xl font-bold mb-4">Загрузить изображение</h1>
       <ImageUpload /> */}
-      <h1 className="text-2xl font-bold mb-4">Проекты</h1>
+      <h1 className="text-2xl font-bold mb-4">Новости</h1>
       <AddTodo onTodoAdded={fetchTodos} />
       <TodoList todos={todos} onDelete={handleDeleteTodo} />
     </div>

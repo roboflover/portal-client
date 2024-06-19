@@ -42,7 +42,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
     formData.append('description', selectedDescription); // Ключ 'title' для заголовка
 
     try {
-      await axios.post(`${host}/project/upload`, formData, {
+      await axios.post(`${host}/news/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -94,14 +94,14 @@ const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
           required
           className="border p-2 rounded w-full bg-gray-800 text-white placeholder-gray-500"
         />
-        <input
-          type="text"
+        <textarea
           value={selectedDescription}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Введите описание"
           required
+          rows={4} // Количество строк по умолчанию
           className="border p-2 rounded w-full bg-gray-800 text-white placeholder-gray-500"
-        />
+        ></textarea>
         <button type="submit" className="bg-blue-700 text-white p-2 rounded hover:bg-blue-900">
           Добавить
         </button>
