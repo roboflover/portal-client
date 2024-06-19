@@ -29,7 +29,7 @@ export function Menu() {
       {/* <Link href="/games" className={getLinkClass('/games')}>Игры</Link> */}
       <Link href="/" className={getLinkClass('/')}>Новости</Link>
       {/* <Link href="/exhibitions"  className={getLinkClass('/exhibitions')}>Выставки</Link> */}
-      <Link href="/catalog"  className={getLinkClass('/catalog')}>Каталог</Link>
+      <Link href="/product"  className={getLinkClass('/product')}>Продукция</Link>
       <Link href="/contact"  className={getLinkClass('/contact')}>Контакты</Link>
       </nav>
   ) }else {
