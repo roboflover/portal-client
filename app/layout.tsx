@@ -16,6 +16,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
   
   return (
     <html lang="en" suppressHydrationWarning={true}>
+      <title>Робоцветы</title>
       <body className={inter.className}>
         <AuthProvider>
           {children}

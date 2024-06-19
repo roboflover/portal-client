@@ -73,7 +73,7 @@ const CatalogList: React.FC<CatalogListProps> = ({ products }) => {
         {products.map((product) => (
           <li key={product.id} className="flex flex-col p-4 border border-blue-500 rounded-3xl ">
             <div className="flex flex-col items-center">
-              <h3 className="mt-4 mb-4 font-bold text-3xl">{product.title}</h3>
+              <h3 className="mt-4 mb-8 font-bold text-3xl">{product.title}</h3>
               {product.images && product.images.map((image) => (
                 <div key={image.id} className="flex flex-col items-center">
                   <Image

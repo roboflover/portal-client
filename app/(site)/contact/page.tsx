@@ -22,10 +22,18 @@ export default function ContactPage() {
                         <h3 className="text-xl font-semibold">Адрес</h3>
                         <p className="text-gray-700">Санкт-Петербург, Среднерогатская улица, дом 8к1</p>
                     </div>
+                    <div>
+                        <h3 className="text-xl font-semibold">Социальные сети</h3>
+                        <p className="text-gray-700">
+                            <a href="https://vk.com/roboflovers" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                                vk.com
+                            </a>
+                        </p>
+                    </div>
                 </div>
                 <div className="mt-6">
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1994.769938018657!2d30.31757831599471!3d59.93428008187527!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x469631b4a7e6b9e9%3A0x8c5e6a2b1f8a7c9d!2z0JrRg9C60LDRgNC40YLRjCDQnNCw0YHQutCy0LAsIDjQkDEsINCe0LzRgdC60LLQsCwg0KDQtdGB0L_QvtC70YzRgdC60LDRjyDQvtCx0LsuLCAxOTExMTk!5e0!3m2!1sru!2sru!4v1635943026625!5m2!1sru!2sru"
+                        src="https://yandex.ru/map-widget/v1/?ll=30.335451%2C59.923365&source=serp_navig&z=12.38"
                         width="100%"
                         height="400"
                         style={{ border: 0 }}

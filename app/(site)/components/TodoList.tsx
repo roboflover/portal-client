@@ -30,9 +30,9 @@ const TodoList: React.FC<TodoListProps> = ({ todos }) => {
          />
           )}
           <div className="absolute inset-0 bg-black bg-opacity-0 p-4 rounded z-10">
-            <span className="block text-white text-sm mb-2">
+            {/* <span className="block text-white text-sm mb-2">
               {new Date(todo.createdAt).toLocaleString()}
-            </span>
+            </span> */}
             <span className="block font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-white mb-2">
               {todo.title}
             </span>
