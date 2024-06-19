@@ -27,12 +27,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const token = Cookies.get('access_token');
     if (token) {
       setIsAuthenticated(true); 
-      const decodedToken: any = jwtDecode(token);
-      setUserId(decodedToken.sub); // Предполагается, что ID пользователя хранится в поле "id"
+      const decodedToken: { sub: number } = jwtDecode(token);
+      setUserId(decodedToken.sub); // Предполагается, что ID пользователя хранится в поле "sub"
     }
   }, []);
 
   const host = process.env.NEXT_PUBLIC_SERVER;
+
+  if (!host) {
+    throw new Error('NEXT_PUBLIC_SERVER is not defined');
+  }
 
   const login = async (email: string, password: string) => {
     try {
@@ -43,11 +47,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       Cookies.set('access_token', access_token, { expires: 7 });
       setIsAuthenticated(true);
 
-      // const decodedToken: any = jwtDecode(access_token);
+      // const decodedToken: { id: number } = jwtDecode(access_token);
       // setUserId(decodedToken.id); // Предполагается, что ID пользователя хранится в поле "id"
 
       return response.data.role;
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        setError(error.response.data.message || 'Ошибка при входе');
+      } else {
+        setError('Неизвестная ошибка');
+      }
       throw error;
     }
   };

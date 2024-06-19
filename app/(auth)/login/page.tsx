@@ -18,6 +18,7 @@ export default function Login() {
   }, []);
 
   useEffect(() => {
+    console.log('isAuthenticated', isAuthenticated)
     if (isAuthenticated) {
       //router.push('/profile');
     }
