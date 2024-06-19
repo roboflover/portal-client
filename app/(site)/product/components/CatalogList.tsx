@@ -106,7 +106,7 @@ const CatalogList: React.FC<CatalogListProps> = ({ products }) => {
         className="bg-cyan-900 p-8 shadow-lg w-96 border border-blue-500 rounded-3xl "
         overlayClassName="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
       >
-        <h2 className="text-3xl text-gray-900 pb-8 pt-8 max-w-5xl text-center font-bold" style={{ textShadow: '0.5px 0.5px 0 #fff, -0.5px -0.5px 0 #fff, -0.5px 0.5px 0 #fff, 0.5px -0.5px 0 #fff' }}>
+        <h2 className="pb-8 text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default" >
           Сделать заказ
         </h2>
         {selectedProduct && (

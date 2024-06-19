@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     const mailOptions = {
       from: "portal@robobug.ru",
       to: 'portal@robobug.ru',
-      subject: 'Your Subject',
+      subject: email,
       text: message,
     };
 
