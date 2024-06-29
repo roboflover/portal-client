@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -12,6 +14,7 @@ interface AuthContextProps {
   error: string | null;
   userId: number | null;
   setUserId: (id: number | null) => void;
+  token: string | null;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -21,11 +24,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [role, setRole] = useState<string | null>(null);
-
+  const [token, setToken] = useState<string | null>(null);
+  
   // Проверка наличия токена доступа в куках при монтировании компонента
   useEffect(() => {
     const token = Cookies.get('access_token');
     if (token) {
+      setToken(token); // Устанавливаем токен в состояние
       setIsAuthenticated(true); 
       const decodedToken: { sub: number } = jwtDecode(token);
       setUserId(decodedToken.sub); // Предполагается, что ID пользователя хранится в поле "sub"
@@ -69,7 +74,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, login, logout, role, error, userId, setUserId }}>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, login, logout, role, error, userId, setUserId, token }}>
       {children}
     </AuthContext.Provider>
   );

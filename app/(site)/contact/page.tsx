@@ -19,10 +19,6 @@ export default function ContactPage() {
                         <p className="text-gray-700">+79032888286</p>
                     </div>
                     <div>
-                        <h3 className="text-xl font-semibold">Адрес</h3>
-                        <p className="text-gray-700">Санкт-Петербург, Среднерогатская улица, дом 8к1</p>
-                    </div>
-                    <div>
                         <h3 className="text-xl font-semibold">Социальные сети</h3>
                         <p className="text-gray-700">
                             <a href="https://vk.com/roboflovers" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">

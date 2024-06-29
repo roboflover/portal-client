@@ -29,7 +29,7 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/profile');
+      //router.push('/profile');
     }
   }, [isAuthenticated, router]);
 
