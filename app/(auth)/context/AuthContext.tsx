@@ -46,6 +46,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string) => {
     try {
       const response = await axios.post(`${host}/auth/login`, { email, password });
+      //console.log(response)
       const { access_token } = response.data;
       setRole(response.data.role);
       localStorage.setItem('access_token', access_token);

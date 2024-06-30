@@ -93,7 +93,7 @@ const CatalogList: React.FC<CatalogListProps> = ({ products }) => {
             </div>
             <div className="flex items-center justify-center mt-4">
               <button onClick={() => handleAddToCart(product.id)} className="px-4 py-2 text-white bg-blue-500 rounded-xl">
-                Купить
+                Подробнее
               </button>
             </div>
           </li>

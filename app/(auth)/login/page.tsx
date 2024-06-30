@@ -18,31 +18,36 @@ export default function Login() {
   }, []);
 
   useEffect(() => {
-    console.log('isAuthenticated', isAuthenticated)
     if (isAuthenticated) {
-      //router.push('/profile');
+      router.push('/profile');
     }
   }, [isAuthenticated, router]);
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
-
+    console.log('Form submitted'); // Добавьте это
+  
     try {
+      console.log('Attempting login'); // И это
       const rolePlayer = await login(email, password);
+      console.log('rolePlayer', rolePlayer); // И это
+  
       if (rolePlayer !== null) {
         localStorage.setItem('user', JSON.stringify({ email, role: rolePlayer }));
         let value;
         value = localStorage.getItem("user") || "";
         const user = JSON.parse(value);
-
+  
         setIsLoginSuccessful(true);
         setLoginError(null); // Очистка ошибки если логин успешен
       }
     } catch (error) {
+      console.error('Login error:', error); // И это
       setIsLoginSuccessful(false);
       setLoginError('Login failed. Please check your credentials.');
     }
   };
+  
 
   useEffect(() => {
     if (isLoginSuccessful) {
