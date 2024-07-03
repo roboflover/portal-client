@@ -152,8 +152,8 @@ export default function Print3dPage() {
     
     
     return (
-        <div className="flex flex-col items-center justify-center p-4">
-          <div className="w-full max-w-2xl pt-8 pb-16 space-y-6 rounded shadow-md">
+        <div className="flex flex-col items-center justify-center">
+          <div className="w-full pt-8 pb-16 space-y-6 rounded shadow-md">
             <h2 className="text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">Расчет 3д печати</h2>
             { dimensions ? (
                     <div className="space-y-4">
@@ -168,12 +168,6 @@ export default function Print3dPage() {
     <p className="text-2xl font-bold">Цена: {calculateVolumeAndPrice(dimensions).price.toFixed(0)} ₽</p>
     <div className="m-10 items-center space-x-4">
         <ColorPicker setColor={setColor}/>
-    {/* <input
-        type="color"
-        value={color}
-        onChange={(e) => setColor(e.target.value)}
-        className="m-10 font-semibold border border-blue-500 rounded text-lg"
-    /> */}
         <select
         value={material}
         onChange={handleMaterialChange}
