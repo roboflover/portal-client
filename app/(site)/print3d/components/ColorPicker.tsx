@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 const pantoneColors = [
@@ -31,8 +31,15 @@ function hexToVector3(hex: string): THREE.Vector3 {
 export default function ColorPicker({ setColor }: ColorPickerProps) {
     const [localColor, setLocalColor] = useState('#7FFF00');
     const [isOpen, setIsOpen] = useState(false);
+    const pickerRef = useRef<HTMLDivElement>(null);
 
     const selectedColor = pantoneColors.find(c => c.hex === localColor);
+
+    const handleClickOutside = (event:MouseEvent) => {
+        if (pickerRef.current && !pickerRef.current.contains(event.target as Node)) {
+            setIsOpen(false);
+        }
+    };
 
     const handleColorChange = (colorHex:string) => {
         setLocalColor(colorHex);
@@ -40,8 +47,15 @@ export default function ColorPicker({ setColor }: ColorPickerProps) {
         setIsOpen(false);
     };
 
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
-        <div className="relative">
+        <div className="relative" ref={pickerRef}>
             <div
                 className="w-10 h-10 border border-gray-300 rounded cursor-pointer"
                 style={{ backgroundColor: localColor }}

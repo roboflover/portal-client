@@ -122,7 +122,15 @@ export default function Print3dPage() {
         const volumeCm3 = (dimensions.x * dimensions.y * dimensions.z) * 1e6; // Переводим из м³ в см³
         const pricePerCm3 = 4; // Цена за кубический сантиметр
         let price = volumeCm3 * pricePerCm3;
-        
+        function hexToVector3(hex: string): THREE.Vector3 {
+        // Создаем объект THREE.Color из HEX строки
+        const color = new THREE.Color(hex);
+
+        // Преобразуем цвет в THREE.Vector3
+        const vector = new THREE.Vector3(color.r, color.g, color.b);
+
+        return vector;
+}
         // Рассчитываем скидку в зависимости от объема
         const maxDiscount = 0.8; // Максимальная скидка 50%
         const baseRate = 1e-6; // Коэффициент для расчета скидки
@@ -133,24 +141,21 @@ export default function Print3dPage() {
         if (discount > maxDiscount) {
             discount = maxDiscount;
         }
-    
         // Применяем скидку к цене
         price = price * (1 - discount);
-    
         // Гарантируем, что цена не будет менее 50 рублей
         if (price < 50) {
             price = 50;
-        }
-    
+        } 
         return { volumeCm3, price };
     };
     
     
     return (
-        <div className="flex flex-col items-center justify-start min-h-screen p-0">
-            <div className="w-full max-w-2xl p-8 space-y-6 rounded">
-                <h2 className="text-3xl font-bold custom-text text-center">Расчет 3д печати</h2>
-                { dimensions ? (
+        <div className="flex flex-col items-center justify-center p-4">
+          <div className="w-full max-w-2xl pt-8 pb-16 space-y-6 rounded shadow-md">
+            <h2 className="text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">Расчет 3д печати</h2>
+            { dimensions ? (
                     <div className="space-y-4">
     <ul className="flex flex-wrap justify-start items-end text-left space-x-4 space-y-2 list-none p-0">
         <li className="w-full sm:w-auto"></li>
