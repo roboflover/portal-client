@@ -9,11 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.1",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-menubar": "^1.0.4",
     "@radix-ui/react-navigation-menu": "^1.1.4",
     "@radix-ui/react-slot": "^1.0.2",
     "@react-email/components": "0.0.19",
+    "@react-three/drei": "^9.108.1",
+    "@react-three/fiber": "^8.16.8",
+    "@types/three": "^0.166.0",
     "@uidotdev/usehooks": "^2.4.1",
     "aws-sdk": "^2.1634.0",
     "axios": "^1.7.2",
@@ -35,6 +39,7 @@
     "react-modal": "^3.16.1",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "three": "^0.166.1",
     "yup": "^1.4.0"
   },
   "devDependencies": {

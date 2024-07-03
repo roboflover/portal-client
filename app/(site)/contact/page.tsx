@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <div className="flex flex-col items-center justify-start min-h-screen p-4">
             <div className="w-full max-w-2xl p-8 space-y-6 rounded shadow-md">
                 <h2 className="text-3xl font-bold text-center">Контакты</h2>
                 <div className="space-y-4">

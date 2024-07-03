@@ -71,3 +71,35 @@
     --ring: 212.7 26.8% 83.9;
   }
 }
+
+.custom-text {
+  color: #00FF00; /* Зеленый цвет */
+  background: linear-gradient(45deg, #ff007f, #00bfff); /* Бармалиново-голубой градиент */
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  position: relative;
+}
+
+.custom-text::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid red; /* Красная рамка */
+  z-index: -1;
+}
+
+.custom-text::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background-image: radial-gradient(circle, #ff007f 1px, transparent 1px);
+  background-size: 10px 10px; /* Размер крапинок */
+  z-index: -2;
+}
