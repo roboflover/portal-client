@@ -3,66 +3,13 @@
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { OrbitControls  } from '@react-three/drei';
 import * as THREE from 'three';
-import { STLLoader } from './../../../lib/three/examples/jsm/loaders/STLLoader';
+import { STLModel } from './components/STLModel'
 import { useRef, useState, useEffect } from 'react';
 import ColorPicker from './components/ColorPicker'
+import { analyzeModelVolume } from './components/analyzeModelVolume';
 const signedVolumeOfTriangle = (p1: THREE.Vector3, p2: THREE.Vector3, p3: THREE.Vector3): number => {
     return p1.dot(p2.cross(p3)) / 6.0;
   };
-
-const STLModel: React.FC<{ url: string, color: string, setDimensions: (dimensions: THREE.Vector3) => void }> = ({ url, color, setDimensions }) => {
-    const geometry = useLoader(STLLoader, url);
-    const ref = useRef<THREE.Mesh>(null);  
-
-    useEffect(() => {
-        if (geometry && ref.current) {
-            geometry.computeBoundingBox();
-            const boundingBox = geometry.boundingBox;
-            if (boundingBox) {
-                const dimensions = new THREE.Vector3();
-                boundingBox.getSize(dimensions);
-                const initialScale = new THREE.Vector3(1, 1, 1);
-
-                const size = new THREE.Vector3();
-                boundingBox.getSize(size);
-                // Рассчитываем масштаб модели так, чтобы она занимала весь экран
-                const maxAxis = Math.max(size.x, size.y, size.z);
-                const scale = 5 / maxAxis;
-
-                ref.current.scale.set(scale, scale, scale);
-
-                // Центрируем модель
-                const center = new THREE.Vector3();
-                boundingBox.getCenter(center);
-                ref.current.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
-
-                if (dimensions.x*1000 > 10000 || dimensions.y*1000 > 10000 || dimensions.z*1000 > 10000) {
-                    initialScale.x = (dimensions.x)*.001
-                    initialScale.y = (dimensions.y)*.001
-                    initialScale.z = (dimensions.z)*.001
-                   setDimensions(initialScale);
-                } else {
-                    setDimensions(dimensions);
-                }
-
-            }
-        }
-    }, [geometry, setDimensions]);
-
-    useFrame(() => {
-        if (ref.current) {
-            ref.current.rotation.y += 0.01;
-        }
-    });
-    
-    return (
-        <>
-            <mesh ref={ref} geometry={geometry} castShadow receiveShadow>
-                <meshStandardMaterial color={color} />
-            </mesh>
-        </>
-    );
-};
 
 function Helpers() {
     // Размер грида в миллиметрах (например, 100 мм)
@@ -84,20 +31,21 @@ export default function Print3dPage() {
     const [dimensions, setDimensions] = useState<THREE.Vector3 | null>(null);
     const [color, setColor] = useState('#7FFF00'); // Состояние для цвета
     const [material, setMaterial] = useState('ABS');
-
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const [volume, setVolume] = useState<number>(0);
+    
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         setLoading(true);
         if (file) {
-            
-            try {
-                
+            try {            
                 const fileSizeInMB = file.size / (1024 * 1024);
                 if (fileSizeInMB > 100) {
                     throw new Error('Размер файла превышает 100 МБ');
                 }
     
                 const url = URL.createObjectURL(file);
+                const modelVolume = await analyzeModelVolume(url);
+                setVolume(modelVolume);
                 setModelUrl(url);
                 console.log('Файл принят:', file);
             } catch (error) {
@@ -118,36 +66,16 @@ export default function Print3dPage() {
         setMaterial(event.target.value);
     };
 
-    const calculateVolumeAndPrice = (dimensions: THREE.Vector3) => {
-        const volumeCm3 = (dimensions.x * dimensions.y * dimensions.z) * 1e6; // Переводим из м³ в см³
-        const pricePerCm3 = 4; // Цена за кубический сантиметр
-        let price = volumeCm3 * pricePerCm3;
-        function hexToVector3(hex: string): THREE.Vector3 {
-        // Создаем объект THREE.Color из HEX строки
-        const color = new THREE.Color(hex);
-
-        // Преобразуем цвет в THREE.Vector3
-        const vector = new THREE.Vector3(color.r, color.g, color.b);
-
-        return vector;
-}
-        // Рассчитываем скидку в зависимости от объема
-        const maxDiscount = 0.8; // Максимальная скидка 50%
-        const baseRate = 1e-6; // Коэффициент для расчета скидки
-        const purchaseCount = 50;
-        const discountRate = baseRate * Math.log(purchaseCount + 1); 
-        let discount = volumeCm3 * discountRate;
-        // Ограничиваем скидку максимальным значением
-        if (discount > maxDiscount) {
-            discount = maxDiscount;
+    const calculateVolumeAndPrice = (volume:number) => {
+        
+        const pricePerCm3 = 10; // Цена за кубический сантиметр
+       
+        let newprice = volume*pricePerCm3;
+        if(newprice < 45){
+            newprice = 45
         }
-        // Применяем скидку к цене
-        price = price * (1 - discount);
-        // Гарантируем, что цена не будет менее 50 рублей
-        if (price < 50) {
-            price = 50;
-        } 
-        return { volumeCm3, price };
+
+        return newprice
     };
     
     
@@ -163,15 +91,15 @@ export default function Print3dPage() {
                     <li className="w-full sm:w-auto">Длина: {(dimensions.y * 1000).toFixed(2)} мм</li>
                     <li className="w-full sm:w-auto">Высота: {(dimensions.z * 1000).toFixed(2)} мм</li>
                     <li className="w-full sm:w-auto">Материал: {material}</li>
-                    <li className="w-full sm:w-auto">Объем: {calculateVolumeAndPrice(dimensions).volumeCm3.toFixed(2)} см³</li>
+                    <li className="w-full sm:w-auto">Объем: {volume.toFixed(2)} см³</li>
                 </ul>
-                <p className="flex items-center justify-center text-2xl font-bold">Цена: {calculateVolumeAndPrice(dimensions).price.toFixed(0)} ₽</p>
+                <p className="flex items-center justify-center text-2xl font-bold">Цена: {calculateVolumeAndPrice(volume).toFixed(0)} ₽</p>
                 <ColorPicker setColor={setColor}/>
-                <div className="m-10 space-x-4 flex flex-wrap justify-center items-center">
+                <div className="m-10 flex flex-wrap justify-center items-center">
                     <select
                     value={material}
                     onChange={handleMaterialChange}
-                    className="m-5 px-6 py-3  h-10 text-sm font-semibold border border-blue-500 rounded"
+                    className="m-5 px-3 h-10 text-xs border border-blue-500 rounded"
                     >
                         <option value="ABS">ABS</option>
                         <option value="PETG">PETG</option>
