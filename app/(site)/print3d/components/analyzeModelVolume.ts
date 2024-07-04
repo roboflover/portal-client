@@ -7,19 +7,34 @@ interface Dimensions {
     z: number;
 }
 
-const checkModelDimensions = (geometry: THREE.BufferGeometry): boolean => {
+const exceedsLimitThousand = (dimensions: THREE.Vector3) => {
+    const values = Object.values(dimensions);
+    const count = values.filter(value => value > 1000).length;
+    return count >= 1;
+};
+
+const checkModelDimensions = (geometry: THREE.BufferGeometry) => {
     // Создаем ограничивающий параллелепипед для геометрии
     const boundingBox = new THREE.Box3().setFromObject(new THREE.Mesh(geometry));
 
     // Вычисляем размеры модели
     const dimensions = new THREE.Vector3();
     boundingBox.getSize(dimensions);
-
+    let absoluteDimension = dimensions.multiplyScalar(1000)
     // Проверяем, превышает ли размер модели 1000 метров по любой из осей
-    const exceedsLimit = (dimensions.x*1000 > 10000 || dimensions.y*1000 > 10000 || dimensions.z*1000 > 10000)
-    console.log('exceedsLimit', exceedsLimit)
-    return exceedsLimit;
+    console.log('dimensions', dimensions)
+    const exceedsLimitThousent = dimensions.x > 1000 && dimensions.y > 1000 && dimensions.z > 1000
+    const exceedsLimitDifferent = exceedsLimitThousand(dimensions)
+   
+    if (exceedsLimitThousent)
+        return 'Thousent';
+
+    if(exceedsLimitDifferent)
+        return 'Different'
+    
+    
 };
+
 
 // Функция для уменьшения размера геометрии
 const scaleGeometry = (geometry: THREE.BufferGeometry, scale: number): void => {
@@ -38,11 +53,17 @@ export const analyzeModelVolume = async (url: string): Promise<number> => {
                     return;
                 }
 
+                let multiply = 1000000
                 // Вызов функции checkModelDimensions
-                if (checkModelDimensions(geometry)) {
-                    console.log('Размер модели превышает 1000 метров по одной из осей.');
+                let isNormalDimension = checkModelDimensions(geometry)
+                console.log(isNormalDimension)
+                if (isNormalDimension==="Thousent") 
                     scaleGeometry(geometry, 0.001);
-                }
+                
+                if (isNormalDimension==="Different") 
+                    multiply = 10000
+
+                // console.log(isNormalDimension)
  
                 const positions = geometry.attributes.position.array;
                 let volume = 0;
@@ -58,8 +79,8 @@ export const analyzeModelVolume = async (url: string): Promise<number> => {
                 }
 
                 // Переводим объем из кубических единиц в кубические сантиметры (если единица измерения - метр)
-                const volumeInCubicCentimeters = Math.abs(volume) * 1000000;
-                console.log(`Объем модели: ${volumeInCubicCentimeters.toFixed(1)} кубических сантиметров`);
+                const volumeInCubicCentimeters = Math.abs(volume) * multiply;
+                console.log('resolve(volumeInCubicCentimeters)', volumeInCubicCentimeters)
                 resolve(volumeInCubicCentimeters);
             },
             undefined,
@@ -70,12 +91,3 @@ export const analyzeModelVolume = async (url: string): Promise<number> => {
     });
 };
 
-
-// if (dimensions.x*1000 > 10000 || dimensions.y*1000 > 10000 || dimensions.z*1000 > 10000) {
-//     initialScale.x = (dimensions.x)*.001
-//     initialScale.y = (dimensions.y)*.001
-//     initialScale.z = (dimensions.z)*.001
-//    setDimensions(initialScale);
-// } else {
-//     setDimensions(dimensions);
-// }

@@ -32,7 +32,13 @@ export default function Print3dPage() {
     const [color, setColor] = useState('#7FFF00'); // Состояние для цвета
     const [material, setMaterial] = useState('ABS');
     const [volume, setVolume] = useState<number>(0);
-    
+    const [fileName, setFileName] = useState<string>()
+    let zakazParams = {
+        modelUrl: setModelUrl,
+        color: color,
+        material: material,
+
+    }
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         setLoading(true);
@@ -42,12 +48,11 @@ export default function Print3dPage() {
                 if (fileSizeInMB > 100) {
                     throw new Error('Размер файла превышает 100 МБ');
                 }
-    
+                setFileName(file.name)
                 const url = URL.createObjectURL(file);
                 const modelVolume = await analyzeModelVolume(url);
                 setVolume(modelVolume);
                 setModelUrl(url);
-                console.log('Файл принят:', file);
             } catch (error) {
                 if (error instanceof Error) {
                     setErrorMessage(error.message);
@@ -78,22 +83,41 @@ export default function Print3dPage() {
         return newprice
     };
     
+    const isDimensionExceeds500mm = (dimensions:THREE.Vector3) => {
+        return dimensions.x * 1000 > 500 || dimensions.y * 1000 > 500 || dimensions.z * 1000 > 500;
+    };
     
+
     return (
         <div className="flex flex-col items-center justify-center">
           <div className="w-full pt-8 pb-16 space-y-6 rounded shadow-md">
             <h2 className="text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">Расчет 3д печати</h2>
-            { dimensions ? (
+
+            { dimensions && isDimensionExceeds500mm(dimensions) && (
+                <div className=''>
+                    <p className="flex flex-wrap space-y-4 items-center justify-center text-red-700">
+                        Размеры превышают 500 мм
+                    </p>
+                </div>
+            )}
+
+            { dimensions && !isDimensionExceeds500mm(dimensions) ? (
+                
             <div className="space-y-4 items-center justify-center">
                 <ul className="flex flex-wrap items-center justify-center space-x-4 space-y-2 list-none p-0">
-                    <li className="w-full sm:w-auto"></li>
-                    <li className="w-full sm:w-auto">Ширина: {(dimensions.x * 1000).toFixed(2)} мм</li>
-                    <li className="w-full sm:w-auto">Длина: {(dimensions.y * 1000).toFixed(2)} мм</li>
-                    <li className="w-full sm:w-auto">Высота: {(dimensions.z * 1000).toFixed(2)} мм</li>
+                <li></li>
+                    <li className="w-full sm:w-auto font-medium">{fileName}</li>
+                    <li className="w-full sm:w-auto">Ширина: {(dimensions.x * 1000).toFixed()} мм</li>
+                    <li className="w-full sm:w-auto">Длина: {(dimensions.y * 1000).toFixed()} мм</li>
+                    <li className="w-full sm:w-auto">Высота: {(dimensions.z * 1000).toFixed()} мм</li>
                     <li className="w-full sm:w-auto">Материал: {material}</li>
-                    <li className="w-full sm:w-auto">Объем: {volume.toFixed(2)} см³</li>
+                    <li className="w-full sm:w-auto">Объем: {volume.toFixed()} см³</li>
                 </ul>
-                <p className="flex items-center justify-center text-2xl font-bold">Цена: {calculateVolumeAndPrice(volume).toFixed(0)} ₽</p>
+                <div className='flex flex-col items-center'>
+                    <p className="mt-2 text-xl font-semibold italic border border-blue-500 p-2 rounded-lg" style={{ borderColor: 'rgba(59, 130, 246, 0.5)' }}>
+                    {calculateVolumeAndPrice(volume).toFixed(0)}&nbsp;₽
+                    </p>
+                </div>
                 <ColorPicker setColor={setColor}/>
                 <div className="m-10 flex flex-wrap justify-center items-center">
                     <select
