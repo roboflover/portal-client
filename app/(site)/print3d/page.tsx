@@ -156,43 +156,43 @@ export default function Print3dPage() {
           <div className="w-full pt-8 pb-16 space-y-6 rounded shadow-md">
             <h2 className="text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">Расчет 3д печати</h2>
             { dimensions ? (
-                    <div className="space-y-4">
-    <ul className="flex flex-wrap justify-start items-end text-left space-x-4 space-y-2 list-none p-0">
-        <li className="w-full sm:w-auto"></li>
-        <li className="w-full sm:w-auto">Ширина: {(dimensions.x * 1000).toFixed(2)} мм</li>
-        <li className="w-full sm:w-auto">Длина: {(dimensions.y * 1000).toFixed(2)} мм</li>
-        <li className="w-full sm:w-auto">Высота: {(dimensions.z * 1000).toFixed(2)} мм</li>
-        <li className="w-full sm:w-auto">Материал: {material}</li>
-        <li className="w-full sm:w-auto">Объем: {calculateVolumeAndPrice(dimensions).volumeCm3.toFixed(2)} см³</li>
-    </ul>
-    <p className="text-2xl font-bold">Цена: {calculateVolumeAndPrice(dimensions).price.toFixed(0)} ₽</p>
-    <div className="m-10 items-center space-x-4">
-        <ColorPicker setColor={setColor}/>
-        <select
-        value={material}
-        onChange={handleMaterialChange}
-        className="m-5 px-6 py-3  h-10 text-sm font-semibold border border-blue-500 rounded"
-         >
-        <option value="ABS">ABS</option>
-        <option value="PETG">PETG</option>
-        <option value="PLA">PLA</option>
-        </select>
-          <button
-            onClick={handleButtonClick}
-            className="m-5 px-6 py-3  h-10 text-sm font-semibold text-gray-500 border border-gray-500 rounded hover:bg-gray-500 hover:text-white transition duration-300 ease-in-out"
-          >
-            Перезагрузить
-          </button>
-          <button className="m-5 px-6 py-3  h-10 text-sm font-semibold text-green-500 border border-green-500 rounded hover:bg-green-500 hover:text-white transition duration-300 ease-in-out">
-            Заказать
-        </button>
-        </div>
-</div>                 
-                ):(
-                    <>
-                    <p>Загрузить 3д модель в формате .stl, максимальный размер файла 100мб</p>
-                <input type="file" accept=".stl" onChange={handleFileChange} className="mb-4" />
-                </>
+            <div className="space-y-4 items-center justify-center">
+                <ul className="flex flex-wrap items-center justify-center space-x-4 space-y-2 list-none p-0">
+                    <li className="w-full sm:w-auto"></li>
+                    <li className="w-full sm:w-auto">Ширина: {(dimensions.x * 1000).toFixed(2)} мм</li>
+                    <li className="w-full sm:w-auto">Длина: {(dimensions.y * 1000).toFixed(2)} мм</li>
+                    <li className="w-full sm:w-auto">Высота: {(dimensions.z * 1000).toFixed(2)} мм</li>
+                    <li className="w-full sm:w-auto">Материал: {material}</li>
+                    <li className="w-full sm:w-auto">Объем: {calculateVolumeAndPrice(dimensions).volumeCm3.toFixed(2)} см³</li>
+                </ul>
+                <p className="flex items-center justify-center text-2xl font-bold">Цена: {calculateVolumeAndPrice(dimensions).price.toFixed(0)} ₽</p>
+                <ColorPicker setColor={setColor}/>
+                <div className="m-10 space-x-4 flex flex-wrap justify-center items-center">
+                    <select
+                    value={material}
+                    onChange={handleMaterialChange}
+                    className="m-5 px-6 py-3  h-10 text-sm font-semibold border border-blue-500 rounded"
+                    >
+                        <option value="ABS">ABS</option>
+                        <option value="PETG">PETG</option>
+                        <option value="PLA">PLA</option>
+                    </select>
+                    <button
+                        onClick={handleButtonClick}
+                        className="m-5 px-6 py-3  h-10 text-sm font-semibold text-gray-500 border border-gray-500 rounded hover:bg-gray-500 hover:text-white transition duration-300 ease-in-out"
+                    >
+                        Перезагрузить
+                    </button>
+                    <button className="m-5 px-6 py-3  h-10 text-sm font-semibold text-green-500 border border-green-500 rounded hover:bg-green-500 hover:text-white transition duration-300 ease-in-out">
+                        Заказать
+                    </button>
+                </div>
+            </div>                 
+             ):(
+                <div className="flex flex-col items-center justify-center">
+                    <p className="mb-4 text-center">Загрузить 3д модель в формате .stl, максимальный размер файла 100мб</p>
+                    <input type="file" accept=".stl" onChange={handleFileChange} className="mb-4" />
+                </div>
                 )}
 
             </div>

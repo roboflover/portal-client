@@ -55,7 +55,7 @@ export default function ColorPicker({ setColor }: ColorPickerProps) {
     }, []);
 
     return (
-        <div className="relative" ref={pickerRef}>
+        <div className="relative flex justify-center items-center" ref={pickerRef}>
             <div
                 className="w-10 h-10 border border-gray-300 rounded cursor-pointer"
                 style={{ backgroundColor: localColor }}
