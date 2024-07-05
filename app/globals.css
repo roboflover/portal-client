@@ -10,6 +10,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+html, body, #root, .canvas-container {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 /*
 'woodsmoke': {
   '50': 'hsl(0, 0%, 96%)',
@@ -70,6 +78,32 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9;
   }
+}
+
+.container {
+  display: flex; /* Или любой другой подходящий дисплей */
+  justify-content: flex-start; /* Убедиться, что элементы внутри контейнера выровнены по левому краю */
+  align-items: flex-start; /* Убедиться, что элементы внутри контейнера выровнены по верху */
+}
+
+.file-name {
+  word-wrap: break-word; /* Для переноса длинных слов */
+  max-width: 200px; /* Ограничивает ширину */
+  display: inline-block; /* И позволяет перекрывать блочные элементы */
+  text-align: left; /* Прижимает текст к левому краю */
+  /* Убираем внешние и внутренние отступы */
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.square-palette {
+  width: 250px;
+  height: 250px;
+}
+
+.square-item {
+  width: 64px; /* 16 * 4 (rem) */
+  height: 64px; /* 16 * 4 (rem) */
 }
 
 .custom-text {

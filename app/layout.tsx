@@ -9,7 +9,7 @@ import Head from "next/head";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Робоцветы',
+  title: 'Робожуки',
   description:
     'This is a meta description. Welcome to slingacademy.com. Happy coding and have a nice day',
 };
@@ -20,11 +20,11 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
     <html lang="en" suppressHydrationWarning={true}>
    
       <Head>
-      <title>Робоцветы</title>
+      <title>Робожуки</title>
       <link rel="icon" href="/favicon.ico" />
      
       </Head>
-      <body className={inter.className}>
+      <body className={inter.className} id="root">
       <Script id="metrika-counter" strategy="afterInteractive">
   {`(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();

@@ -22,7 +22,7 @@ const checkModelDimensions = (geometry: THREE.BufferGeometry) => {
     boundingBox.getSize(dimensions);
     let absoluteDimension = dimensions.multiplyScalar(1000)
     // Проверяем, превышает ли размер модели 1000 метров по любой из осей
-    console.log('dimensions', dimensions)
+
     const exceedsLimitThousent = dimensions.x > 1000 && dimensions.y > 1000 && dimensions.z > 1000
     const exceedsLimitDifferent = exceedsLimitThousand(dimensions)
    
@@ -56,15 +56,15 @@ export const analyzeModelVolume = async (url: string): Promise<number> => {
                 let multiply = 1000000
                 // Вызов функции checkModelDimensions
                 let isNormalDimension = checkModelDimensions(geometry)
-                console.log(isNormalDimension)
+
                 if (isNormalDimension==="Thousent") 
                     scaleGeometry(geometry, 0.001);
                 
                 if (isNormalDimension==="Different") 
                     multiply = 10000
 
-                // console.log(isNormalDimension)
- 
+
+                
                 const positions = geometry.attributes.position.array;
                 let volume = 0;
 
@@ -80,7 +80,7 @@ export const analyzeModelVolume = async (url: string): Promise<number> => {
 
                 // Переводим объем из кубических единиц в кубические сантиметры (если единица измерения - метр)
                 const volumeInCubicCentimeters = Math.abs(volume) * multiply;
-                console.log('resolve(volumeInCubicCentimeters)', volumeInCubicCentimeters)
+
                 resolve(volumeInCubicCentimeters);
             },
             undefined,

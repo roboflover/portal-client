@@ -55,28 +55,29 @@ export default function ColorPicker({ setColor }: ColorPickerProps) {
     }, []);
 
     return (
-        <div className="relative flex justify-center items-center" ref={pickerRef}>
+        <div className="m-6 relative flex justify-center items-center" ref={pickerRef}>
             <div
                 className="w-10 h-10 border border-gray-300 rounded cursor-pointer"
                 style={{ backgroundColor: localColor }}
                 onClick={() => setIsOpen(!isOpen)}
             ></div>
-            {isOpen && (
-                <ul className="absolute mt-2 p-2 border border-gray-300 rounded bg-white max-h-60 overflow-auto z-10 grid grid-cols-2 gap-2">
-                    {pantoneColors.map((colorOption) => (
-                        <li
-                            key={colorOption.hex}
-                            className="w-10 h-10 cursor-pointer hover:bg-gray-100"
-                            onClick={() => handleColorChange(colorOption.hex)}
-                        >
-                            <div
-                                className="w-full h-full  border-gray-600"
-                                style={{ backgroundColor: colorOption.hex }}
-                            ></div>
-                        </li>
-                    ))}
-                </ul>
-            )}
+{isOpen && (
+    <ul className="absolute mt-2 p-4 border border-gray-300 rounded bg-white overflow-auto z-10 grid grid-cols-3 gap-4 square-palette">
+        {pantoneColors.map((colorOption) => (
+            <li
+                key={colorOption.hex}
+                className="flex items-center justify-center cursor-pointer hover:bg-gray-100 square-item"
+                onClick={() => handleColorChange(colorOption.hex)}
+            >
+                <div
+                    className="w-full h-full border border-gray-600"
+                    style={{ backgroundColor: colorOption.hex }}
+                ></div>
+            </li>
+        ))}
+    </ul>
+)}
+
         </div>
     );
 }

@@ -56,11 +56,11 @@ const CatalogList: React.FC<CatalogListProps> = ({ products }) => {
       });
 
       if (response.ok) {
-        console.log('Email sent successfully');
+
         // Закрыть модальное окно после отправки
         setModalIsOpen(false);
       } else {
-        console.error('Failed to send email');
+
       }
     } catch (error) {
       console.error('Error:', error);
@@ -88,7 +88,7 @@ const CatalogList: React.FC<CatalogListProps> = ({ products }) => {
               ))}
               <p className="mt-2 w-full max-w-2xl text-center">{product.description}</p>
               <p className="mt-2 text-xl font-semibold italic border border-blue-500 p-2 rounded-lg" style={{ borderColor: 'rgba(59, 130, 246, 0.5)' }}>
-                {product.price.toFixed(0)}&nbsp;₽
+                {Number(product.price.toFixed(0)).toLocaleString('ru-RU')}&nbsp;₽
               </p>
             </div>
             <div className="flex items-center justify-center mt-4">

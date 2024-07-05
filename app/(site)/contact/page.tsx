@@ -12,15 +12,15 @@ export default function ContactPage() {
                 <div className="space-y-4">
                     <div>
                         <h3 className="text-xl font-semibold">Почта</h3>
-                        <p className="text-gray-700">portal@robobug.ru</p>
+                        <p className="text-gray-500">portal@robobug.ru</p>
                     </div>
                     <div>
                         <h3 className="text-xl font-semibold">Телефон</h3>
-                        <p className="text-gray-700">+79032888286</p>
+                        <p className="text-gray-500">+79032888286</p>
                     </div>
                     <div>
                         <h3 className="text-xl font-semibold">Социальные сети</h3>
-                        <p className="text-gray-700">
+                        <p className="text-gray-500">
                             <a href="https://vk.com/roboflovers" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                                 vk.com
                             </a>
