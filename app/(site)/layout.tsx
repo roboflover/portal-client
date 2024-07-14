@@ -1,15 +1,11 @@
 'use client'
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./../globals.css";
 import { ThemeProvider } from "next-themes"
 import { Header } from '@/app/(site)/components/header'
 import { Footer } from '@/app/(site)/components/footer'
-import { SidebarMenu } from "@/app/(site)/components/sidebarMenu";
-import { Banner } from "./../(site)/components/banner";
 import { useState } from "react";
 import { AuthProvider } from "./../(auth)/context/AuthContext";
-import { redirect } from 'next/navigation';
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -13,6 +13,9 @@ export default function Login() {
   const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
 
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingLogs, setLoadingLogs] = useState<string[]>([]);
+
   useEffect(() => {
     document.cookie = 'cookieName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   }, []);
@@ -25,29 +28,28 @@ export default function Login() {
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted'); // Добавьте это
-  
+    setLoading(true);
+    setLoadingLogs(['Form submitted']);
+
     try {
-      console.log('Attempting login'); // И это
+      setLoadingLogs((prevLogs) => [...prevLogs, "Attempting login"]);
       const rolePlayer = await login(email, password);
-      console.log('rolePlayer', rolePlayer); // И это
-  
+      setLoadingLogs((prevLogs) => [...prevLogs, `Role Player: ${rolePlayer}`]);
+
       if (rolePlayer !== null) {
         localStorage.setItem('user', JSON.stringify({ email, role: rolePlayer }));
-        let value;
-        value = localStorage.getItem("user") || "";
-        const user = JSON.parse(value);
-  
         setIsLoginSuccessful(true);
-        setLoginError(null); // Очистка ошибки если логин успешен
+        setLoginError(null);
       }
     } catch (error) {
-      console.error('Login error:', error); // И это
+      console.error('Login error:', error);
+      setLoadingLogs((prevLogs) => [...prevLogs, 'Login error']);
       setIsLoginSuccessful(false);
       setLoginError('Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     if (isLoginSuccessful) {
@@ -100,6 +102,16 @@ export default function Login() {
           </button>
           {loginError && <p className="mt-2 text-sm text-red-600">{loginError}</p>}
         </form>
+        {loading && (
+          <div className="mt-4 p-4 bg-gray-200 rounded">
+            <h3 className="text-sm font-medium">Loading logs:</h3>
+            <ul className="text-xs">
+              {loadingLogs.map((log, index) => (
+                <li key={index}>{log}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -14,29 +14,6 @@ export default function Catalog() {
         fetchProducts();
       }, []);
 
-      const [data, setData] = useState<string | null>(null);
-
-      ///
-      // useEffect(() => {
-      //   const fetchData = async () => {
-      //     try {
-      //       const response = await fetch('/api/hello/');
-      //       if (!response.ok) {
-      //         throw new Error(`Error: ${response.status}`);
-      //       }
-      //       const text = await response.text();
-      //       setData(text);
-      //     } catch (error) {
-      //       console.error('Failed to fetch data:', error);
-      //     }
-      //   };
-    
-      //   fetchData();
-      // }, []);
-      ///
-
-
-    
       const fetchProducts = async () => {
         const data = await getProducts();
         setЗroducts(data);

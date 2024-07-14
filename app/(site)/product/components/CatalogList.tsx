@@ -26,6 +26,7 @@ const CatalogList: React.FC<CatalogListProps> = ({ products }) => {
   
   Modal.setAppElement('body'); 
 
+  const [messageSent, setMessageSent] = useState(false);
   const [cart, setCart] = useState<{ [key: number]: number }>({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -44,7 +45,12 @@ const CatalogList: React.FC<CatalogListProps> = ({ products }) => {
     }
   };
 
- const handleSubmit = async (e: React.FormEvent) => {
+  const resetForm = () => {
+    setEmail('');
+    setMessage('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await fetch('/api/hello', {
@@ -56,11 +62,16 @@ const CatalogList: React.FC<CatalogListProps> = ({ products }) => {
       });
 
       if (response.ok) {
-
-        // Закрыть модальное окно после отправки
-        setModalIsOpen(false);
+        // Показать сообщение об успешной отправке
+        setMessageSent(true);
+        // Закрыть модальное окно через 2 секунды
+        setTimeout(() => {
+          setModalIsOpen(false);
+          setMessageSent(false);
+          resetForm() // Сброс отображения сообщения перед следующим открытием модального окна
+        }, 2000);
       } else {
-
+        // Обработка ошибки, если это необходимо
       }
     } catch (error) {
       console.error('Error:', error);
@@ -99,17 +110,23 @@ const CatalogList: React.FC<CatalogListProps> = ({ products }) => {
           </li>
         ))}
       </ul>
+
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
         contentLabel="Редактирование товара"
-        className="bg-cyan-900 p-8 shadow-lg w-96 border border-blue-500 rounded-3xl "
+        className="bg-cyan-900 p-8 shadow-lg w-96 border border-blue-500 rounded-3xl text-gray-300"
         overlayClassName="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
       >
         <h2 className="pb-8 text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default" >
           Сделать заказ
         </h2>
-        {selectedProduct && (
+         {messageSent ? (
+    <div className="bg-green-500 text-white p-4 rounded">
+      Ваше сообщение отправлено
+    </div>
+  ) : (
+    selectedProduct && (
           <form onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email">Ваша почта:</label>
@@ -136,8 +153,8 @@ const CatalogList: React.FC<CatalogListProps> = ({ products }) => {
               Отправить
             </button>
           </form>
-        )}
-      </Modal>
+        ))}
+      </Modal>  
     </div>
   );
 };

@@ -19,6 +19,12 @@ export default function ContactPage() {
                         <p className="text-gray-500">+79032888286</p>
                     </div>
                     <div>
+                        <h3 className="text-xl font-semibold">Реквизиты</h3>
+                        <p className="text-gray-500">ИНДИВИДУАЛЬНЫЙ ПРЕДПРИНИМАТЕЛЬ ГРИГОРЯН СТЕПАН НИКОЛАЕВИЧ</p>
+                        <p className="text-gray-500">ИНН 770372636777</p>
+                        <p className="text-gray-500">ОГРН/ОГРНИП 323774600632191</p>
+                    </div>
+                    <div>
                         <h3 className="text-xl font-semibold">Социальные сети</h3>
                         <p className="text-gray-500">
                             <a href="https://vk.com/roboflovers" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">

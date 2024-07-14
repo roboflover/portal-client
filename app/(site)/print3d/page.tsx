@@ -166,7 +166,7 @@ export default function Print3dPage() {
           </p>
         )}
         <h2 className="text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
-          Расчет 3д печати по технологии FMD
+          Расчет 3D печати по технологии FMD
         </h2>
 
         {dimensions && isDimensionExceeds500mm(dimensions) && (
@@ -229,17 +229,25 @@ export default function Print3dPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center">
-            <p className="mb-4 text-center">Загрузить 3д модель в формате .stl, максимальный размер файла 100мб</p>
+            <p className="mb-4 text-center">Загрузить 3D модель в формате .stl, максимальный размер файла 100мб</p>
             <input type="file" accept=".stl" onChange={handleFileChange} className="mb-4" />
           </div>
         )}
       </div>
       <div className="w-9/12 flex flex-col items-center justify-center flex-grow">
+      <p className="text-gray-500">Если 3D модель не загружается, отправьте письмо на почту <a href="mailto:zakaz@robobug.ru"> zakaz@robobug.ru</a> </p>
       <div className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] relative flex-grow">
         <ResizableCanvas shadows camera={{ position: [5, 5, 10], fov: 50 }} className="mb-50">
           <ambientLight intensity={0.5} />
           <directionalLight
             position={[10, 10, 10]}
+            intensity={1}
+            castShadow
+            shadow-mapSize-width={1024}
+            shadow-mapSize-height={400}
+          />
+          <directionalLight
+            position={[-5, -10, 0]}
             intensity={1}
             castShadow
             shadow-mapSize-width={1024}
@@ -263,7 +271,7 @@ export default function Print3dPage() {
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
           contentLabel="Редактирование товара"
-          className="bg-cyan-900 p-8 shadow-lg w-96 border border-blue-500 rounded-3xl "
+          className="bg-cyan-900 p-8 shadow-lg w-96 border border-blue-500 rounded-3xl text-gray-300"
           overlayClassName="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
           >
           <h2 className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default" >

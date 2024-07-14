@@ -57,7 +57,7 @@ export function Menu() {
             value={selectedValue}
             className="h-7 text-sm font-semibold rounded bg-gray-100 dark:bg-gray-900 text-black dark:text-white px-2"
           >
-            <option value="">---</option> {/* Пустой пункт меню */}
+            <option value="">⇩&nbsp;⇩&nbsp;⇩</option> {/* Пустой пункт меню */}
             <option value="product">Продукция</option>
             <option value="print3d">3д печать</option>
           </select>
