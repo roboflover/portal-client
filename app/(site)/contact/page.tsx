@@ -12,7 +12,7 @@ export default function ContactPage() {
                 <div className="space-y-4">
                     <div>
                         <h3 className="text-xl font-semibold">Почта</h3>
-                        <p className="text-gray-500">portal@robobug.ru</p>
+                        <p className="text-gray-500">zakaz@robobug.ru</p>
                     </div>
                     <div>
                         <h3 className="text-xl font-semibold">Телефон</h3>
