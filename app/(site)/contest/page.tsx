@@ -16,7 +16,10 @@ declare global {
 export default function ContactPage() {
 
 // let ddd = new window.CDEKWidget({ from: 'Новосибирск', root: 'cdek-map', apiKey: 'b6dbf69a-02a9-4c16-ab2e-172777c18534', servicePath: 'https://robobug.ru/service.php', defaultLocation: 'Новосибирск' });
-  
+/*
+</script>
+*/
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
           const script = document.createElement('script');
@@ -25,13 +28,40 @@ export default function ContactPage() {
           script.charset = 'utf-8';
           script.onload = () => {
             new window.CDEKWidget({
-              from: 'Новосибирск',
-              root: 'cdek-map',
-              apiKey: 'yandex-api-key',
-              servicePath: 'https://some-site.com/service.php',
-              defaultLocation: 'Новосибирск',
+                from: 'Новосибирск',
+                root: 'cdek-map',
+                apiKey: 'f4e034c2-8c37-4168-8b97-99b6b3b268d7',
+                canChoose: true,
+                servicePath: 'http://robobug.ru/service.php',
+                hideFilters: {
+                    have_cashless: false,
+                    have_cash: false,
+                    is_dressing_room: false,
+                    type: false,
+                },
+                hideDeliveryOptions: {
+                    office: false,
+                    door: true,
+                },
+                popup: false,
+                debug: false,
+                goods: [
+                    {
+                        width: 10,
+                        height: 10,
+                        length: 10,
+                        weight: 10,
+                    },
+                ],
+                defaultLocation: [82.9346, 55.0415],
+                lang: 'rus',
+                currency: 'RUB',
+                tariffs: {
+                    office: [233, 137, 139],
+                    door: [234, 136, 138],
+                },
             });
-          };
+            };
           document.body.appendChild(script);
         }
       }, []);    
