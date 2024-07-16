@@ -25,12 +25,11 @@ export default function ContactPage() {
           const script = document.createElement('script');
           script.src = 'https://cdn.jsdelivr.net/npm/@cdek-it/widget@3';
           script.async = true;
-          script.charset = 'utf-8';
           script.onload = () => {
             new window.CDEKWidget({
                 from: 'Новосибирск',
                 root: 'cdek-map',
-                apiKey: 'f4e034c2-8c37-4168-8b97-99b6b3b268d7',
+                apiKey: '95af15ee-dcb7-4205-af45-90b027553738',
                 canChoose: true,
                 servicePath: 'http://robobug.ru/service.php',
                 hideFilters: {
