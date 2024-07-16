@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthProvider } from "./(auth)/context/AuthContext";
 import Script from "next/script";
 import Head from "next/head";
@@ -15,11 +15,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
-  
+
+
   return (
     <html lang="en" suppressHydrationWarning={true}>
    
       <Head>
+
       <title>Робожуки</title>
       <link rel="icon" href="/favicon.ico" />
      
