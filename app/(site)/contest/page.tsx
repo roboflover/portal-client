@@ -29,7 +29,7 @@ export default function ContactPage() {
             new window.CDEKWidget({
                 from: 'Новосибирск',
                 root: 'cdek-map',
-                apiKey: '95af15ee-dcb7-4205-af45-90b027553738',
+                apiKey: '75cb6000-eca6-4f8f-ab19-8486f57505cb',
                 canChoose: true,
                 servicePath: 'http://robobug.ru/service.php',
                 hideFilters: {
