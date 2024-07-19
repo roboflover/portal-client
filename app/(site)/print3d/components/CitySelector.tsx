@@ -15,7 +15,7 @@ const CitySelector: React.FC = () => {
 
     const client_id = process.env.NEXT_PUBLIC_CLIENT_ID;
     const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET;
-
+    console.log('privet')
     useEffect(() => {
         const fetchToken = async () => {
             setIsLoading(true);
