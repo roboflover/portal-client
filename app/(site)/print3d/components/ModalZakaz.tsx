@@ -38,6 +38,7 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [data, setData] = useState<DataProps>(initialData);
+    const [zakaz, setZakaz] = useState(Number)
 
     useImperativeHandle(ref, () => ({
           openModal() {
@@ -90,7 +91,7 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
           overlayClassName="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
           >
           <h2 className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default" >
-            Ваш заказ № {Math.ceil(Math.random()*1000+1000)}
+            Ваш заказ № 0001
           </h2>
           {modalIsOpen && data.dimensions && (
             <form onSubmit={handleSubmit}>
