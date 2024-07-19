@@ -186,7 +186,7 @@ export default function Print3dPage() {
           </p>
         )}
         <h2 className="text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
-          Расчет 3D печати по технологии FMD
+          Расчет 3D печати по технологии FMD.
         </h2>
 
         {dimensions && isDimensionExceeds500mm(dimensions) && (
