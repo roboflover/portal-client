@@ -18,20 +18,20 @@ export const STLModel: React.FC<STLModelProps> = ({ url, color, setDimensions })
   const geometry = useLoader(STLLoader, url, (loader) => {
     setLoading(true);
     loader.manager.onStart = (url, itemsLoaded, itemsTotal) => {
-      console.log(`Начало загрузки: ${url}. ${itemsLoaded} из ${itemsTotal} загружено.`);
+      // console.log(`Начало загрузки: ${url}. ${itemsLoaded} из ${itemsTotal} загружено.`);
     };
 
     loader.manager.onLoad = () => {
-      console.log('Все загрузки завершены.');
+      // console.log('Все загрузки завершены.');
       setLoading(false);
     };
 
     loader.manager.onProgress = (url, itemsLoaded, itemsTotal) => {
-      console.log(`Загрузка: ${url}. ${itemsLoaded} из ${itemsTotal} загружено.`);
+      // console.log(`Загрузка: ${url}. ${itemsLoaded} из ${itemsTotal} загружено.`);
     };
 
     loader.manager.onError = (url) => {
-      console.error(`Ошибка загрузки: ${url}`);
+      // console.error(`Ошибка загрузки: ${url}`);
       setLoading(false);
     };
   });

@@ -1,75 +1,55 @@
 'use client'
 
-import { Metadata } from 'next';
-import { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-// export const metadata: Metadata = {
-//     title: 'Contact',
-// }
+const ModalMap = () => {
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
+  
+  useEffect(() => {
+    if (!mapContainerRef.current) return; // Handle ref not set
 
-declare global {
-    interface Window {
-      CDEKWidget: any;
-    }
-  }
-
-export default function ContactPage() {
-
-// let ddd = new window.CDEKWidget({ from: 'Новосибирск', root: 'cdek-map', apiKey: 'b6dbf69a-02a9-4c16-ab2e-172777c18534', servicePath: 'https://robobug.ru/service.php', defaultLocation: 'Новосибирск' });
-/*
-</script>
-*/
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-          const script = document.createElement('script');
-          script.src = 'https://cdn.jsdelivr.net/npm/@cdek-it/widget@3';
-          script.async = true;
-          script.onload = () => {
-            new window.CDEKWidget({
-                from: 'Новосибирск',
-                root: 'cdek-map',
-                apiKey: '75cb6000-eca6-4f8f-ab19-8486f57505cb',
-                canChoose: true,
-                servicePath: 'http://robobug.ru/service.php',
-                hideFilters: {
-                    have_cashless: false,
-                    have_cash: false,
-                    is_dressing_room: false,
-                    type: false,
-                },
-                hideDeliveryOptions: {
-                    office: false,
-                    door: true,
-                },
-                popup: false,
-                debug: false,
-                goods: [
-                    {
-                        width: 10,
-                        height: 10,
-                        length: 10,
-                        weight: 10,
-                    },
-                ],
-                defaultLocation: [82.9346, 55.0415],
-                lang: 'rus',
-                currency: 'RUB',
-                tariffs: {
-                    office: [233, 137, 139],
-                    door: [234, 136, 138],
-                },
-            });
-            };
-          document.body.appendChild(script);
+    const ymapsLoader = () => {
+      window.ymaps.ready(() => {
+        if (mapRef.current) {
+          return; // Карта уже инициализирована, выходим
         }
-      }, []);    
-    
-    return (
-        <div className="flex flex-col items-center justify-start min-h-screen p-4">
 
-            <div id="cdek-map" className="w-[800px] h-[600px]"></div>
+        const myMap = new window.ymaps.Map(mapContainerRef.current, {
+          center: [55.751574, 37.573856], // Координаты центра карты (Москва, Красная площадь)
+          zoom: 9,
+          controls: ['zoomControl', 'fullscreenControl']
+        });
 
-        </div>
-    );
-}
+        // Добавляем почтовое отделение в центре карты как пример
+        const myPlacemark = new window.ymaps.Placemark([55.751574, 37.573856], {
+          balloonContent: 'Почтовое отделение'
+        });
+
+        myMap.geoObjects.add(myPlacemark);
+        mapRef.current = myMap; // Сохраняем ссылку на карту в ref
+      });
+    };
+
+    // Лоадер YMaps
+    if (!window.ymaps) {
+      const script = document.createElement('script');
+      script.src = 'https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=ваш_api_ключ';
+      script.async = true;
+      script.onload = ymapsLoader;
+      document.body.appendChild(script);
+    } else {
+      ymapsLoader();
+    }
+  }, []);
+
+  return (
+    <div>
+      <div ref={mapContainerRef} style={{ width: '100%', height: '300px' }}>
+        Загрузка карты...
+      </div>
+    </div>
+  );
+};
+
+export default ModalMap;

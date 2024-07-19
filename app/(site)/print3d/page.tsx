@@ -8,6 +8,8 @@ import { useRef, useState, useEffect, ReactNode } from 'react';
 import ColorPicker from './components/ColorPicker';
 import { analyzeModelVolume } from './components/analyzeModelVolume';
 import Modal from 'react-modal';
+import ModalMap from './components/ModalMap';
+import ModalZakaz, { ModalZakazRef } from './components/ModalZakaz';
 
 const signedVolumeOfTriangle = (p1: THREE.Vector3, p2: THREE.Vector3, p3: THREE.Vector3): number => {
   return p1.dot(p2.cross(p3)) / 6.0;
@@ -59,6 +61,7 @@ const ResizableCanvas = (props: { children: ReactNode, shadows?: boolean, camera
 };
 
 export default function Print3dPage() {
+
   const [loading, setLoading] = useState(false);
   const [modelUrl, setModelUrl] = useState<string | null>(null);
   const [dimensions, setDimensions] = useState<THREE.Vector3 | null>(null);
@@ -70,10 +73,27 @@ export default function Print3dPage() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [email, setEmail] = useState<string>('@');
   const [file, setFile] = useState<File | null>(null);
+  const modalRef = useRef<ModalZakazRef>(null);
+
+  const showModal = () => {
+    if (modalRef.current) {
+      modalRef.current.setData({
+          dimensions: dimensions,
+          volume: volume,
+          material: material,
+          color: color,
+          email: 'test@example.com',
+          fileName: fileName,
+          summa: summa,
+      });
+      modalRef.current.openModal();
+  }
+  };
 
   Modal.setAppElement('#root')
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+
     const file = event.target.files?.[0];
     setLoading(true);
     if (file) {
@@ -147,7 +167,7 @@ export default function Print3dPage() {
         body: formData,
       });
 
-      setModalIsOpen(false);
+      //setModalIsOpen(false);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -222,7 +242,7 @@ export default function Print3dPage() {
               >
                 Перезагрузить
               </button>
-              <button onClick={() => handleAddToCart()} className="m-5 px-6 py-3 h-10 text-sm font-semibold text-green-500 border border-green-500 rounded hover:bg-green-500 hover:text-white transition duration-300 ease-in-out">
+              <button onClick={showModal} className="m-5 px-6 py-3 h-10 text-sm font-semibold text-green-500 border border-green-500 rounded hover:bg-green-500 hover:text-white transition duration-300 ease-in-out">
                 Оформить заказ
               </button>
             </div>
@@ -235,7 +255,7 @@ export default function Print3dPage() {
         )}
       </div>
       <div className="w-9/12 flex flex-col items-center justify-center flex-grow">
-      <p className="text-gray-500">Если 3D модель не загружается, отправьте письмо на почту <a href="mailto:zakaz@robobug.ru"> zakaz@robobug.ru</a> </p>
+      <p className="text-gray-500">Если 3D модель не загружается, отправьте на почту <a href="mailto:zakaz@robobug.ru"> zakaz@robobug.ru</a> </p>
       <div className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] relative flex-grow">
         <ResizableCanvas shadows camera={{ position: [5, 5, 10], fov: 50 }} className="mb-50">
           <ambientLight intensity={0.5} />
@@ -267,9 +287,9 @@ export default function Print3dPage() {
         </div>
       )}
 
+  <ModalZakaz ref={modalRef}    />
   <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={() => setModalIsOpen(false)}
+          isOpen={false}
           contentLabel="Редактирование товара"
           className="bg-cyan-900 p-8 shadow-lg w-96 border border-blue-500 rounded-3xl text-gray-300"
           overlayClassName="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
@@ -300,6 +320,7 @@ export default function Print3dPage() {
                   className="border p-2 rounded w-full"
                 />
               </div>
+              <ModalMap/>
               <div>
                 <label htmlFor="message">Комментарий:</label>
                 <textarea
@@ -354,5 +375,4 @@ export default function Print3dPage() {
     
     if(name === '#2D2926')
       return 'черный'
-
   }
