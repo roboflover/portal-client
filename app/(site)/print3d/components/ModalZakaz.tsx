@@ -8,6 +8,7 @@ import RegionSelector from './RegionSelector';
 import { useOrder } from '@/app/context/OrderContext';
 import PointSelector from './PointSelector';
 import { RegionData } from './RegionSelector'
+import Calculator from './Calculator';
 
 Modal.setAppElement('#root');
 
@@ -39,10 +40,16 @@ const initialData: DataProps = {
   count: 1
 };
 
-// Используем forwardRef и useImperativeHandle, добавляя типы
-const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) => {
+const regionStarter = {
+  "country_code": "RU",
+  "country": "Россия",
+  "region": "Санкт-Петербург",
+  "region_code": 82,
+  "fias_region_guid": "c2deb16a-0330-4f05-821f-1d09c93331e6"
+}
 
-    const [selectedRegion, setSelectedRegion] = useState<RegionData | null>(null)
+const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) => {
+    const [selectedRegion, setSelectedRegion] = useState<RegionData>(regionStarter)
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [data, setData] = useState<DataProps>(initialData);
     const { orderDetails } = useOrder();
@@ -55,14 +62,6 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
     const { count } = orderDetails;
     const [email, setEmail] = useState('');
     ModalMap.displayName = 'root';
-    useEffect(()=>{
-      //console.log(orderDetails)
-          // Обновление состояния data при изменении orderDetails
-    // setData((prevData) => ({
-    //   ...prevData,
-    //   ...orderDetails
-    // }));
-    }, [orderDetails])
 
     useImperativeHandle(ref, () => ({
           openModal() {
@@ -81,6 +80,7 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
       
       const handleRegionSelect = (region: RegionData) => {
         setSelectedRegion(region);
+        console.log(selectedRegion)
       };
 
       const handleSubmit = async (e: React.FormEvent) => {
@@ -143,30 +143,30 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
                   </ul>
                   </div>
                   
-                  <div className="max-w-md mx-auto  my-5 px-5 rounded-lg border border-gray-500 shadow-lg overflow-hidden">
+                  <div className="my-5 px-5 rounded-lg border border-gray-500 shadow-lg overflow-hidden">
                     <h2 className="text-1xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default" >
                       Получатель
                     </h2>
-                    <ul className='mb-5'>
-                      <li className="flex flex-initial items-center mb-2">
+                    <ul className='mb-5 '>
+                      <li className="flex flex-initial items-center mb-2 ">
                         <input
                           type="email"
                           id="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value )}
                           required
-                          className="border p-1 rounded mx-auto"
+                          className="border p-1 rounded mx-auto w-full"
                           placeholder="Ваша почта" // Добавляем placeholder
                         />
                       </li>
-                      <li className="flex flex-initial items-center mb-2">
+                      <li className="flex flex-initial items-center mb-2 ">
                         <input
                           type="text"
                           id="phone"
                           // value={data.phone}
                           // onChange={(e) => setData({ ...data, phone: e.target.value })}
                           required
-                          className="border p-1 rounded mx-auto"
+                          className="border p-1 rounded mx-auto w-full"
                           placeholder='Телефон'
                         />
                       </li>
@@ -177,7 +177,7 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
                           // value={data.fullName}
                           // onChange={(e) => setData({ ...data, fullName: e.target.value })}
                           required
-                          className="border p-1 rounded mx-auto"
+                          className="border p-1 rounded mx-auto w-full"
                           placeholder='ФИО'
                         />
                       </li>
@@ -197,13 +197,11 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
                         <PointSelector selectedRegion={selectedRegion}/>    
                         <li className=' font-semibold relative p-1 mt-5'>
                       <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-pink-500 rounded"></div>
-                      <div className="relative">
-                        Стоимость доставки: {`${count}₽ `}
-                      </div>
+                        <Calculator  selectedRegion={selectedRegion}/>
                     </li>  
                       </ul>
                   </div>
-              </div>
+                </div>
               <button type="submit" className="px-4 py-2  bg-blue-500 rounded-xl mt-4">
                 Оплатить
               </button>

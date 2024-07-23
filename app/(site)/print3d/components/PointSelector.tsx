@@ -78,7 +78,6 @@ const RegionSelector: React.FC<SelectedRegion> = ({ selectedRegion }) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedAdress = deliveryPoints.find(point => point.uuid === event.target.value);
-    console.log(selectedAdress)
     if (selectedAdress) {
       setAdress(selectedAdress.location.address);
     }
@@ -86,7 +85,7 @@ const RegionSelector: React.FC<SelectedRegion> = ({ selectedRegion }) => {
 
   return (
     <div className='border rounded w-full'>
-      {loading ? <p>Loading...</p> : (
+      {loading ? <p>Загрузка пунктов выдачи...</p> : (
         <>
           <input
             type="text"

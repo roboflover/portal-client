@@ -68,14 +68,13 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ onRegionSelect }) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedRegion = regions.find(region => region.fias_region_guid === event.target.value);
     if (selectedRegion) {
-      console.log(selectedRegion)
       onRegionSelect(selectedRegion);
     }
   };
 
   return (
     <div className='border rounded w-full'>
-      {loading ? <p>Loading...</p> : (
+      {loading ? <p>Загрузка региона...</p> : (
         <select className='border p-2 rounded w-full' onChange={handleChange}>
           {regions.map((region, index) => (
             <option key={index} value={region.fias_region_guid}>
