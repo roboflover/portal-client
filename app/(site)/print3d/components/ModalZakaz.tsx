@@ -9,7 +9,7 @@ import { useOrder } from '@/app/context/OrderContext';
 import PointSelector from './PointSelector';
 import { RegionData } from './RegionSelector'
 
-Modal.setAppElement('#root'); 
+Modal.setAppElement('#root');
 
 export interface ModalZakazRef {
     openModal: () => void;
@@ -54,7 +54,7 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
     const { summa } = orderDetails;
     const { count } = orderDetails;
     const [email, setEmail] = useState('');
-
+    ModalMap.displayName = 'root';
     useEffect(()=>{
       //console.log(orderDetails)
           // Обновление состояния data при изменении orderDetails
@@ -213,7 +213,9 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
         {/* <ModalMap/> */}
     </div>
   );
+  
 });
+ModalMap.displayName = 'ModalZakaz';
 
 export default ModalZakaz;
 
