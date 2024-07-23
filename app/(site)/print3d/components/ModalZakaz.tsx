@@ -61,7 +61,6 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
     const { summa } = orderDetails;
     const { count } = orderDetails;
     const [email, setEmail] = useState('');
-    ModalMap.displayName = 'root';
 
     useImperativeHandle(ref, () => ({
           openModal() {
@@ -213,7 +212,7 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
   );
   
 });
-ModalMap.displayName = 'ModalZakaz';
+ModalZakaz.displayName = 'ModalZakaz';
 
 export default ModalZakaz;
 
