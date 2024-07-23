@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Eye } from 'lucide-react';
 import { EyeOff } from 'lucide-react';

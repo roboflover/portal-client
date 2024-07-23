@@ -1,0 +1,114 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { RegionData } from './RegionSelector';
+
+type UUID = string;
+
+interface DeliveryPoint {
+    location: any;
+    name: string;
+    uuid: UUID;
+    nearest_station: string;
+    address: string;
+}
+
+interface SelectedRegion {
+    selectedRegion: RegionData | null
+}
+
+const RegionSelector: React.FC<SelectedRegion> = ({ selectedRegion }) => {
+
+  const [regions, setRegions] = useState<RegionData[]>([]);
+  const [token, setToken] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [deliveryPoints, setDeliveryPoints] = useState<DeliveryPoint[]>([]);
+  const [searchText, setSearchText] = useState<string>(''); // Состояние для текста поиска
+  const [address, setAdress] = useState<string>('')
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const response = await axios.post('/api/cdek'); // Предполагается, что API для получения токена находится по адресу /api/token
+        setToken(response.data.access_token);
+      } catch (error) {
+        console.error('Error fetching token:', error);
+        setError('Failed to fetch token');
+      }
+    };
+
+    fetchToken();
+  }, []);
+
+  useEffect(() => {
+    const fetchRegions = async () => {
+      if (!token || !selectedRegion || !selectedRegion.region_code) return;
+      setLoading(true);
+      try {
+        const response = await axios.get('/api/cdek/deliverypoints', {
+          params: {
+            region_code: selectedRegion.region_code // Передача region_code как параметра
+          },
+          headers: {
+            Authorization: `Bearer ${token}` // Токен авторизации
+          }
+        });
+        setDeliveryPoints(response.data)
+      } catch (error) {
+        console.error('Error fetching points:', error); // Логирование ошибки
+        setError('Failed to fetch points'); // Установка сообщения об ошибке
+      } finally {
+        setLoading(false); // Сброс состояния загрузки
+      }
+    };
+    fetchRegions();
+  }, [token, selectedRegion]); // Зависимости эффекта
+  
+  const prioritizeCities = (regions: RegionData[]) => {
+    const priorityCities = ['Москва', 'Санкт-Петербург'];
+    const priorityRegions = regions.filter(region => priorityCities.includes(region.region));
+    const otherRegions = regions.filter(region => !priorityCities.includes(region.region));
+    return [...priorityRegions, ...otherRegions];
+  };
+
+  // Фильтрация точек выдачи на основе текста поиска
+  const filteredDeliveryPoints = deliveryPoints.filter(point =>
+    point.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedAdress = deliveryPoints.find(point => point.uuid === event.target.value);
+    console.log(selectedAdress)
+    if (selectedAdress) {
+      setAdress(selectedAdress.location.address);
+    }
+  };
+
+  return (
+    <div className='border rounded w-full'>
+      {loading ? <p>Loading...</p> : (
+        <>
+          <input
+            type="text"
+            className="border p-2 rounded w-full mb-2"
+            placeholder="Поиск..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+          <select className='border p-2 rounded w-full' onChange={handleChange}>
+            {filteredDeliveryPoints.map((point) => (
+              <option key={point.uuid} value={point.uuid}>
+                {point.name}
+              </option>
+            ))}
+          </select>
+          <p>{address}</p>
+        </>
+      )}
+      {error && <p>{error}</p>}
+    </div>
+  );
+};
+
+export default RegionSelector;
+

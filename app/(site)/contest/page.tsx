@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react';
+import RegionSelector from './components/RegionSelector';
 
 const ModalMap = () => {
   const mapContainerRef = useRef(null);
@@ -45,9 +46,10 @@ const ModalMap = () => {
 
   return (
     <div>
-      <div ref={mapContainerRef} style={{ width: '100%', height: '300px' }}>
+      <RegionSelector />
+      {/* <div ref={mapContainerRef} style={{ width: '100%', height: '300px' }}>
         Загрузка карты...
-      </div>
+      </div> */}
     </div>
   );
 };

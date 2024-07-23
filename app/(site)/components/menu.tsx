@@ -1,10 +1,9 @@
 'use client'
 
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
 import { ChangeEvent, ReactNode, createContext, useEffect, useState } from "react";
-import { useAuth } from "@/app/(auth)/context/AuthContext";
-import { usePathname } from 'next/navigation';
+import { useAuth } from "@/app/context/AuthContext";
+import { usePathname, useRouter} from 'next/navigation';
 
 interface SidebarContextProps {
   // Добавьте сюда любые свойства, которые вы планируете передавать через контекст

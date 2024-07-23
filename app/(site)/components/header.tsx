@@ -7,7 +7,7 @@ import { ModeToggle } from '@/app/(site)/components/modeToggle';
 import { EnterToggle } from './enterToogle';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/app/(auth)/context/AuthContext';
+import { useAuth } from '@/app/context/AuthContext';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button"
 import { LogIn } from 'lucide-react';
@@ -39,11 +39,11 @@ export function Header({ toggleMenu }:ToggleMenuProps) {
        <div className="flex justify-between items-center p-4">
           <Logo />
           <div>
-            {/* {isAuthenticated ? (
-            <EnterToggle toggleMenu={toggleMenu} />
-          ) : (
-            <Link href="/login" className="m-0 p-0" legacyBehavior><Button className="mr-5" variant="outline" ><LogIn/></Button></Link>
-          )} */}
+            {isAuthenticated ? (
+              <EnterToggle toggleMenu={toggleMenu} />
+              ) : (
+              <Link href="/login" className="m-0 p-0" legacyBehavior><Button className="mr-5" variant="outline" ><LogIn/></Button></Link>
+          )}
             <ModeToggle/>
           </div>
         </div>

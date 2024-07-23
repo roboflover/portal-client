@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { fetchUserProfile } from '@/app/lib/profile';  // Импортируем функцию из нового файла
-import { useAuth } from '@/app/(auth)/context/AuthContext';
+import { useAuth } from '@/app/context/AuthContext';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 

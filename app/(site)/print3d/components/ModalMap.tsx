@@ -10,7 +10,8 @@ interface ModalMapRef {
 
 // Используем forwardRef и useImperativeHandle, добавляя типы
 const ModalMap = forwardRef<ModalMapRef>((props, ref: Ref<ModalMapRef>) => {
-    const [modalIsOpen, setModalIsOpen] = useState(false);
+  
+    const [modalIsOpen, setModalIsOpen] = useState(true);
     // Применяем useImperativeHandle для передачи методов наружу
     useImperativeHandle(ref, () => ({
       openModal() {

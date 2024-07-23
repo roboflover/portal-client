@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { useAuth } from '@/app/(auth)/context/AuthContext';
+import { useAuth } from '@/app/context/AuthContext';
 import { usePathname } from 'next/navigation';
 
 export function SidebarMenu({ isOpen, toggleMenu }:any) {

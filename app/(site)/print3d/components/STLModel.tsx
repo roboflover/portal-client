@@ -11,6 +11,7 @@ interface STLModelProps {
 }
 
 export const STLModel: React.FC<STLModelProps> = ({ url, color, setDimensions }) => {
+
   const ref = useRef<THREE.Mesh>(null);
   const [loading, setLoading] = useState(false);
 

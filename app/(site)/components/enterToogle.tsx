@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useAuth } from "@/app/(auth)/context/AuthContext";
+import { useAuth } from "@/app/context/AuthContext";
  
 export function EnterToggle({toggleMenu}:any) {
   

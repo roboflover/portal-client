@@ -5,7 +5,7 @@ import { ThemeProvider } from "next-themes"
 import { Header } from '@/app/(site)/components/header'
 import { Footer } from '@/app/(site)/components/footer'
 import { useState } from "react";
-import { AuthProvider } from "./../(auth)/context/AuthContext";
+import { AuthProvider } from "../context/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
