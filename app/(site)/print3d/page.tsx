@@ -75,7 +75,7 @@ export default function Print3dPage() {
     const totalSum = calculateSummaAndPrice(orderDetails.volume, orderDetails.count);
     const formattedTotalSum = Number(totalSum.toFixed(0));
     setSumma(formattedTotalSum);
-  }, [orderDetails.volume, orderDetails.count, orderDetails.material, orderDetails.color, orderDetails.fileName ]); 
+  }, [orderDetails.volume, orderDetails.count, orderDetails.material, orderDetails.color, orderDetails.fileName, setSumma ]); 
 
   const showModal = () => {
     setModalIsOpen(true);
