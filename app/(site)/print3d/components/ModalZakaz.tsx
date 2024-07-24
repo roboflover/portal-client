@@ -111,23 +111,22 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
         return (
           <div>
           <Modal
-              isOpen={modalIsOpen}
-              onRequestClose={() => setModalIsOpen(false)}
-              contentLabel="Редактирование товара"
-              className="bg-cyan-900 p-8 shadow-lg w-96 border border-blue-500 rounded-3xl text-gray-300 overflow-y-auto"
-              overlayClassName="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+            isOpen={modalIsOpen}
+            onRequestClose={() => setModalIsOpen(false)}
+            contentLabel="Редактирование товара"
+            className="bg-cyan-900 shadow-lg border border-blue-500 rounded-3xl text-gray-300 overflow-y-auto"
+            overlayClassName="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
           >
-
-          {modalIsOpen && dimensions && (
-            <form onSubmit={handleSubmit}>
-              <div>
-              <h2 className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default" >
-                Оформление заказа
-                </h2>
-              <div className="max-w-md mx-auto  my-5 px-5 rounded-lg border border-gray-500 shadow-lg overflow-hidden">
-              <h2 className="text-1xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default" >
-                Описание
-                </h2>
+            {modalIsOpen && dimensions && (
+              <form onSubmit={handleSubmit} className="flex flex-col items-center">
+                <div>
+                  <h2 className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
+                    Оформление заказа
+                  </h2>
+                  <div className="max-w-xs mx-auto my-2 px-5 rounded-lg border border-gray-500 shadow-lg overflow-hidden">
+                    <h2 className="text-1xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
+                      Описание
+                    </h2>
                   <ul className='mb-2' >                 
                     <li>Размер: {(dimensions.x * 1000).toFixed()} х {(dimensions.x * 1000).toFixed()} х {(dimensions.x * 1000).toFixed()}(мм)</li>
                     <li>Материал: {material}</li>
@@ -151,7 +150,7 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
                           value={email}
                           onChange={(e) => setEmail(e.target.value )}
                           required
-                          className="border p-1 rounded mx-auto w-full"
+                          className="border p-1 rounded mx-auto"
                           placeholder="Ваша почта" // Добавляем placeholder
                         />
                       </li>
@@ -162,7 +161,7 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
                           // value={data.phone}
                           // onChange={(e) => setData({ ...data, phone: e.target.value })}
                           required
-                          className="border p-1 rounded mx-auto w-full"
+                          className="border p-1 rounded mx-auto"
                           placeholder='Телефон'
                         />
                       </li>
@@ -173,7 +172,7 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
                           // value={data.fullName}
                           // onChange={(e) => setData({ ...data, fullName: e.target.value })}
                           required
-                          className="border p-1 rounded mx-auto w-full"
+                          className="border p-1 rounded mx-auto"
                           placeholder='ФИО'
                         />
                       </li>
@@ -189,13 +188,13 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
                         <li><label htmlFor="email">Выберите пункт выдачи:</label></li>
                         <PointSelector selectedRegion={selectedRegion}/>    
                         <li className=' font-semibold relative p-1 mt-5'>
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-pink-500 rounded"></div>
-                        <Calculator  selectedRegion={selectedRegion}/>
-                    </li>  
+                          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-pink-500 rounded"></div>
+                          <Calculator  selectedRegion={selectedRegion}/>
+                        </li>  
                       </ul>
                   </div>
                 </div>
-              <button type="submit" className="px-4 py-2  bg-blue-500 rounded-xl mt-4">
+              <button type="submit" className="py-2 px-4 bg-blue-500 rounded-xl w-full">
                 Оплатить
               </button>
             </form>

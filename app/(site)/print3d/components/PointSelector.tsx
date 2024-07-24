@@ -84,12 +84,12 @@ const RegionSelector: React.FC<SelectedRegion> = ({ selectedRegion }) => {
   };
 
   return (
-    <div className='border rounded w-full'>
+    <div className='border rounded w-64'>
       {loading ? <p>Загрузка пунктов выдачи...</p> : (
         <>
           <input
             type="text"
-            className="border p-2 rounded w-full mb-2"
+            className="border p-2 rounded w-full"
             placeholder="Поиск..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}

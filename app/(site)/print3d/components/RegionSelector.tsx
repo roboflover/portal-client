@@ -73,18 +73,19 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ onRegionSelect }) => {
   };
 
   return (
-    <div className='border rounded w-full'>
-      {loading ? <p>Загрузка региона...</p> : (
-        <select className='border p-2 rounded w-full' onChange={handleChange}>
-          {regions.map((region, index) => (
-            <option key={index} value={region.fias_region_guid}>
-              {region.region} ({region.country})
-            </option>
-          ))}
-        </select>
-      )}
-      {error && <p>{error}</p>}
-    </div>
+<div className='border rounded w-64'>
+  {loading ? <p>Загрузка региона...</p> : (
+    <select className='border p-2 rounded w-full' onChange={handleChange}>
+      {regions.map((region, index) => (
+        <option key={index} value={region.fias_region_guid}>
+          {region.region} ({region.country})
+        </option>
+      ))}
+    </select>
+  )}
+  {error && <p>{error}</p>}
+</div>
+
   );
 };
 
