@@ -128,7 +128,7 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
               <h2 className="text-1xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default" >
                 Описание
                 </h2>
-                  <ul className='mb-5' >                 
+                  <ul className='mb-2' >                 
                     <li>Размер: {(dimensions.x * 1000).toFixed()} х {(dimensions.x * 1000).toFixed()} х {(dimensions.x * 1000).toFixed()}(мм)</li>
                     <li>Материал: {material}</li>
                     <li>Цвет: {changeColorName(color)}</li>
@@ -140,13 +140,10 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
                       </div>
                     </li>                
                   </ul>
-                  </div>
-                  
-                  <div className="my-5 px-5 rounded-lg border border-gray-500 shadow-lg overflow-hidden">
                     <h2 className="text-1xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default" >
                       Получатель
                     </h2>
-                    <ul className='mb-5 '>
+                    <ul className='mb-2'>
                       <li className="flex flex-initial items-center mb-2 ">
                         <input
                           type="email"
@@ -181,13 +178,10 @@ const ModalZakaz = forwardRef<ModalZakazRef>((props, ref: Ref<ModalZakazRef>) =>
                         />
                       </li>
                     </ul>
-                  </div>
-
-                  <div className="max-w-md mx-auto  my-5 px-5 rounded-lg border border-gray-500 shadow-lg overflow-hidden">
                     <h2 className="text-1xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default" >
                       Доставка
                     </h2>
-                      <ul className='mb-5' >
+                      <ul className='mb-2' >
                         <li><label htmlFor="email">Страна: Россия</label></li>
                         <li><label htmlFor="email">Оператор доставки: CDEK</label></li>
                         <li><label htmlFor="email">Выберите город:</label></li>

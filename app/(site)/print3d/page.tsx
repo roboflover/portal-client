@@ -186,14 +186,14 @@ export default function Print3dPage() {
         {orderDetails.dimensions && !isDimensionExceeds500mm(orderDetails.dimensions) ? (
    <div className="">
         <div className='flex justify-center w-full'>
-            <ul className="flex flex-wrap justify-center items-start space-x-4 space-y-2 list-none p-0">
+            <ul className="flex flex-wrap justify-center xl:items-start sm:items-center lg:items-center space-x-4 space-y-2 list-none p-0">
               <li></li>
               <li><span className="file-name ">{orderDetails.fileName}</span></li>
-              <li className="w-full sm:w-auto">Ширина: {(orderDetails.dimensions.x * 1000).toFixed()} мм</li>
-              <li className="w-full sm:w-auto">Длина: {(orderDetails.dimensions.y * 1000).toFixed()} мм</li>
-              <li className="w-full sm:w-auto">Высота: {(orderDetails.dimensions.z * 1000).toFixed()} мм</li>
-              <li className="w-full sm:w-auto">Материал: {orderDetails.material}</li>
-              <li className="w-full sm:w-auto">Объем: {orderDetails.volume.toFixed(1)} см³</li>
+              <li className="lg:w-full sm:w-auto">Ширина: {(orderDetails.dimensions.x * 1000).toFixed()} мм</li>
+              <li className="lg:w-full sm:w-auto">Длина: {(orderDetails.dimensions.y * 1000).toFixed()} мм</li>
+              <li className="lg:w-full sm:w-auto">Высота: {(orderDetails.dimensions.z * 1000).toFixed()} мм</li>
+              <li className="lg:w-full sm:w-auto">Материал: {orderDetails.material}</li>
+              <li className="lg:w-full sm:w-auto">Объем: {orderDetails.volume.toFixed(1)} см³</li>
             </ul>
             </div>
             <div className='flex items-center justify-center'>
