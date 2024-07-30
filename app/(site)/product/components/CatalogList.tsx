@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import Modal from 'react-modal';
+import Modal from './Modal';
 
 interface Image {
   id: number;
@@ -20,62 +20,14 @@ interface CatalogListProps {
   products: Product[];
 }
 
-
-
 const CatalogList: React.FC<CatalogListProps> = ({ products }) => {
-  
-  Modal.setAppElement('body'); 
 
-  const [messageSent, setMessageSent] = useState(false);
-  const [cart, setCart] = useState<{ [key: number]: number }>({});
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<{ id: number; title: string, price: number } | null>(null)
 
-  const handleAddToCart = (productId: number) => {
-    setCart((prevCart) => ({
-      ...prevCart,
-      [productId]: (prevCart[productId] || 0) + 1,
-    }));
-    const product = products.find((p) => p.id === productId);
-    if (product) {
-      setSelectedProduct(product);
-      setModalIsOpen(true);
-    }
-  };
-
-  const resetForm = () => {
-    setEmail('');
-    setMessage('');
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('/api/hello', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, message }),
-      });
-
-      if (response.ok) {
-        // Показать сообщение об успешной отправке
-        setMessageSent(true);
-        // Закрыть модальное окно через 2 секунды
-        setTimeout(() => {
-          setModalIsOpen(false);
-          setMessageSent(false);
-          resetForm() // Сброс отображения сообщения перед следующим открытием модального окна
-        }, 2000);
-      } else {
-        // Обработка ошибки, если это необходимо
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
+  const handleAddToCart = (productId: number, productTitle: string, productPrice: number) => {
+    setSelectedProduct({ id: productId, title: productTitle, price: productPrice });
+    setIsOpen(true);
   };
 
   return (
@@ -103,77 +55,16 @@ const CatalogList: React.FC<CatalogListProps> = ({ products }) => {
               </p>
             </div>
             <div className="flex items-center justify-center mt-4">
-              <button onClick={() => handleAddToCart(product.id)} className="px-4 py-2 text-white bg-blue-500 rounded-xl">
-                Подробнее
+              <button onClick={() => handleAddToCart(product.id, product.title, Number(product.price.toFixed(0)))} className="px-4 py-2 text-white bg-blue-500 rounded-xl">
+                Оформить заказ
               </button>
             </div>
           </li>
         ))}
       </ul>
-
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        contentLabel="Редактирование товара"
-        className="bg-cyan-900 p-8 shadow-lg w-96 border border-blue-500 rounded-3xl text-gray-300"
-        overlayClassName="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-      >
-        <h2 className="pb-8 text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default" >
-          Сделать заказ
-        </h2>
-         {messageSent ? (
-    <div className="bg-green-500 text-white p-4 rounded">
-      Ваше сообщение отправлено
-    </div>
-  ) : (
-    selectedProduct && (
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="email">Ваша почта:</label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="border p-2 rounded w-full"
-              />
-            </div>
-            <div>
-              <label htmlFor="message">Сообщение:</label>
-              <textarea
-                id="message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                required
-                className="border p-2 rounded w-full"
-              />
-            </div>
-            <button type="submit" className="px-4 py-2  bg-blue-500 rounded-xl mt-4">
-              Отправить
-            </button>
-          </form>
-        ))}
-      </Modal>  
+      <Modal isOpen={isOpen} setIsOpen={setIsOpen} product={selectedProduct} />
     </div>
   );
 };
 
 export default CatalogList;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

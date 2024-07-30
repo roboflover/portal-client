@@ -56,12 +56,13 @@ export const STLModel: React.FC<STLModelProps> = ({ url, color, setDimensions })
         ref.current.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
 
         if (dimensions.x*1000 > 10000 || dimensions.y*1000 > 10000 || dimensions.z*1000 > 10000) { 
-            initialScale.x = (dimensions.x)*.001 
-            initialScale.y = (dimensions.y)*.001 
-            initialScale.z = (dimensions.z)*.001 
+            initialScale.x = (dimensions.x) 
+            initialScale.y = (dimensions.y)
+            initialScale.z = (dimensions.z)
            setDimensions(initialScale); 
         } else { 
-            setDimensions(dimensions); 
+            const newVector = new THREE.Vector3(dimensions.x*1000, dimensions.y*1000, dimensions.y*1000)
+            setDimensions(newVector); 
         } 
       }
     }

@@ -23,6 +23,7 @@ export default function Catalog() {
         <div className="flex flex-col items-center justify-center p-4">
           <div className="w-full max-w-2xl pt-8 pb-16 space-y-6 rounded shadow-md">
             <h2 className="text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">Трасса для гонок дронов</h2>
+            <p className="text-gray-500  text-center underline"><a href="/userAgreementCatalog">Перед заказом ознакомьтесь с пользователським соглашением</a> </p>
           </div>
             <CatalogList products={products}  />
         </div>

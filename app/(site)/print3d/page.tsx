@@ -4,11 +4,11 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { STLModel } from './components/STLModel';
-import { useRef, useState, useEffect, ReactNode, useContext } from 'react';
+import { useRef, useState, useEffect, ReactNode } from 'react';
 import ColorPicker from './components/ColorPicker';
 import { analyzeModelVolume } from './components/analyzeModelVolume';
 import Modal from 'react-modal';
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useOrder } from '@/app/context/OrderContext';
 import Cookies from 'js-cookie';
 import ModalZakaz, { ModalZakazRef } from './components/ModalZakaz';
@@ -30,7 +30,6 @@ function Helpers() {
 }
 
 const ResizableCanvas = (props: { children: ReactNode, shadows?: boolean, camera?: any, className?: string }) => {
-  
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -64,66 +63,77 @@ const ResizableCanvas = (props: { children: ReactNode, shadows?: boolean, camera
 };
 
 export default function Print3dPage() {
-
-  const [loading, setLoading] = useState(false)
-  const [modelUrl, setModelUrl] = useState(String)
-  const { orderDetails, setDimensions, setVolume, setMaterial, setColor, setSumma, setCount, setFileName } = useOrder();
+  const [loading, setLoading] = useState(false);
+  const [modelUrl, setModelUrl] = useState<string | null>(null);
+  const { orderDetails, setDimensions, setVolume, setMaterial, setColor, setSumma, setQuantity, setFileName } = useOrder();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const modalRef = useRef<ModalZakazRef>(null);
-  
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const router = useRouter();
+  const [count, setCount] = useState<number>(1);
+  const [file, setFile] = useState<File | null>(null);
+
   useEffect(() => {
-    const totalSum = calculateSummaAndPrice(orderDetails.volume, orderDetails.count);
+    const totalSum = calculateSummaAndPrice(orderDetails.volume, count);
     const formattedTotalSum = Number(totalSum.toFixed(0));
     setSumma(formattedTotalSum);
-  }, [orderDetails.volume, orderDetails.count, orderDetails.material, orderDetails.color, orderDetails.fileName ]); 
+
+  }, [orderDetails.volume, count, orderDetails.quantity]);
 
   const showModal = () => {
+    setQuantity(count);
+
     setModalIsOpen(true);
     if (modalRef.current) {
       modalRef.current.setData({
-          dimensions: orderDetails.dimensions,
-          volume: orderDetails.volume,
-          material: orderDetails.material,
-          color: orderDetails.color,
-          email: '',
-          fileName: orderDetails.fileName,
-          summa: orderDetails.summa,
-          count: orderDetails.count
+        dimensions: orderDetails.dimensions,
+        volume: orderDetails.volume,
+        material: orderDetails.material,
+        color: orderDetails.color,
+        email: '',
+        fileName: orderDetails.fileName,
+        summa: orderDetails.summa,
+        quantity: count // Передаем count вместо orderDetails.quantity
       });
       modalRef.current.openModal();
-  }
+    }
   };
 
-  Modal.setAppElement('#root')
+  Modal.setAppElement('#root');
 
   const handleAddToCart = () => {
     setModalIsOpen(true);
   };
 
-  const handleCountChange = (newCount: number) => {
-    setCount(newCount);
-    const totalSum = calculateSummaAndPrice(orderDetails.volume, newCount);
-    const formattedTotalSum = Number(totalSum.toFixed(0));
-    setSumma(formattedTotalSum);
+  const handleQuantityChange = (newQuantity: number) => {
+    if (newQuantity > 0) {
+      setCount(newQuantity);
+      const totalSum = calculateSummaAndPrice(orderDetails.volume, newQuantity);
+      const formattedTotalSum = Number(totalSum.toFixed(0));
+      setSumma(formattedTotalSum);
+    }
   };
-  
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-
-    const file = event.target.files?.[0];
+    const selectedFile = event.target.files?.[0];
     setLoading(true);
-    if (file) {
+    if (selectedFile) {
       try {
-        const fileSizeInMB = file.size / (1024 * 1024);
-        if (fileSizeInMB > 100) {
-          throw new Error('Размер файла превышает 100 МБ');
+        if (!selectedFile.name.endsWith('.stl')) {
+          throw new Error('Только файлы с расширением .stl допускаются для загрузки');
         }
-        const url = URL.createObjectURL(file);
+
+        const fileSizeInMB = selectedFile.size / (1024 * 1024);
+        if (fileSizeInMB > 50) {
+          throw new Error('Размер файла превышает 50 МБ');
+        }
+
+        const url = URL.createObjectURL(selectedFile);
         const modelVolume = await analyzeModelVolume(url);
         setVolume(modelVolume);
         setModelUrl(url);
-        setFileName(file.name)
-
+        setFileName(selectedFile.name);
+        setFile(selectedFile); 
       } catch (error) {
         if (error instanceof Error) {
           setErrorMessage(error.message);
@@ -138,10 +148,10 @@ export default function Print3dPage() {
   };
 
   const isDimensionExceeds500mm = (dimensions: THREE.Vector3) => {
-    return dimensions.x * 1000 > 500 || dimensions.y * 1000 > 500 || dimensions.z * 1000 > 500;
+    return dimensions.x > 500 || dimensions.y > 500 || dimensions.z > 500;
   };
 
-  const calculateSummaAndPrice = (volume: number, count: number): number => {
+  const calculateSummaAndPrice = (volume: number, quantity: number): number => {
     const pricePerCm3 = 12; // Цена за кубический сантиметр
 
     let newprice = volume * pricePerCm3;
@@ -149,7 +159,7 @@ export default function Print3dPage() {
       newprice = 45;
     }
 
-    return newprice * count;
+    return newprice * quantity;
   };
 
   const handleButtonClick = () => {
@@ -157,13 +167,11 @@ export default function Print3dPage() {
     window.location.reload();
   };
 
-  const router = useRouter();
-
   const handleOrderClick = () => {
     // router.push('/order' );
   };
 
-   return (
+  return (
     <div className="flex flex-col items-center justify-center flex-grow">
       <div className="w-full pt-8 space-y-6 rounded shadow-md">
         {!orderDetails.dimensions && (
@@ -184,23 +192,23 @@ export default function Print3dPage() {
         )}
 
         {orderDetails.dimensions && !isDimensionExceeds500mm(orderDetails.dimensions) ? (
-   <div className="">
-        <div className='flex justify-center w-full'>
-            <ul className="flex flex-wrap justify-center sm:items-center lg:items-center space-x-4 space-y-2 list-none p-0">
-              <li></li>
-              <li><span className="file-name ">{orderDetails.fileName}</span></li>
-              <li className="w-auto">Ширина: {(orderDetails.dimensions.x * 1000).toFixed()} мм</li>
-              <li className="w-auto">Длина: {(orderDetails.dimensions.y * 1000).toFixed()} мм</li>
-              <li className="w-auto">Высота: {(orderDetails.dimensions.z * 1000).toFixed()} мм</li>
-              <li className="w-auto">Материал: {orderDetails.material}</li>
-              <li className="w-auto">Объем: {orderDetails.volume.toFixed(1)} см³</li>
-            </ul>
+          <div className="">
+            <div className='flex justify-center w-full'>
+              <ul className="flex flex-wrap justify-center sm:items-center lg:items-center space-x-4 space-y-2 list-none p-0">
+                <li></li>
+                <li><span className="file-name ">{orderDetails.fileName}</span></li>
+                <li className="w-auto">Ширина: {(orderDetails.dimensions.x).toFixed()} мм</li>
+                <li className="w-auto">Длина: {(orderDetails.dimensions.y).toFixed()} мм</li>
+                <li className="w-auto">Высота: {(orderDetails.dimensions.z).toFixed()} мм</li>
+                <li className="w-auto">Материал: {orderDetails.material}</li>
+                <li className="w-auto">Объем: {orderDetails.volume.toFixed(1)} см³</li>
+              </ul>
             </div>
             <div className='flex items-center justify-center'>
-            <input
+              <input
                 type="number"
-                value={orderDetails.count}
-                onChange={(e) => handleCountChange(Number(e.target.value))}
+                value={count}
+                onChange={(e) => handleQuantityChange(Number(e.target.value))}
                 min="1"
                 className="mt-2 p-2 border border-blue-500 rounded-lg"
                 style={{ borderColor: 'rgba(59, 130, 246, 0.5)', width: '78px' }}
@@ -215,7 +223,7 @@ export default function Print3dPage() {
 
               <select
                 value={orderDetails.material}
-                onChange={(e)=>{setMaterial(e.target.value)}}
+                onChange={(e) => { setMaterial(e.target.value) }}
                 className="m-5 px-3 h-10 text-xs border border-blue-500 rounded"
               >
                 <option value="ABS">ABS</option>
@@ -235,8 +243,9 @@ export default function Print3dPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center">
-            <p className="mb-4 text-center">Загрузить 3D модель в формате .stl, максимальный размер файла 100мб</p>
+            <p className="mb-4 text-center">Загрузить 3D модель в формате .stl, максимальный размер файла 50мб</p>
             <input type="file" accept=".stl" onChange={handleFileChange} className="mb-4" />
+            {errorMessage && <p>{errorMessage}</p>}
           </div>
         )}
       </div>
@@ -273,7 +282,7 @@ export default function Print3dPage() {
           </div>
         </div>
       )}  
-        <ModalZakaz ref={modalRef} />
+        <ModalZakaz ref={modalRef} file={file} />
       </div>
       
       );

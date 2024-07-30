@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import Script from "next/script";
 import Head from "next/head";
-import { OrderProvider } from "./context/OrderContext";
+import { Order3dPrintProvider } from "./context/OrderContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,11 +44,11 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
           });`
         }
       </Script>
-      <OrderProvider>
+      <Order3dPrintProvider>
       <AuthProvider>
         {children}
       </AuthProvider>
-      </OrderProvider>
+      </Order3dPrintProvider>
       </body>
     </html>
   );

@@ -11,36 +11,36 @@ interface OrderDetails {
   color: string;
   fileName: string;
   summa: number;
-  count: number;
+  quantity: number;
   modelUrl: string;
 }
 
 type OrderContextType = {
-    orderDetails: OrderDetails;
-    setDimensions: (newDimensions: THREE.Vector3) => void;
-    setMaterial: (newMaterial: string) => void;
-    setColor: (newColor: string) => void;
-    setSumma: (newSumma: number) => void;
-    setVolume: (newVolume: number) => void;
-    setCount: (newCount: number) => void;
-    setModelUrl: (newModelUrl: string) => void;
-    setFileName: (newFileName: string) => void;
-  };
+  orderDetails: OrderDetails;
+  setDimensions: (newDimensions: THREE.Vector3) => void;
+  setMaterial: (newMaterial: string) => void;
+  setColor: (newColor: string) => void;
+  setSumma: (newSumma: number) => void;
+  setVolume: (newVolume: number) => void;
+  setQuantity: (newQuantity: number) => void;
+  setModelUrl: (newModelUrl: string) => void;
+  setFileName: (newFileName: string) => void;
+};
 
 // Функция для сохранения деталей заказа в куки
 export function saveOrderDetailsInCookies(orderDetails: OrderDetails) {
-    Cookies.set('orderDetails', JSON.stringify(orderDetails), { expires: 7 });
-  }
-  
+  Cookies.set('orderDetails', JSON.stringify(orderDetails), { expires: 7 });
+}
+
 // Функция для извлечения деталей заказа из кук
 function getOrderDetailsFromCookies(): OrderDetails | null {
-    const details = Cookies.get('orderDetails');
-    return details ? JSON.parse(details) : null;
+  const details = Cookies.get('orderDetails');
+  return details ? JSON.parse(details) : null;
 }
 
 const OrderContext = createContext<OrderContextType | null>(null);
 
-export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const Order3dPrintProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [orderDetails, setOrderDetails] = useState<OrderDetails>({
     dimensions: null,
     volume: 0,
@@ -48,18 +48,10 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     color: '#00B140',
     fileName: '',
     summa: 0,
-    count: 1,
-    modelUrl: '',
-    // email: '',
-    // phone: '',
-    // name: '',
-    // city: '',
-    // pickpoint: '',
-
+    quantity: 1,
+    modelUrl: ''
   });
 
-  const value = { orderDetails, setOrderDetails };
-  
   useEffect(() => {
     const savedDetails = getOrderDetailsFromCookies();
     if (savedDetails) {
@@ -68,61 +60,43 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   }, []);
 
   const setDimensions = (newDimensions: THREE.Vector3) => {
-    const updatedDetails = { ...orderDetails, dimensions: newDimensions };
-    setOrderDetails(updatedDetails);
+    setOrderDetails(prevDetails => ({ ...prevDetails, dimensions: newDimensions }));
   };
 
   const setMaterial = (newMaterial: string) => {
-    setOrderDetails(prevDetails => {
-    const updatedDetails =  ({ ...prevDetails, material: newMaterial })
-    return updatedDetails
-    });
+    setOrderDetails(prevDetails => ({ ...prevDetails, material: newMaterial }));
   };
 
   const setColor = (newColor: string) => {
-    setOrderDetails(prevDetails => {
-    const updatedDetails = ({ ...prevDetails, color: newColor })
-    return updatedDetails
-    })
+    setOrderDetails(prevDetails => ({ ...prevDetails, color: newColor }));
   };
 
   const setSumma = (newSumma: number) => {
-    setOrderDetails(prevDetails => {
-    const updatedDetails = ({...prevDetails, summa: newSumma })
-    return updatedDetails
-    })
-  }
-  
-  const setVolume = (newVolume: number) => {
-    setOrderDetails(prevDetails => {
-    const updatedDetails = ({ ...prevDetails, volume: newVolume })
-    return updatedDetails
-    })
-  }
+    setOrderDetails(prevDetails => ({ ...prevDetails, summa: newSumma }));
+  };
 
-  const setCount = (newCount: number) => {
-    setOrderDetails(prevDetails => {
-    const updatedDetails = ({ ...prevDetails, count: newCount })
-    return updatedDetails
-    })
-  }
+  const setVolume = (newVolume: number) => {
+    setOrderDetails(prevDetails => ({ ...prevDetails, volume: newVolume }));
+  };
+
+  const setQuantity = (newQuantity: number) => {
+    setOrderDetails(prevDetails => ({ ...prevDetails, quantity: newQuantity }));
+  };
 
   const setModelUrl = (newModelUrl: string) => {
-    setOrderDetails(prevDetails => {
-    const updatedDetails = ({ ...prevDetails, modelUrl: newModelUrl })
-    return updatedDetails
-    })
-  }
+    setOrderDetails(prevDetails => ({ ...prevDetails, modelUrl: newModelUrl }));
+  };
 
   const setFileName = (newFileName: string) => {
-    setOrderDetails(prevDetails => {
-    const updatedDetails = ({ ...prevDetails, fileName: newFileName })
-    return updatedDetails
-    })
-  }
+    setOrderDetails(prevDetails => ({ ...prevDetails, fileName: newFileName }));
+  };
+
+  useEffect(() => {
+    saveOrderDetailsInCookies(orderDetails);
+  }, [orderDetails]);
 
   return (
-    <OrderContext.Provider value={{ orderDetails, setDimensions, setMaterial, setColor, setSumma, setVolume, setCount, setModelUrl, setFileName }}>
+    <OrderContext.Provider value={{ orderDetails, setDimensions, setMaterial, setColor, setSumma, setVolume, setQuantity, setModelUrl, setFileName }}>
       {children}
     </OrderContext.Provider>
   );

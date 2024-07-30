@@ -35,8 +35,8 @@ export const getProducts = async (): Promise<Product[]> => {
     }
 };
 
-export const createProduct = async (title: string): Promise<Product> => {
-  const response = await api.post('/product', { title });
+export const createProduct = async (data: Product): Promise<Product> => {
+  const response = await api.post('/product', { data });
   return response.data;
 };
 

@@ -39,11 +39,11 @@ export function Header({ toggleMenu }:ToggleMenuProps) {
        <div className="flex justify-between items-center p-4">
           <Logo />
           <div>
-            {isAuthenticated ? (
+            {/* {isAuthenticated ? (
               <EnterToggle toggleMenu={toggleMenu} />
               ) : (
               <Link href="/login" className="m-0 p-0" legacyBehavior><Button className="mr-5" variant="outline" ><LogIn/></Button></Link>
-          )}
+          )} */}
             <ModeToggle/>
           </div>
         </div>

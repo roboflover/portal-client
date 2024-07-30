@@ -45,7 +45,6 @@ const Order = () => {
     const { color } = orderDetails;
     const { fileName } = orderDetails;
     const { summa } = orderDetails;
-    const { count } = orderDetails;
     const [email, setEmail] = useState('');
 
     useEffect(() => {
@@ -101,7 +100,7 @@ const Order = () => {
                     <li>Объем: {volume.toFixed(1)} см³</li>
                     <li>Материал: {material}</li>
                     <li>Цвет: {changeColorName(color)}</li>
-                    <li>Количество: {count}шт</li>
+                    {/* <li>Количество: {count}шт</li> */}
                     <li className=' font-semibold relative p-1'>
                       <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-pink-500 rounded"></div>
                       <div className="relative">

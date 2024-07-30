@@ -14,7 +14,6 @@ export interface Product {
   images?: Image[];
 }
 
-
 interface Image {
   id: number;
   url: string;
