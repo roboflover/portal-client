@@ -44,6 +44,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
           });`
         }
       </Script>
+      <script src="https://yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
       <Order3dPrintProvider>
       <AuthProvider>
         {children}

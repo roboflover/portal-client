@@ -1,33 +1,28 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { getTodos, updateTodo, deleteTodo, Todo } from '../../lib/projectsApi';
-import TodoList from './components/TodoList';
-import AddTodo from './components/AddTodo';
+import { getOrder, updateOrder, deleteOrder, Order } from '../../lib/orderPrint3dApi';
+import OrderList from './components/OrderList';
 
 const Home: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    fetchTodos();
+    fetchOrders();
   }, []);
 
-  const fetchTodos = async () => {
-    const data = await getTodos();
-    setTodos(data);
+  const fetchOrders = async () => {
+    const data = await getOrder();
+    setOrders(data);
   };
 
   const handleDeleteTodo = async (id: number) => {
-    await deleteTodo(id);
-    setTodos(todos.filter((todo) => todo.id !== id));
+    await deleteOrder(id);
+    setOrders(orders.filter((order) => order.id !== id));
   };
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-4 bg-gray-900 text-white shadow-md rounded">
-      {/* <h1 className="text-2xl font-bold mb-4">Загрузить изображение</h1>
-      <ImageUpload /> */}
-      <h1 className="text-2xl font-bold mb-4">Новости</h1>
-      <AddTodo onTodoAdded={fetchTodos} />
-      <TodoList todos={todos} onDelete={handleDeleteTodo} />
+      <OrderList orders={orders} onDelete={handleDeleteTodo} />
     </div>
   );
 };

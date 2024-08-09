@@ -12,6 +12,10 @@ import { useRouter } from 'next/navigation';
 import { useOrder } from '@/app/context/OrderContext';
 import Cookies from 'js-cookie';
 import ModalZakaz, { ModalZakazRef } from './components/ModalZakaz';
+import AddTodo from './components/AddReviewPrint3d';
+import { getReviews, updateReview, deleteReview, ReviewPrint3d } from '../../lib/reviewPrint3dApi';
+import ReviewPrint3dList from './components/ReviewPrint3dList';
+
 
 const signedVolumeOfTriangle = (p1: THREE.Vector3, p2: THREE.Vector3, p3: THREE.Vector3): number => {
   return p1.dot(p2.cross(p3)) / 6.0;
@@ -72,13 +76,15 @@ export default function Print3dPage() {
   const router = useRouter();
   const [count, setCount] = useState<number>(1);
   const [file, setFile] = useState<File | null>(null);
+  const [todos, setTodos] = useState<ReviewPrint3d[]>([]);
+  const [reviewsPrint3d, setReviewsPrint3d] = useState<ReviewPrint3d[]>([]);
 
-  useEffect(() => {
+ useEffect(() => {
     const totalSum = calculateSummaAndPrice(orderDetails.volume, count);
     const formattedTotalSum = Number(totalSum.toFixed(0));
     setSumma(formattedTotalSum);
-
-  }, [orderDetails.volume, count, orderDetails.quantity]);
+    fetchReviewsPrint3d();
+  }, [orderDetails.volume, count, orderDetails.quantity, reviewsPrint3d]);
 
   const showModal = () => {
     setQuantity(count);
@@ -103,6 +109,11 @@ export default function Print3dPage() {
 
   const handleAddToCart = () => {
     setModalIsOpen(true);
+  };
+
+  const fetchReviewsPrint3d = async () => {
+    const data = await getReviews();
+    setReviewsPrint3d(data);
   };
 
   const handleQuantityChange = (newQuantity: number) => {
@@ -165,6 +176,11 @@ export default function Print3dPage() {
   const handleButtonClick = () => {
     Cookies.remove('orderDetails');
     window.location.reload();
+  };
+
+  const handleDelete = async (id: number) => {
+    await deleteReview(id);
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   const handleOrderClick = () => {
@@ -282,13 +298,17 @@ export default function Print3dPage() {
           </div>
         </div>
       )}  
+      <h2 className="m-14 text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
+        Отзывы
+      </h2>
+      <AddTodo onReviewPrint3dAdded={fetchReviewsPrint3d} />
+      <ReviewPrint3dList reviews={reviewsPrint3d} onDelete={handleDelete} />
         <ModalZakaz ref={modalRef} file={file} />
       </div>
       
       );
       }
 
-    
   function setErrorMessage(arg0: string) {
       throw new Error('Function not implemented.');
   }

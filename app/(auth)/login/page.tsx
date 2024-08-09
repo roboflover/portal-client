@@ -3,11 +3,13 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/context/AuthContext';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
   const { isAuthenticated } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // Добавленное состояние для видимости пароля
   const router = useRouter();
   const { login, error, role } = useAuth();
   const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
@@ -66,9 +68,13 @@ export default function Login() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
-        <h2 className="text-2xl font-bold text-center">Аккаунт</h2>
+        <h2 className="text-2xl font-bold text-center">Вход в личный кабинет</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
+            <div className='flex justify-between w-full my-5'>
+            <button className='border border-blue-500 rounded-md px-2 py-1 m-2'  type='button' onClick={()=>router.push('/register')}>Регистрация</button>
+            <button className='border border-blue-500 rounded-md px-2 py-1 m-2'  type='button' onClick={()=>router.push('/passwordReset')}>Восстановить пароль</button>
+            </div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
             </label>
@@ -85,14 +91,23 @@ export default function Login() {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200"
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"} // Изменен тип инпута в зависимости от видимости пароля
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-3 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 pr-10"
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-700"
+                onClick={() => setShowPassword(!showPassword)} // Обработчик клика для переключения видимости пароля
+              >
+                {showPassword ? <EyeOff /> : <Eye />}
+              </button>
+            </div>
           </div>
           <button
             type="submit"

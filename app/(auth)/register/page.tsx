@@ -70,6 +70,10 @@ export default function RegisterPage() {
         <h2 className="text-2xl font-bold text-center">Регистрация</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
+          <div className='flex justify-between w-full my-5'>
+          <button className='border border-blue-500 rounded-md px-2 py-1 m-0' type='button' onClick={()=>router.push('/login')}>Вход</button>
+          <button className='border border-blue-500 rounded-md px-2 py-1 m-0'  type='button' onClick={()=>router.push('/passwordReset')}>Восстановить пароль</button>
+            </div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
               Имя
             </label>

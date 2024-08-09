@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
 import axios from 'axios';
 
-interface AddTodoProps {
-  onTodoAdded: () => void; // Callback функция для обновления списка заданий после добавления нового
+interface AddReviewPrint3dProps {
+  onReviewPrint3dAdded: () => void; // Callback функция для обновления списка отзывов после добавления нового
 }
 
-const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
-  const host = process.env.NEXT_PUBLIC_SERVER
+const AddReviewPrint3d: React.FC<AddReviewPrint3dProps> = ({ onReviewPrint3dAdded }) => {
+  const host = process.env.NEXT_PUBLIC_SERVER;
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
@@ -25,24 +25,23 @@ const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
-
     event.preventDefault();
     setError(null);
     setUploadProgress(null);
     setSuccessMessage(null);
-  
+
     if (!selectedFile) {
       setError('Пожалуйста, выберите изображение');
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('file', selectedFile); // Ключ 'file' для файла
     formData.append('title', selectedTitle); // Ключ 'title' для заголовка
-    formData.append('description', selectedDescription); // Ключ 'title' для заголовка
+    formData.append('description', selectedDescription); // Ключ 'description' для описания
 
     try {
-      await axios.post(`${host}/news/upload`, formData, {
+      await axios.post(`${host}/review-print3d/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -53,22 +52,22 @@ const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
           }
         },
       });
-  
+
       setSelectedFile(null);
       setUploadProgress(null);
-      setSuccessMessage('Задание успешно добавлено');
+      setSuccessMessage('Отзыв успешно добавлен');
       if (fileInputRef.current) {
         fileInputRef.current.value = ''; // Очистка поля ввода
       }
       setTitle('');
       setDescription('');
-      onTodoAdded(); // Вызов callback функции после успешного добавления
+      onReviewPrint3dAdded(); // Вызов callback функции после успешного добавления
     } catch (error) {
-      console.log(error)
-      setError('Ошибка при добавлении задания или загрузке изображения');
+      console.log(error);
+      setError('Ошибка при добавлении отзыва или загрузке изображения');
     }
   };
-  
+
   return (
     <div className="mb-4">
       <form onSubmit={handleSubmit} className="flex flex-col space-y-2">
@@ -90,7 +89,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
           type="text"
           value={selectedTitle}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Введите новое задание"
+          placeholder="Введите заголовок"
           required
           className="border p-2 rounded w-full bg-gray-800 text-white placeholder-gray-500"
         />
@@ -112,4 +111,4 @@ const AddTodo: React.FC<AddTodoProps> = ({ onTodoAdded }) => {
   );
 };
 
-export default AddTodo;
+export default AddReviewPrint3d;

@@ -3,13 +3,14 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import {jwtDecode} from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode'; // Импортируем jwt-decode
 
 interface AuthContextProps {
   isAuthenticated: boolean;
   setIsAuthenticated: (value: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  resetPassword: (email: string) => Promise<void>; // Добавляем метод resetPassword
   role: string | null;
   error: string | null;
   userId: number | null;
@@ -26,12 +27,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [role, setRole] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
   
-  // Проверка наличия токена доступа в куках при монтировании компонента
   useEffect(() => {
     const token = Cookies.get('access_token');
     if (token) {
       setToken(token); // Устанавливаем токен в состояние
-      setIsAuthenticated(true); 
+      setIsAuthenticated(true);
       const decodedToken: { sub: number } = jwtDecode(token);
       setUserId(decodedToken.sub); // Предполагается, что ID пользователя хранится в поле "sub"
     }
@@ -46,20 +46,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string) => {
     try {
       const response = await axios.post(`${host}/auth/login`, { email, password });
-      //console.log(response)
       const { access_token } = response.data;
       setRole(response.data.role);
       localStorage.setItem('access_token', access_token);
       Cookies.set('access_token', access_token, { expires: 7 });
       setIsAuthenticated(true);
 
-      // const decodedToken: { id: number } = jwtDecode(access_token);
-      // setUserId(decodedToken.id); // Предполагается, что ID пользователя хранится в поле "id"
-
       return response.data.role;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         setError(error.response.data.message || 'Ошибка при входе');
+      } else {
+        setError('Неизвестная ошибка');
+      }
+      throw error;
+    }
+  };
+
+  const resetPassword = async (email: string) => {
+    try {
+      await axios.post(`${host}/auth/reset-password`, { email }); // Предполагается, что ваш серверный маршрут находится по этому URL
+      setError(null);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        setError(error.response.data.message || 'Ошибка при сбросе пароля');
       } else {
         setError('Неизвестная ошибка');
       }
@@ -75,7 +85,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, login, logout, role, error, userId, setUserId, token }}>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, login, logout, resetPassword, role, error, userId, setUserId, token }}>
       {children}
     </AuthContext.Provider>
   );
