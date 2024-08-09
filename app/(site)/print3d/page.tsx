@@ -16,7 +16,6 @@ import AddTodo from './components/AddReviewPrint3d';
 import { getReviews, updateReview, deleteReview, ReviewPrint3d } from '../../lib/reviewPrint3dApi';
 import ReviewPrint3dList from './components/ReviewPrint3dList';
 
-
 const signedVolumeOfTriangle = (p1: THREE.Vector3, p2: THREE.Vector3, p3: THREE.Vector3): number => {
   return p1.dot(p2.cross(p3)) / 6.0;
 };
@@ -84,7 +83,7 @@ export default function Print3dPage() {
     const formattedTotalSum = Number(totalSum.toFixed(0));
     setSumma(formattedTotalSum);
     fetchReviewsPrint3d();
-  }, [orderDetails.volume, count, orderDetails.quantity, reviewsPrint3d]);
+  }, [orderDetails.volume, count, orderDetails.quantity, reviewsPrint3d, setSumma]);
 
   const showModal = () => {
     setQuantity(count);

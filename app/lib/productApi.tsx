@@ -5,9 +5,10 @@ const api = axios.create({
   baseURL: host, // замените на ваш URL сервера
 });
 
-export interface ReviewPrint3d {
+export interface Product {
   id: number;
   title: string;
+  price: number;
   description?: string;
   imageUrl: string;
   createdAt: Date;
@@ -19,29 +20,29 @@ export interface ReviewPrint3d {
 interface Image {
   id: number;
   url: string;
-  reviewId?: number;
+  productId?: number;
 }
 
-export const getReviews = async (): Promise<ReviewPrint3d[]> => {
+export const getProducts = async (): Promise<Product[]> => {
   try {
-    const response = await api.get('/review-print3d');
+    const response = await api.get('/product');
     return response.data;
   } catch (error) {
-    console.error('Error fetching reviews:', error);
+    console.error('Error fetching Products:', error);
     throw error;
   }
 };
 
-export const createReview = async (data: ReviewPrint3d): Promise<ReviewPrint3d> => {
-  const response = await api.post('/review-print3d', { data });
+export const createProduct = async (data: Product): Promise<Product> => {
+  const response = await api.post('/product', { data });
   return response.data;
 };
 
-export const updateReview = async (id: number, data: ReviewPrint3d): Promise<ReviewPrint3d> => {
-  const response = await api.patch(`/review-print3d/${id}`, data);
+export const updateProduct = async (id: number, data: Product): Promise<Product> => {
+  const response = await api.patch(`/product/${id}`, data);
   return response.data;
 };
 
-export const deleteReview = async (id: number): Promise<void> => {
-  await api.delete(`/review-print3d/${id}`);
+export const deleteProduct = async (id: number): Promise<void> => {
+  await api.delete(`/product/${id}`);
 };
