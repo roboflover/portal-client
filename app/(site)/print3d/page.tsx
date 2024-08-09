@@ -300,9 +300,9 @@ export default function Print3dPage() {
       <h2 className="m-14 text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
         Отзывы
       </h2>
-      <AddTodo onReviewPrint3dAdded={fetchReviewsPrint3d} />
-      <ReviewPrint3dList reviews={reviewsPrint3d} onDelete={handleDelete} />
-        <ModalZakaz ref={modalRef} file={file} />
+      {/* <AddTodo onReviewPrint3dAdded={fetchReviewsPrint3d} />
+      <ReviewPrint3dList reviews={reviewsPrint3d} onDelete={handleDelete} /> */}
+      <ModalZakaz ref={modalRef} file={file} />
       </div>
       
       );
