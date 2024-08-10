@@ -12,25 +12,25 @@ import { useRouter } from 'next/navigation';
 import { useOrder } from '@/app/context/OrderContext';
 import Cookies from 'js-cookie';
 import ModalZakaz, { ModalZakazRef } from './components/ModalZakaz';
-import AddTodo from './components/AddReviewPrint3d';
-import { getReviews, updateReview, deleteReview, ReviewPrint3d } from '../../lib/reviewPrint3dApi';
-import ReviewPrint3dList from './components/ReviewPrint3dList';
+// import AddTodo from './components/AddReviewPrint3d';
+// import { getReviews, updateReview, deleteReview, ReviewPrint3d } from '../../lib/reviewPrint3dApi';
+// import ReviewPrint3dList from './components/ReviewPrint3dList';
 
 const signedVolumeOfTriangle = (p1: THREE.Vector3, p2: THREE.Vector3, p3: THREE.Vector3): number => {
   return p1.dot(p2.cross(p3)) / 6.0;
 };
 
-function Helpers() {
-  const gridSize = 100;
-  const divisions = gridSize / 10;
+// function Helpers() {
+//   const gridSize = 100;
+//   const divisions = gridSize / 10;
 
-  return (
-    <>
-      {/* <gridHelper args={[gridSize / 10, divisions]} /> */}
-      <axesHelper args={[5]} />
-    </>
-  );
-}
+//   return (
+//     <>
+//       {/* <gridHelper args={[gridSize / 10, divisions]} /> */}
+//       <axesHelper args={[5]} />
+//     </>
+//   );
+// }
 
 const ResizableCanvas = (props: { children: ReactNode, shadows?: boolean, camera?: any, className?: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -75,15 +75,19 @@ export default function Print3dPage() {
   const router = useRouter();
   const [count, setCount] = useState<number>(1);
   const [file, setFile] = useState<File | null>(null);
-  const [todos, setTodos] = useState<ReviewPrint3d[]>([]);
-  const [reviewsPrint3d, setReviewsPrint3d] = useState<ReviewPrint3d[]>([]);
+  // const [todos, setTodos] = useState<ReviewPrint3d[]>([]);
+  // const [reviewsPrint3d, setReviewsPrint3d] = useState<ReviewPrint3d[]>([]);
 
  useEffect(() => {
     const totalSum = calculateSummaAndPrice(orderDetails.volume, count);
     const formattedTotalSum = Number(totalSum.toFixed(0));
     setSumma(formattedTotalSum);
-    fetchReviewsPrint3d();
-  }, [orderDetails.volume, count, orderDetails.quantity, reviewsPrint3d, setSumma]);
+    // fetchReviewsPrint3d();
+  }, [orderDetails.volume, count, orderDetails.quantity]);
+
+  useEffect(() => {
+    Cookies.remove('orderDetails');
+  }, []);
 
   const showModal = () => {
     setQuantity(count);
@@ -110,10 +114,10 @@ export default function Print3dPage() {
     setModalIsOpen(true);
   };
 
-  const fetchReviewsPrint3d = async () => {
-    const data = await getReviews();
-    setReviewsPrint3d(data);
-  };
+  // const fetchReviewsPrint3d = async () => {
+  //   const data = await getReviews();
+  //   setReviewsPrint3d(data);
+  // };
 
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity > 0) {
@@ -177,10 +181,10 @@ export default function Print3dPage() {
     window.location.reload();
   };
 
-  const handleDelete = async (id: number) => {
-    await deleteReview(id);
-    setTodos(todos.filter((todo) => todo.id !== id));
-  };
+  // const handleDelete = async (id: number) => {
+  //   await deleteReview(id);
+  //   setTodos(todos.filter((todo) => todo.id !== id));
+  // };
 
   const handleOrderClick = () => {
     // router.push('/order' );
@@ -286,7 +290,7 @@ export default function Print3dPage() {
           />
           {modelUrl && <STLModel url={modelUrl} setDimensions={setDimensions} color={orderDetails.color} />}
           <OrbitControls />
-          <Helpers />
+          {/* <Helpers /> */}
         </ResizableCanvas>
       </div>
     </div>
@@ -297,9 +301,9 @@ export default function Print3dPage() {
           </div>
         </div>
       )}  
-      <h2 className="m-14 text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
+      {/* <h2 className="m-14 text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
         Отзывы
-      </h2>
+      </h2> */}
       {/* <AddTodo onReviewPrint3dAdded={fetchReviewsPrint3d} />
       <ReviewPrint3dList reviews={reviewsPrint3d} onDelete={handleDelete} /> */}
       <ModalZakaz ref={modalRef} file={file} />

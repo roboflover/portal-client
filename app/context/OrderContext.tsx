@@ -45,7 +45,7 @@ export const Order3dPrintProvider: React.FC<{ children: ReactNode }> = ({ childr
     dimensions: null,
     volume: 0,
     material: 'ABS',
-    color: '#00B140',
+    color: '#8A8D8F',
     fileName: '',
     summa: 0,
     quantity: 1,

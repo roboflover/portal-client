@@ -13,6 +13,7 @@ interface STLModelProps {
 export const STLModel: React.FC<STLModelProps> = ({ url, color, setDimensions }) => {
 
   const ref = useRef<THREE.Mesh>(null);
+  const groupRef = useRef<THREE.Group>(null); // Создаем реф для группы
   const [loading, setLoading] = useState(false);
 
   // Логируем процесс загрузки файла
@@ -66,20 +67,26 @@ export const STLModel: React.FC<STLModelProps> = ({ url, color, setDimensions })
         } 
       }
     }
+    if(groupRef.current){
+      groupRef.current.rotation.x = -Math.PI / 2;
+    }
   }, [geometry, setDimensions]);
 
   useFrame(() => {
     if (ref.current) {
-      ref.current.rotation.y += 0.01;
+      ref.current.rotation.z += 0.01;
     }
   });
 
   return (
     <>
       {loading && <div>Загрузка модели...</div>}
-      <mesh ref={ref} geometry={geometry} castShadow receiveShadow>
-        <meshStandardMaterial color={color} />
-      </mesh>
+      <group ref={groupRef}>
+        <mesh ref={ref} geometry={geometry} castShadow receiveShadow>
+          <meshStandardMaterial color={color} />
+        </mesh>
+        <axesHelper args={[5]} />
+      </group>
     </>
   );
 };

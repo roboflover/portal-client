@@ -29,7 +29,7 @@ function hexToVector3(hex: string): THREE.Vector3 {
 }
 
 export default function ColorPicker({ setColor }: ColorPickerProps) {
-    const [localColor, setLocalColor] = useState('#7FFF00');
+    const [localColor, setLocalColor] = useState('#8A8D8F');
     const [isOpen, setIsOpen] = useState(false);
     const pickerRef = useRef<HTMLDivElement>(null);
 

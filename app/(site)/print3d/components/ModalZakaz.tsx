@@ -20,7 +20,7 @@ Modal.setAppElement('#root');
 type Model3dDetail = {
   fileName: string;
   volume: number;
-  color: string;
+  color?: string;
   material: string;
   dimensions: string;
 };
@@ -120,7 +120,7 @@ const ModalZakaz = forwardRef<ModalZakazRef, ModalZakazProps>(({file}, ref: Ref<
     const model3dDetail: Model3dDetail = {
         fileName: fileName,
         volume: volume,
-        color: color,
+        color: changeColorName(color),
         material: material,
         dimensions: JSON.stringify(dimensions)
     };
@@ -216,7 +216,7 @@ const ModalZakaz = forwardRef<ModalZakazRef, ModalZakazProps>(({file}, ref: Ref<
                       </h2>
                     ) : (
                       <h2 className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
-                        Заказ №{numOrd}
+                        Оформление заказа  {/*Заказ №{numOrd} */}
                       </h2>
                     )}
                   </div>
@@ -339,7 +339,7 @@ function changeColorName(name:string){
     return 'белый'
   
   if(name === '#8A8D8F')
-    return 'сервый'
+    return 'серый'
   
   if(name === '#2D2926')
     return 'черный'
