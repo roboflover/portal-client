@@ -1,3 +1,4 @@
+// ColorPicker.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
@@ -61,22 +62,22 @@ export default function ColorPicker({ setColor }: ColorPickerProps) {
                 style={{ backgroundColor: localColor }}
                 onClick={() => setIsOpen(!isOpen)}
             ></div>
-{isOpen && (
-    <ul className="absolute mt-2 p-4 border border-gray-300 rounded bg-white overflow-auto z-10 grid grid-cols-3 gap-4 square-palette">
-        {pantoneColors.map((colorOption) => (
-            <li
-                key={colorOption.hex}
-                className="flex items-center justify-center cursor-pointer hover:bg-gray-100 square-item"
-                onClick={() => handleColorChange(colorOption.hex)}
-            >
-                <div
-                    className="w-full h-full border border-gray-600"
-                    style={{ backgroundColor: colorOption.hex }}
-                ></div>
-            </li>
-        ))}
-    </ul>
-)}
+            {isOpen && (
+                <ul className="absolute mt-2 p-4 border border-gray-300 rounded bg-white overflow-auto z-10 grid grid-cols-3 gap-4 square-palette">
+                    {pantoneColors.map((colorOption) => (
+                        <li
+                            key={colorOption.hex}
+                            className="flex items-center justify-center cursor-pointer hover:bg-gray-100 square-item"
+                            onClick={() => handleColorChange(colorOption.hex)}
+                        >
+                            <div
+                                className="w-full h-full border border-gray-600"
+                                style={{ backgroundColor: colorOption.hex }}
+                            ></div>
+                        </li>
+                    ))}
+                </ul>
+            )}
 
         </div>
     );

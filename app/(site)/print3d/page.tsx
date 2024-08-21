@@ -1,3 +1,5 @@
+// print3d/page.tsx
+
 'use client';
 
 import { Canvas } from '@react-three/fiber';
@@ -12,25 +14,41 @@ import { useRouter } from 'next/navigation';
 import { useOrder } from '@/app/context/OrderContext';
 import Cookies from 'js-cookie';
 import ModalZakaz, { ModalZakazRef } from './components/ModalZakaz';
-// import AddTodo from './components/AddReviewPrint3d';
-// import { getReviews, updateReview, deleteReview, ReviewPrint3d } from '../../lib/reviewPrint3dApi';
-// import ReviewPrint3dList from './components/ReviewPrint3dList';
+import { v4 as uuidv4 } from 'uuid';
+import { OrderPrint3dProps } from './interface/zakazProps.interface';
+import {
+  updateVolume, updateFile, updateFileName, updateModelUrl,
+  updateDimensions, updateMaterial, updateSumma, updateQuantity, updateColor
+} from './utils/update';
+
+const orderData: OrderPrint3dProps = {
+  id: 1,
+  orderNumber: 12345,
+  quantity: 1,
+  summa: 0,
+  fileSize: 500,
+  fileName: "model.stl",
+  material: "PLA",
+  width: null,
+  length: null,
+  height: null,
+  volume: 1000,
+  color: '#8A8D8F',
+  orderDetails: "Some details",
+  deliveryCity: "",
+  deliveryAddress: "",
+  customerName: "",
+  customerEmail: "",
+  customerPhone: "",
+  orderStatus: "Регистрация заказа в системе",
+  comment: "",
+  modelUrl: undefined,
+  paymentId: "abc123",
+};
 
 const signedVolumeOfTriangle = (p1: THREE.Vector3, p2: THREE.Vector3, p3: THREE.Vector3): number => {
   return p1.dot(p2.cross(p3)) / 6.0;
 };
-
-// function Helpers() {
-//   const gridSize = 100;
-//   const divisions = gridSize / 10;
-
-//   return (
-//     <>
-//       {/* <gridHelper args={[gridSize / 10, divisions]} /> */}
-//       <axesHelper args={[5]} />
-//     </>
-//   );
-// }
 
 const ResizableCanvas = (props: { children: ReactNode, shadows?: boolean, camera?: any, className?: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -50,7 +68,7 @@ const ResizableCanvas = (props: { children: ReactNode, shadows?: boolean, camera
       }
     };
 
-    handleResize(); // Call the resize handler once to set initial size
+    handleResize(); // Call the resize handler once to set the initial size
     window.addEventListener('resize', handleResize);
 
     return () => {
@@ -67,64 +85,49 @@ const ResizableCanvas = (props: { children: ReactNode, shadows?: boolean, camera
 
 export default function Print3dPage() {
   const [loading, setLoading] = useState(false);
-  const [modelUrl, setModelUrl] = useState<string | null>(null);
-  const { orderDetails, setDimensions, setVolume, setMaterial, setColor, setSumma, setQuantity, setFileName } = useOrder();
-  const [modalIsOpen, setModalIsOpen] = useState(false);
   const modalRef = useRef<ModalZakazRef>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const router = useRouter();
   const [count, setCount] = useState<number>(1);
   const [file, setFile] = useState<File | null>(null);
-  // const [todos, setTodos] = useState<ReviewPrint3d[]>([]);
-  // const [reviewsPrint3d, setReviewsPrint3d] = useState<ReviewPrint3d[]>([]);
+  const [currentOrder, setCurrentOrder] = useState<OrderPrint3dProps>(orderData);
 
- useEffect(() => {
-    const totalSum = calculateSummaAndPrice(orderDetails.volume, count);
+  useEffect(() => {
+    const totalSum = calculateSummaAndPrice(currentOrder.volume, currentOrder.quantity);
     const formattedTotalSum = Number(totalSum.toFixed(0));
-    setSumma(formattedTotalSum);
-    // fetchReviewsPrint3d();
-  }, [orderDetails.volume, count, orderDetails.quantity]);
+    updateSumma(formattedTotalSum, setCurrentOrder);
+  }, [currentOrder.volume, currentOrder.quantity ]);
 
   useEffect(() => {
     Cookies.remove('orderDetails');
   }, []);
 
   const showModal = () => {
-    setQuantity(count);
-
-    setModalIsOpen(true);
-    if (modalRef.current) {
-      modalRef.current.setData({
-        dimensions: orderDetails.dimensions,
-        volume: orderDetails.volume,
-        material: orderDetails.material,
-        color: orderDetails.color,
-        email: '',
-        fileName: orderDetails.fileName,
-        summa: orderDetails.summa,
-        quantity: count // Передаем count вместо orderDetails.quantity
-      });
+    setCurrentOrder(currentOrder)
+    if (modalRef.current && (currentOrder.width && currentOrder.length && currentOrder.height)) {
       modalRef.current.openModal();
     }
   };
 
   Modal.setAppElement('#root');
 
-  const handleAddToCart = () => {
-    setModalIsOpen(true);
+  const handleMaterialChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newMaterial = e.target.value;
+    updateMaterial(newMaterial, setCurrentOrder);
   };
 
-  // const fetchReviewsPrint3d = async () => {
-  //   const data = await getReviews();
-  //   setReviewsPrint3d(data);
-  // };
+  const handleUpdateDimensions = (newDimensions: THREE.Vector3) => {
+    updateDimensions(newDimensions, setCurrentOrder);
+  };
 
-  const handleQuantityChange = (newQuantity: number) => {
+  const handleUpdateColor = (newColor: string) => {
+    updateColor(newColor, setCurrentOrder);
+  };
+
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuantity = Number(e.target.value);
     if (newQuantity > 0) {
       setCount(newQuantity);
-      const totalSum = calculateSummaAndPrice(orderDetails.volume, newQuantity);
-      const formattedTotalSum = Number(totalSum.toFixed(0));
-      setSumma(formattedTotalSum);
+      updateQuantity(newQuantity, setCurrentOrder);
     }
   };
 
@@ -138,16 +141,18 @@ export default function Print3dPage() {
         }
 
         const fileSizeInMB = selectedFile.size / (1024 * 1024);
+        setFile(selectedFile)
         if (fileSizeInMB > 50) {
           throw new Error('Размер файла превышает 50 МБ');
         }
 
         const url = URL.createObjectURL(selectedFile);
-        const modelVolume = await analyzeModelVolume(url);
-        setVolume(modelVolume);
-        setModelUrl(url);
-        setFileName(selectedFile.name);
-        setFile(selectedFile); 
+        let modelVolume = await analyzeModelVolume(url);
+        modelVolume = parseInt(modelVolume.toFixed(0), 10);
+        updateVolume(modelVolume, setCurrentOrder);
+        updateModelUrl(url, setCurrentOrder);
+        updateFileName(selectedFile.name, setCurrentOrder);
+        updateFile(selectedFile, setCurrentOrder);
       } catch (error) {
         if (error instanceof Error) {
           setErrorMessage(error.message);
@@ -181,28 +186,24 @@ export default function Print3dPage() {
     window.location.reload();
   };
 
-  // const handleDelete = async (id: number) => {
-  //   await deleteReview(id);
-  //   setTodos(todos.filter((todo) => todo.id !== id));
-  // };
-
-  const handleOrderClick = () => {
-    // router.push('/order' );
-  };
-
   return (
     <div className="flex flex-col items-center justify-center flex-grow">
       <div className="w-full pt-8 space-y-6 rounded shadow-md">
-        {!orderDetails.dimensions && (
-          <p className="flex flex-wrap space-y-4 items-center justify-center text-blue-700">
+        {!((currentOrder.width && currentOrder.length && currentOrder.height)) && (
+          <div className='flex flex-col items-center justify-center h-full'>
+          <button onClick={()=>{window.location.href = '/print3d/my-orders'}} className="text-center px-6 py-3 h-10 text-sm font-semibold text-blue-700 border border-blue-700 rounded hover:bg-blue-700 hover:text-white transition duration-300 ease-in-out">
+            Проверить статус заказа
+          </button>
+          <p className="mt-4 text-blue-700">
             Выполнение заказа: 1-5 дней
           </p>
+        </div>
         )}
         <h2 className="text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
           Расчет 3D печати по технологии FMD
         </h2>
 
-        {orderDetails.dimensions && isDimensionExceeds500mm(orderDetails.dimensions) && (
+        {(currentOrder.width && currentOrder.length && currentOrder.height) && isDimensionExceeds500mm(new THREE.Vector3(currentOrder.width, currentOrder.length, currentOrder.height)) && (
           <div className=''>
             <p className="flex flex-wrap space-y-4 items-center justify-center text-red-700">
               Размеры превышают 500 мм
@@ -210,39 +211,37 @@ export default function Print3dPage() {
           </div>
         )}
 
-        {orderDetails.dimensions && !isDimensionExceeds500mm(orderDetails.dimensions) ? (
+        {(currentOrder.width && currentOrder.length && currentOrder.height) && !isDimensionExceeds500mm(new THREE.Vector3(currentOrder.width, currentOrder.length, currentOrder.height)) ? (
           <div className="">
             <div className='flex justify-center w-full'>
-              <ul className="flex flex-wrap justify-center sm:items-center lg:items-center space-x-4 space-y-2 list-none p-0">
-                <li></li>
-                <li><span className="file-name ">{orderDetails.fileName}</span></li>
-                <li className="w-auto">Ширина: {(orderDetails.dimensions.x).toFixed()} мм</li>
-                <li className="w-auto">Длина: {(orderDetails.dimensions.y).toFixed()} мм</li>
-                <li className="w-auto">Высота: {(orderDetails.dimensions.z).toFixed()} мм</li>
-                <li className="w-auto">Материал: {orderDetails.material}</li>
-                <li className="w-auto">Объем: {orderDetails.volume.toFixed(1)} см³</li>
-              </ul>
+            <ul className="flex justify-center items-center mx-6">
+              <li className="w-auto flex items-center mx-2">{currentOrder.fileName}</li>
+              <li className="w-auto flex items-center mx-2">Ширина: {(currentOrder.width).toFixed()} мм</li>
+              <li className="w-auto flex items-center mx-2">Длина: {(currentOrder.length).toFixed()} мм</li>
+              <li className="w-auto flex items-center mx-2">Высота: {(currentOrder.height).toFixed()} мм</li>
+              <li className="w-auto flex items-center mx-2">Объем: {currentOrder.volume.toFixed(1)} см³</li>
+            </ul>
             </div>
             <div className='flex items-center justify-center'>
               <input
                 type="number"
                 value={count}
-                onChange={(e) => handleQuantityChange(Number(e.target.value))}
+                onChange={handleQuantityChange}
                 min="1"
                 className="mt-2 p-2 border border-blue-500 rounded-lg"
                 style={{ borderColor: 'rgba(59, 130, 246, 0.5)', width: '78px' }}
               />
               <p className='m-4 pt-2'>х</p>
               <p className="mt-2 text-xl font-semibold italic border border-blue-500 p-2 rounded-lg" style={{ borderColor: 'rgba(59, 130, 246, 0.5)' }}>
-                {orderDetails.summa.toFixed(0)}&nbsp;₽
+                {currentOrder.summa.toFixed(0)}&nbsp;₽ 
               </p>
             </div>
             <div className="m-10 flex flex-wrap justify-center items-center">
-              <ColorPicker setColor={setColor} />
+              <ColorPicker setColor={handleUpdateColor} />
 
               <select
-                value={orderDetails.material}
-                onChange={(e) => { setMaterial(e.target.value) }}
+                value={currentOrder.material}
+                onChange={handleMaterialChange}
                 className="m-5 px-3 h-10 text-xs border border-blue-500 rounded"
               >
                 <option value="ABS">ABS</option>
@@ -269,49 +268,48 @@ export default function Print3dPage() {
         )}
       </div>
       <div className="w-9/12 flex flex-col items-center justify-center flex-grow">
-      <p className="text-gray-500">Если 3D модель не загружается, отправьте на почту <a href="mailto:zakaz@robobug.ru"> zakaz@robobug.ru</a> </p>
-      <p className="text-gray-500 underline"><a href="/userAgreement">Перед заказом ознакомьтесь с пользователським соглашением</a> </p>
-      <div className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] relative flex-grow">
-        <ResizableCanvas shadows camera={{ position: [5, 5, 10], fov: 50 }} className="mb-50">
-          <ambientLight intensity={0.5} />
-          <directionalLight
-            position={[10, 10, 10]}
-            intensity={1}
-            castShadow
-            shadow-mapSize-width={1024}
-            shadow-mapSize-height={400}
-          />
-          <directionalLight
-            position={[-5, -10, 0]}
-            intensity={1}
-            castShadow
-            shadow-mapSize-width={1024}
-            shadow-mapSize-height={400}
-          />
-          {modelUrl && <STLModel url={modelUrl} setDimensions={setDimensions} color={orderDetails.color} />}
-          <OrbitControls />
-          {/* <Helpers /> */}
-        </ResizableCanvas>
+        <p className="text-gray-500">Если 3D модель не загружается, отправьте на почту <a href="mailto:zakaz@robobug.ru">zakaz@robobug.ru</a></p>
+        <p className="text-gray-500 underline"><a href="/userAgreement">Перед заказом ознакомьтесь с пользователcским соглашением</a></p>
+        <div className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] relative flex-grow">
+          <ResizableCanvas shadows camera={{ position: [5, 5, 10], fov: 50 }} className="mb-50">
+            <ambientLight intensity={0.5} />
+            <directionalLight
+              position={[10, 10, 10]}
+              intensity={1}
+              castShadow
+              shadow-mapSize-width={1024}
+              shadow-mapSize-height={400}
+            />
+            <directionalLight
+              position={[-5, -10, 0]}
+              intensity={1}
+              castShadow
+              shadow-mapSize-width={1024}
+              shadow-mapSize-height={400}
+            />
+            {currentOrder.modelUrl && <STLModel url={currentOrder.modelUrl} setDimensions={handleUpdateDimensions} color={currentOrder.color} />}
+            <OrbitControls />
+            {/* <Helpers /> */}
+          </ResizableCanvas>
+        </div>
       </div>
-    </div>
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="p-8 rounded shadow-lg">
             <p className="text-xl font-semibold">Загрузка...</p>
           </div>
         </div>
-      )}  
+      )}
       {/* <h2 className="m-14 text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
         Отзывы
       </h2> */}
       {/* <AddTodo onReviewPrint3dAdded={fetchReviewsPrint3d} />
       <ReviewPrint3dList reviews={reviewsPrint3d} onDelete={handleDelete} /> */}
-      <ModalZakaz ref={modalRef} file={file} />
-      </div>
-      
-      );
-      }
+      <ModalZakaz ref={modalRef} file={file} order={currentOrder} setCurrentOrder={setCurrentOrder} />
+    </div>
+  );
+}
 
-  function setErrorMessage(arg0: string) {
-      throw new Error('Function not implemented.');
-  }
+function setErrorMessage(arg0: string) {
+  throw new Error('Function not implemented.');
+}

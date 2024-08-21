@@ -1,28 +1,12 @@
 import axios from 'axios';
+import { OrderPrint3dProps } from '@/app/(site)/print3d/interface/zakazProps.interface'
 
 const host = process.env.NEXT_PUBLIC_SERVER
 const api = axios.create({
   baseURL: host, // замените на ваш URL сервера
 });
 
-export interface Order {
-  id: number;
-  fileName: string;
-  orderDetails?: string;
-  orderNumber: number;
-  customerName: string;
-  customerEmail: string;
-  deliveryAddress: string;
-  customerPhone: string;
-  summa: number;
-  quantity: number;
-  comment?: string;
-  fileSize?: number;
-  modelUrl?: string;
-}
-
-
-export const getOrder = async (): Promise<Order[]> => {
+export const getOrder = async (): Promise<OrderPrint3dProps[]> => {
     try{
         const response = await api.get('/order-print3d');
         return response.data;
@@ -32,12 +16,12 @@ export const getOrder = async (): Promise<Order[]> => {
     }
 };
 
-export const createOrder = async (title: string): Promise<Order> => {
+export const createOrder = async (title: string): Promise<OrderPrint3dProps> => {
   const response = await api.post('/order-print3d', { title });
   return response.data;
 };
 
-export const updateOrder = async (id: number, data: Order): Promise<Order> => {
+export const updateOrder = async (id: number, data: OrderPrint3dProps): Promise<OrderPrint3dProps> => {
   const response = await api.patch(`/order-print3d/${id}`, data);
   return response.data;
 };

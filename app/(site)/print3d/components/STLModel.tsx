@@ -1,3 +1,4 @@
+// StlModel.tsx
 import { Suspense, useRef, useState, useEffect } from 'react';
 import { useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from 'three';
@@ -16,7 +17,6 @@ export const STLModel: React.FC<STLModelProps> = ({ url, color, setDimensions })
   const groupRef = useRef<THREE.Group>(null); // Создаем реф для группы
   const [loading, setLoading] = useState(false);
 
-  // Логируем процесс загрузки файла
   const geometry = useLoader(STLLoader, url, (loader) => {
     setLoading(true);
     loader.manager.onStart = (url, itemsLoaded, itemsTotal) => {
@@ -57,9 +57,9 @@ export const STLModel: React.FC<STLModelProps> = ({ url, color, setDimensions })
         ref.current.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
 
         if (dimensions.x*1000 > 10000 || dimensions.y*1000 > 10000 || dimensions.z*1000 > 10000) { 
-            initialScale.x = (dimensions.x) 
-            initialScale.y = (dimensions.y)
-            initialScale.z = (dimensions.z)
+            initialScale.x = parseInt(dimensions.x.toFixed(0), 10);
+            initialScale.y = parseInt(dimensions.y.toFixed(0), 10);
+            initialScale.z = parseInt(dimensions.z.toFixed(0), 10);
            setDimensions(initialScale); 
         } else { 
             const newVector = new THREE.Vector3(dimensions.x*1000, dimensions.y*1000, dimensions.y*1000)
@@ -70,7 +70,7 @@ export const STLModel: React.FC<STLModelProps> = ({ url, color, setDimensions })
     if(groupRef.current){
       groupRef.current.rotation.x = -Math.PI / 2;
     }
-  }, [geometry, setDimensions]);
+  }, [geometry]);
 
   useFrame(() => {
     if (ref.current) {

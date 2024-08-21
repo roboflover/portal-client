@@ -13,10 +13,11 @@ interface DeliveryPoint {
 }
 
 interface SelectedRegion {
-    selectedRegion: RegionData | null
+    selectedRegion: RegionData | null;
+    onDeliverySumChange: (sum: number) => void;
 }
 
-const Calculator: React.FC<SelectedRegion> = ({ selectedRegion }) => {
+const Calculator: React.FC<SelectedRegion> = ({ selectedRegion, onDeliverySumChange }) => {
 
   const [regions, setRegions] = useState<RegionData[]>([]);
   const [token, setToken] = useState<string>('');
@@ -54,6 +55,7 @@ const Calculator: React.FC<SelectedRegion> = ({ selectedRegion }) => {
         });
         const sum = Math.round(response.data.tariff_codes[3].delivery_sum / 100) * 100;
         setDeliverySum(sum);
+        onDeliverySumChange(sum); 
       } catch (error) {
         console.error('Error fetching points:', error);  // Логирование ошибки
         // setError(`Failed to fetch points: ${error.message}`); // Установка сообщения об ошибке
@@ -62,7 +64,7 @@ const Calculator: React.FC<SelectedRegion> = ({ selectedRegion }) => {
       }
     };
     fetchRegions();
-  }, [token, selectedRegion]); // Зависимости эффекта
+  }, [token, selectedRegion,  onDeliverySumChange ]); // Зависимости эффекта
   
   return (
     <div className='border rounded w-full'>
@@ -70,7 +72,7 @@ const Calculator: React.FC<SelectedRegion> = ({ selectedRegion }) => {
           {loading ? (
             <p>Загрузка стоимости доставки...</p>
           ) : (
-            <p>Стоимость доставки: {deliverySum !== null ? `${deliverySum}₽` : 'Ой..'}</p>
+            <p>Стоимость доставки: {deliverySum !== null ? `${deliverySum}₽` : 'загрузка...'}</p>
           )}
           {/* {error && <p>{error}</p>} */}
         </div>

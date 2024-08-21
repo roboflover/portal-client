@@ -106,7 +106,7 @@ const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddres
           <p>{address}</p>
         </>
       )}
-      {error && <p>{error}</p>}
+      {/* {error && <p>{error}</p>} */}
     </div>
   );
 };

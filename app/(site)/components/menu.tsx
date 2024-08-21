@@ -1,9 +1,8 @@
 'use client'
 
-import Link from "next/link";
 import { ChangeEvent, ReactNode, createContext, useEffect, useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
-import { usePathname, useRouter} from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 interface SidebarContextProps {
   // Добавьте сюда любые свойства, которые вы планируете передавать через контекст
@@ -11,8 +10,7 @@ interface SidebarContextProps {
 
 const SidebarContext = createContext<SidebarContextProps>({});
 
-export function Menu() {
-  const router = useRouter();
+export const Menu: React.FC = () => {
   const pathname = usePathname();
   const [selectedValue, setSelectedValue] = useState<string>('');
 
@@ -21,9 +19,9 @@ export function Menu() {
     setSelectedValue(value);
 
     if (value === 'product') {
-      router.push('/product');
+      window.location.href = '/product';
     } else if (value === 'print3d') {
-      router.push('/print3d');
+      window.location.href = '/print3d';
     }
   };
 
@@ -49,7 +47,7 @@ export function Menu() {
   if (isLargeDevice) {
     operationMenu = (
       <nav className="flex justify-center space-x-4 py-2 bg-gray-100 dark:bg-gray-900">
-        <Link href="/" className={getLinkClass('/')}>Новости</Link>
+        <a href="/" className={getLinkClass('/')}>Новости</a>
         <div className="relative inline-block">
           <select
             onChange={handleSelectChange}
@@ -61,7 +59,7 @@ export function Menu() {
             <option value="print3d">3д печать</option>
           </select>
         </div>
-        <Link href="/contact" className={getLinkClass('/contact')}>Контакты</Link>
+        <a href="/contact" className={getLinkClass('/contact')}>Контакты</a>
       </nav>
     );
   } else {

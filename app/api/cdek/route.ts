@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
           country_codes: 'RU'
         }
       });
-  
+      
       return new Response(JSON.stringify(response.data), { status: 200 });
     } catch (error) {
       console.error('Error fetching cities:', error);

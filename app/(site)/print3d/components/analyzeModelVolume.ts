@@ -32,7 +32,6 @@ const checkModelDimensions = (geometry: THREE.BufferGeometry) => {
     if(exceedsLimitDifferent)
         return 'Different'
     
-    
 };
 
 
