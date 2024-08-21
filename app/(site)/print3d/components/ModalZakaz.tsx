@@ -1,5 +1,5 @@
 // ModalZakaz.tsx
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import * as THREE from 'three';
 import RegionSelector, { RegionData } from './RegionSelector';
@@ -88,23 +88,30 @@ const ModalZakaz = forwardRef<ModalZakazRef, ModalZakazProps>(({ order, file }, 
     }
   }, [modalIsOpen, order]);
 
-  useEffect(() => {
-    checkFormValidity();
-  }, [currentOrder.customerName, currentOrder.customerEmail, currentOrder.customerPhone, selectedAddress]);
-
-  useEffect(() => {
-    const totalSum = calculateSummaAndPrice(currentOrder.volume, currentOrder.quantity);
-    setCurrentOrder(prevOrder => ({ ...prevOrder, summa: totalSum }));
-  }, [currentOrder.volume, currentOrder.quantity]);
-
-  const checkFormValidity = () => {
+  const checkFormValidity = useCallback(() => {
+    // Логика для проверки формы
     const { customerName, customerEmail, customerPhone } = currentOrder;
     if (customerName.trim() !== '' && customerEmail.trim() !== '' && customerPhone.trim() !== '' && selectedAddress.trim() !== '') {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
     }
-  };
+  }, [currentOrder, selectedAddress]);
+
+  useEffect(() => {
+    checkFormValidity();
+  }, [currentOrder.customerName, currentOrder.customerEmail, currentOrder.customerPhone, selectedAddress, checkFormValidity]);
+
+
+
+  useEffect(() => {
+    const totalSum = calculateSummaAndPrice(currentOrder.volume, currentOrder.quantity);
+    setCurrentOrder(prevOrder => ({ ...prevOrder, summa: totalSum }));
+  }, [currentOrder.volume, currentOrder.quantity]);
+
+  // const checkFormValidity = () => {
+
+  // };
 
   const getLastOrderNumber = async (): Promise<number> => {
     try {

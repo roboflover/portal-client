@@ -70,7 +70,7 @@ export const STLModel: React.FC<STLModelProps> = ({ url, color, setDimensions })
     if(groupRef.current){
       groupRef.current.rotation.x = -Math.PI / 2;
     }
-  }, [geometry]);
+  }, [geometry, setDimensions]);
 
   useFrame(() => {
     if (ref.current) {

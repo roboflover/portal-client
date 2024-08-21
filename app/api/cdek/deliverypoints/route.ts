@@ -3,7 +3,6 @@ import { NextRequest } from "next/server";
 import qs from "qs";
 
  export async function GET(req: NextRequest) {
-
     const token = req.headers.get('Authorization')?.split(' ')[1]; // Предполагается, что токен передается в заголовке Authorization
     const region_code = req.nextUrl.searchParams.get('region_code'); // Получение параметра region_code из URL
 
@@ -12,6 +11,7 @@ import qs from "qs";
     }
   
     try {
+
       const response = await axios.get('https://api.cdek.ru/v2/deliverypoints', {
         headers: {
           'Authorization': `Bearer ${token}`,

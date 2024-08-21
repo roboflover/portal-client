@@ -1,10 +1,11 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { getOrder, updateOrder, deleteOrder, Order } from '../../lib/orderPrint3dApi';
+import { getOrder, updateOrder, deleteOrder } from '../../lib/orderPrint3dApi';
 import OrderList from './components/OrderList';
+import { OrderPrint3dProps } from '@/app/(site)/print3d/interface/zakazProps.interface' 
 
 const Home: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<OrderPrint3dProps[]>([]);
 
   useEffect(() => {
     fetchOrders();
