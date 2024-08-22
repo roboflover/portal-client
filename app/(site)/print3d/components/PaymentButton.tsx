@@ -100,7 +100,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
       formData.append('customerPhone', currentOrder.customerPhone);
       formData.append('orderStatus', currentOrder.orderStatus);
       formData.append('paymentId', checkoutData.id); // Добавление paymentId
-  
+      console.log('material', currentOrder.material)
       if (currentOrder.width !== null) formData.append('width', currentOrder.width.toString());
       if (currentOrder.length !== null) formData.append('length', currentOrder.length.toString());
       if (currentOrder.height !== null) formData.append('height', currentOrder.height.toString());

@@ -47,8 +47,8 @@ export interface DataProps {
 const initialData: DataProps = {
   dimensions: null,
   volume: 0,
-  material: '',
-  color: '',
+  material: 'PLA',
+  color: '#8A8D8F',
   email: '',
   fileName: '',
   summa: 0,
