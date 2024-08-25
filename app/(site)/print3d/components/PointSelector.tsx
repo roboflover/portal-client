@@ -5,6 +5,7 @@ import { RegionData } from './RegionSelector';
 type UUID = string;
 
 interface DeliveryPoint {
+    code: string;
     location: any;
     name: string;
     uuid: UUID;
@@ -15,9 +16,10 @@ interface DeliveryPoint {
 interface RegionSelectorProps {
   selectedRegion: RegionData | null;
   onAddressSelect: (region: string) => void;
+  onDeliveryPointSelect: (deliveryPoint: string) => void;
 }
 
-const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddressSelect }) => {
+const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddressSelect, onDeliveryPointSelect }) => {
 
   const [regions, setRegions] = useState<RegionData[]>([]);
   const [token, setToken] = useState<string>('');
@@ -82,6 +84,8 @@ const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddres
     if (selectedAdress && selectedRegion) {
       setAdress(`${selectedAdress.location.address}${selectedRegion.region}`);
       onAddressSelect(selectedAdress.location.address)
+      onDeliveryPointSelect(selectedAdress.code)
+      // console.log(selectedAdress)
     }
   };
 

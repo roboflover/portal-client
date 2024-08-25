@@ -14,6 +14,7 @@ export interface OrderPrint3dProps {
       customerEmail: string;
       deliveryCity: string;
       deliveryAddress: string;
+      deliveryPoint: string;
       customerPhone: string;
       summa: number;
       quantity: number;
@@ -21,4 +22,5 @@ export interface OrderPrint3dProps {
       fileSize?: number;
       modelUrl?: string;
       paymentId?: string;
+      cdekEntityUuid?: string;
   }

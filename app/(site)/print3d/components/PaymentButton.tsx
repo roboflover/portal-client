@@ -1,10 +1,11 @@
 // PaymentButton.tsx
-
 import { YooCheckout, ICreatePayment } from '@a2seven/yoo-checkout';
 import { useState } from 'react';
 import { OrderPrint3dProps } from '../interface/zakazProps.interface';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import registerCdekOrder from '../utils/registerCdekOrder'
+import { regionStarter } from '../utils/config'
 
 interface PaymentButtonProps {
   currentOrder: OrderPrint3dProps;
@@ -12,6 +13,9 @@ interface PaymentButtonProps {
   isFormValid: boolean;
   formRef: React.RefObject<HTMLFormElement>;
   file: File | null;
+  deliverySum: number;
+  toLocationCode: string;
+  selectedDeliveryPoint: string;
 }
 
 const host = process.env.NEXT_PUBLIC_SERVER;
@@ -19,7 +23,7 @@ const api = axios.create({
   baseURL: host,
 });
 
-const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, value, isFormValid, file }) => {
+const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, value, isFormValid, file, deliverySum, toLocationCode, selectedDeliveryPoint }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<any>(null);
@@ -64,8 +68,20 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
     setError(null);
   
     try {
-      const idempotenceKey = uuidv4();
-      // Сначала создаем платеж и получаем checkoutData
+      // Псевдоданные для примера
+      const orderData = {
+        deliveryCost: deliverySum,
+        toLocationCode: toLocationCode,
+        toCity: currentOrder.deliveryCity,
+        toAddress: currentOrder.deliveryAddress,
+        recipientName: currentOrder.customerName,
+        recipientPhone: currentOrder.customerPhone,
+        recipientNumber: currentOrder.orderNumber.toString(),
+        deliveryPoint: selectedDeliveryPoint
+      };
+
+      const cdekEntityUuid:string = await registerCdekOrder(orderData);
+
       const checkoutResponse = await fetch('/api/yookassa/checkout', {
         method: 'POST',
         headers: {
@@ -99,8 +115,8 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
       formData.append('customerEmail', currentOrder.customerEmail);
       formData.append('customerPhone', currentOrder.customerPhone);
       formData.append('orderStatus', currentOrder.orderStatus);
-      formData.append('paymentId', checkoutData.id); // Добавление paymentId
-      console.log('material', currentOrder.material)
+      formData.append('paymentId', checkoutData.id); 
+      formData.append('cdekEntityUuid', cdekEntityUuid); // Добавление paymentId
       if (currentOrder.width !== null) formData.append('width', currentOrder.width.toString());
       if (currentOrder.length !== null) formData.append('length', currentOrder.length.toString());
       if (currentOrder.height !== null) formData.append('height', currentOrder.height.toString());
@@ -117,26 +133,18 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
       if (!uploadResponse.ok) {
         throw new Error('Произошла ошибка при загрузке данных заказа.');
       }
-  
-      // const uploadData = await uploadResponse.json();
-      // if (!uploadData) {
-      //   throw new Error('Произошла ошибка при анализе ответа на загрузку данных.');
-      // }
-  
-      // setResponse(uploadData);
 
-      const confUrl = checkoutData.confirmation.confirmation_url;
-      window.location.href = confUrl;
+      // const confUrl = checkoutData.confirmation.confirmation_url;
+      // window.location.href = confUrl;
   
-    } catch (error) {
-      console.error(error);
+    } catch (error) { 
+      // console.error(error);
       setError('Произошла ошибка при создании платежа.');
     } finally {
       setLoading(false);
     }
   };
   
-
   return (
     <div className='w-full'>
       <button

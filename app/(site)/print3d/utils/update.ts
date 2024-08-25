@@ -93,6 +93,13 @@ export const updateAdress= (newAdress: string, setCurrentOrder: React.Dispatch<R
   }));
 };
 
+export const updateDeliveryPoint= (newDeliveryPoint: string, setCurrentOrder: React.Dispatch<React.SetStateAction<OrderPrint3dProps>>) => {
+  setCurrentOrder(prevOrder => ({
+    ...prevOrder,
+    deliveryAddress: newDeliveryPoint
+  }));
+};
+
 export const updateCity= (newCity: string, setCurrentOrder: React.Dispatch<React.SetStateAction<OrderPrint3dProps>>) => {
   setCurrentOrder(prevOrder => ({
     ...prevOrder,

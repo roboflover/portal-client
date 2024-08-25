@@ -16,6 +16,7 @@ export const STLModel: React.FC<STLModelProps> = ({ url, color, setDimensions })
   const ref = useRef<THREE.Mesh>(null);
   const groupRef = useRef<THREE.Group>(null); // Создаем реф для группы
   const [loading, setLoading] = useState(false);
+  const [currentDimensions, setCurrentDimensions] = useState(new THREE.Vector3());
 
   const geometry = useLoader(STLLoader, url, (loader) => {
     setLoading(true);
@@ -38,13 +39,13 @@ export const STLModel: React.FC<STLModelProps> = ({ url, color, setDimensions })
     };
   });
 
-  useEffect(() => {
+useEffect(() => {
     if (geometry && ref.current) {
       geometry.computeBoundingBox();
       const boundingBox = geometry.boundingBox;
       if (boundingBox) {
         const dimensions = new THREE.Vector3();
-        const initialScale = new THREE.Vector3(1, 1, 1); 
+        const initialScale = new THREE.Vector3(1, 1, 1);  
         boundingBox.getSize(dimensions);
 
         const maxAxis = Math.max(dimensions.x, dimensions.y, dimensions.z);
@@ -56,22 +57,27 @@ export const STLModel: React.FC<STLModelProps> = ({ url, color, setDimensions })
         boundingBox.getCenter(center);
         ref.current.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
 
-        if (dimensions.x*1000 > 10000 || dimensions.y*1000 > 10000 || dimensions.z*1000 > 10000) { 
-            initialScale.x = parseInt(dimensions.x.toFixed(0), 10);
-            initialScale.y = parseInt(dimensions.y.toFixed(0), 10);
-            initialScale.z = parseInt(dimensions.z.toFixed(0), 10);
-           setDimensions(initialScale); 
-        } else { 
-            const newVector = new THREE.Vector3(dimensions.x*1000, dimensions.y*1000, dimensions.y*1000)
-            setDimensions(newVector); 
-        } 
+        if (!dimensions.equals(currentDimensions)) {
+          if (dimensions.x * 1000 > 10000 || dimensions.y * 1000 > 10000 || dimensions.z * 1000 > 10000) {  
+              initialScale.x = parseInt(dimensions.x.toFixed(0), 10); 
+              initialScale.y = parseInt(dimensions.y.toFixed(0), 10); 
+              initialScale.z = parseInt(dimensions.z.toFixed(0), 10); 
+              setDimensions(initialScale);
+              setCurrentDimensions(initialScale);  
+          } else {  
+              const newVector = new THREE.Vector3(dimensions.x * 1000, dimensions.y * 1000, dimensions.y * 1000);
+              setDimensions(newVector);
+              setCurrentDimensions(newVector); 
+          }
+        }
       }
     }
-    if(groupRef.current){
+
+    if (groupRef.current) {
       groupRef.current.rotation.x = -Math.PI / 2;
     }
-  }, [geometry, setDimensions]);
-
+  }, [geometry]);
+  
   useFrame(() => {
     if (ref.current) {
       ref.current.rotation.z += 0.01;

@@ -6,7 +6,6 @@ export const GET = async () => {
 
 export const POST = async (request: NextRequest) => {
   const body = await request.json();
-  console.log({ body });
 
   // Do something
 
