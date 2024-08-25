@@ -37,6 +37,7 @@ const orderData: OrderPrint3dProps = {
   orderDetails: "Some details",
   deliveryCity: "",
   deliveryAddress: "",
+  deliveryPoint: "",
   customerName: "",
   customerEmail: "",
   customerPhone: "",
@@ -44,6 +45,7 @@ const orderData: OrderPrint3dProps = {
   comment: "",
   modelUrl: undefined,
   paymentId: "abc123",
+  cdekEntityUuid: ''
 };
 
 const signedVolumeOfTriangle = (p1: THREE.Vector3, p2: THREE.Vector3, p3: THREE.Vector3): number => {
