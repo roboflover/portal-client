@@ -216,7 +216,7 @@ export default function Print3dPage() {
         {(currentOrder.width && currentOrder.length && currentOrder.height) && !isDimensionExceeds500mm(new THREE.Vector3(currentOrder.width, currentOrder.length, currentOrder.height)) ? (
           <div className="">
             <div className='flex justify-center w-full'>
-            <ul className="flex justify-center items-center mx-6">
+            <ul className="flex flex-col md:flex-row justify-center items-center mx-6">
               <li className="w-auto flex items-center mx-2">{currentOrder.fileName}</li>
               <li className="w-auto flex items-center mx-2">Ширина: {(currentOrder.width).toFixed()} мм</li>
               <li className="w-auto flex items-center mx-2">Длина: {(currentOrder.length).toFixed()} мм</li>
