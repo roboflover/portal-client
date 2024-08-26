@@ -204,9 +204,9 @@ const ModalZakaz = forwardRef<ModalZakazRef, ModalZakazProps>(({ order, file }, 
         {modalIsOpen && (currentOrder.width && currentOrder.length && currentOrder.height) && (
           <form ref={formRef} className="flex flex-col items-center">
             <div>
-              <h2 className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
+              {/* <h2 className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
                 Оформление заказа
-              </h2>
+              </h2> */}
               <div className="max-w-xs mx-auto my-2 px-5 rounded-lg border border-gray-500 shadow-lg overflow-hidden">
                 <h2 className="text-1xl font-bold italic text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
                   Описание
