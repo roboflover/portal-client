@@ -3,17 +3,7 @@ interface OrderData {
   delivery_recipient_cost: { value: number };
   delivery_point: string;
   shipment_point: string;
-  // from_location: {
-  //   code: string;
-  //   address: string;
-  //   city: string;
-  // };
-  // to_location: {
-  //   code: string;
-  //   address: string;
-  //   city: string;
-  // };
-  packages: any[];  // Определите точный тип данных в зависимости от своей структуры данных
+  packages: any[];
   recipient: {
     name: string;
     phones: { number: string }[];
@@ -21,7 +11,7 @@ interface OrderData {
   sender: {
     name: string;
   };
-  services: any[];  // Определите точный тип данных в зависимости от своей структуры данных
+  services: any[];
   tariff_code: number;
 }
 
@@ -33,7 +23,6 @@ async function registerCdekOrder(
     toAddress,
     recipientName,
     recipientPhone,
-    // recipientNumber,
     deliveryPoint,
   }: {
     deliveryCost: number;
@@ -49,17 +38,7 @@ async function registerCdekOrder(
       delivery_recipient_cost: { value: deliveryCost },
       delivery_point: deliveryPoint,
       shipment_point: 'SPB300',
-      // from_location: {
-      //     code: 'fromLocationCode',
-      //     address: 'fromAddress',
-      //     city: 'fromCity',
-      // },
-      // to_location: {
-      //     code: toLocationCode,
-      //     address: toAddress,
-      //     city: toCity,
-      // },
-      packages: [], // Добавьте необходимые данные сюда
+      packages: [],
       recipient: {
           name: recipientName,
           phones: [{ number: recipientPhone }],
@@ -76,7 +55,7 @@ async function registerCdekOrder(
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
-        }, 
+        },
         body: JSON.stringify(orderData)
       });
       const data = await response.json();

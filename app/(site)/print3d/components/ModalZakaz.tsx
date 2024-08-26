@@ -263,8 +263,8 @@ const ModalZakaz = forwardRef<ModalZakazRef, ModalZakazProps>(({ order, file }, 
             {/* <PaymentButton fullName={currentOrder.customerName} email={currentOrder.customerEmail} phone={currentOrder.customerPhone} value={currentOrder.summa+deliverySum} isFormValid={isFormValid} /> */}
             <PaymentButton  
               formRef={formRef} 
-              currentOrder={currentOrder} 
-              value={2} 
+              currentOrder={currentOrder}
+              value={currentOrder.summa+deliverySum} 
               isFormValid={isFormValid} 
               file={file} deliverySum={deliverySum} 
               toLocationCode={selectedRegion.country_code} 

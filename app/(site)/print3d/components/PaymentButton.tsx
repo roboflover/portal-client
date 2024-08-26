@@ -134,8 +134,8 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
         throw new Error('Произошла ошибка при загрузке данных заказа.');
       }
 
-      // const confUrl = checkoutData.confirmation.confirmation_url;
-      // window.location.href = confUrl;
+      const confUrl = checkoutData.confirmation.confirmation_url;
+      window.location.href = confUrl;
   
     } catch (error) { 
       // console.error(error);

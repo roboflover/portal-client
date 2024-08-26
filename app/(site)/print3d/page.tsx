@@ -92,11 +92,17 @@ export default function Print3dPage() {
   const [count, setCount] = useState<number>(1);
   const [file, setFile] = useState<File | null>(null);
   const [currentOrder, setCurrentOrder] = useState<OrderPrint3dProps>(orderData);
+  const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
     const totalSum = calculateSummaAndPrice(currentOrder.volume, currentOrder.quantity);
     const formattedTotalSum = Number(totalSum.toFixed(0));
     updateSumma(formattedTotalSum, setCurrentOrder);
+    if(totalSum >= 500){
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
   }, [currentOrder.volume, currentOrder.quantity ]);
 
   useEffect(() => {
@@ -256,7 +262,16 @@ export default function Print3dPage() {
               >
                 Перезагрузить
               </button>
-              <button onClick={showModal} className="m-5 px-6 py-3 h-10 text-sm font-semibold text-green-500 border border-green-500 rounded hover:bg-green-500 hover:text-white transition duration-300 ease-in-out">
+              <button
+                onClick={showModal}
+                className={`m-5 px-6 py-3 h-10 text-sm font-semibold rounded transition duration-300 ease-in-out ${
+                  !isValid || loading
+                    ? 'text-gray-500 border-gray-500 bg-gray-600 hover:bg-gray-600 cursor-not-allowed'
+                    : ' bg-green-700 border-green-500 hover:bg-green-500 hover:text-white text-gray-300'
+
+                }`}
+                disabled={!isValid}
+              >
                 Оформить заказ
               </button>
             </div>
@@ -302,11 +317,6 @@ export default function Print3dPage() {
           </div>
         </div>
       )}
-      {/* <h2 className="m-14 text-3xl text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
-        Отзывы
-      </h2> */}
-      {/* <AddTodo onReviewPrint3dAdded={fetchReviewsPrint3d} />
-      <ReviewPrint3dList reviews={reviewsPrint3d} onDelete={handleDelete} /> */}
       <ModalZakaz ref={modalRef} file={file} order={currentOrder} setCurrentOrder={setCurrentOrder} />
     </div>
   );
