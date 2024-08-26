@@ -25,7 +25,7 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ onRegionSelect }) => {
         const response = await axios.post('/api/cdek'); // Предполагается, что API для получения токена находится по адресу /api/token
         setToken(response.data.access_token);
       } catch (error) {
-        console.error('Error fetching token:', error);
+        // console.error('Error fetching token:', error);
         setError('Failed to fetch token');
       }
     };
@@ -75,7 +75,7 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ onRegionSelect }) => {
   return (
 <div className='border rounded w-64'>
   {loading ? <p>Загрузка региона...</p> : (
-    <select className='border p-2 rounded w-full' onChange={handleChange}>
+    <select className='border p-2 rounded w-full text-gray-500' onChange={handleChange}>
       <option value="" disabled>Выберите регион</option>
       {regions.map((region, index) => (
         <option key={index} value={region.fias_region_guid}>
@@ -84,7 +84,7 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ onRegionSelect }) => {
       ))}
     </select>
   )}
-  {error && <p>{error}</p>}
+  {/* {error && <p>{error}</p>} */}
 </div>
   );
 };

@@ -100,7 +100,7 @@ const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddres
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
-          <select className='border p-2 rounded w-full' onChange={handleChange}>
+          <select className='border p-2 rounded w-full  text-gray-500' onChange={handleChange}>
             {filteredDeliveryPoints.map((point) => (
               <option key={point.uuid} value={point.uuid}>
                 {point.name}

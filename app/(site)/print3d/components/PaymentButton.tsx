@@ -30,7 +30,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
 
   const handleCreatePayment = async () => {
     if (!isFormValid) return;
-    
+    //       ,
     const requestData: ICreatePayment = {
       amount: {
         value: value.toString(),
@@ -133,8 +133,8 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
       if (!uploadResponse.ok) {
         throw new Error('Произошла ошибка при загрузке данных заказа.');
       }
-
       const confUrl = checkoutData.confirmation.confirmation_url;
+      console.log(confUrl)
       window.location.href = confUrl;
   
     } catch (error) { 

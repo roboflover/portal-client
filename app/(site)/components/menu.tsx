@@ -48,17 +48,18 @@ export const Menu: React.FC = () => {
     operationMenu = (
       <nav className="flex justify-center space-x-4 py-2 bg-gray-100 dark:bg-gray-900">
         <a href="/" className={getLinkClass('/')}>Новости</a>
-        <div className="relative inline-block">
+        <a href="/print3d" className={getLinkClass('/print3d')}>3D печать</a>
+        {/* <div className="relative inline-block">
           <select
             onChange={handleSelectChange}
             value={selectedValue}
             className="h-7 text-sm font-semibold rounded bg-gray-100 dark:bg-gray-900 text-black dark:text-white px-2"
           >
-            <option value="">⇩&nbsp;⇩&nbsp;⇩</option> {/* Пустой пункт меню */}
+            <option value="">⇩&nbsp;⇩&nbsp;⇩</option> 
             <option value="product">Продукция</option>
             <option value="print3d">3д печать</option>
           </select>
-        </div>
+        </div> */}
         <a href="/contact" className={getLinkClass('/contact')}>Контакты</a>
       </nav>
     );

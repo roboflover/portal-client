@@ -218,6 +218,11 @@ export default function Print3dPage() {
             </p>
           </div>
         )}
+        {!(isValid || !(currentOrder.width && currentOrder.length && currentOrder.height)) && (
+            <p className="flex flex-wrap space-y-4 items-center justify-center text-red-700">
+            Увеличьте количество до минимального заказа 500(руб.)
+          </p>
+        )}
 
         {(currentOrder.width && currentOrder.length && currentOrder.height) && !isDimensionExceeds500mm(new THREE.Vector3(currentOrder.width, currentOrder.length, currentOrder.height)) ? (
           <div className="">
@@ -267,7 +272,7 @@ export default function Print3dPage() {
                 className={`m-5 px-6 py-3 h-10 text-sm font-semibold rounded transition duration-300 ease-in-out ${
                   !isValid || loading
                     ? 'text-gray-500 border-gray-500 bg-gray-600 hover:bg-gray-600 cursor-not-allowed'
-                    : ' bg-green-700 border-green-500 hover:bg-green-500 hover:text-white text-gray-300'
+                    : ' bg-green-500 border-green-500 hover:bg-green-400 hover:text-white text-gray-100'
 
                 }`}
                 disabled={!isValid}

@@ -12,6 +12,7 @@ import { OrderPrint3dProps } from '../interface/zakazProps.interface';
 import { updateAdress, updateCity, updateDeliveryPoint } from '../utils/update'
 import { changeColorName } from '@/app/(site)/print3d/utils/color'
 import { regionStarter } from '../utils/config'
+import validate from 'deep-email-validator'
 
 const host = process.env.NEXT_PUBLIC_SERVER;
 const api = axios.create({
@@ -19,6 +20,11 @@ const api = axios.create({
 });
 
 Modal.setAppElement('#root');
+
+type ValidationResult = {
+  valid: boolean;
+  reason?: string;
+};
 
 type Model3dDetail = {
   fileName: string;
@@ -75,7 +81,8 @@ const ModalZakaz = forwardRef<ModalZakazRef, ModalZakazProps>(({ order, file }, 
   const hasOpened = React.useRef(false);
   const [deliverySum, setDeliverySum] = useState<number>(0);
   const [newFile, setFile] = useState<File | null>(file);
-  
+  const [emailError, setEmailError] = useState('');
+
   useEffect(() => {
     if (modalIsOpen) {
       setCurrentOrder(order);  // Обновление состояния при каждом открытии модального окна
@@ -162,6 +169,28 @@ const ModalZakaz = forwardRef<ModalZakazRef, ModalZakazProps>(({ order, file }, 
     setSelectedDeliveryPoint(deliveryPoint);
   };
 
+  const handleEmailChange = async (e: { target: { value: any; }; }) => {
+    const email = e.target.value;
+    setCurrentOrder({ ...currentOrder, customerEmail: email });
+    // if (email) {
+    //   try {
+    //     const response = await axios.post<ValidationResult>('/api/validate-email', { email });
+    //     const res = response.data;
+    //     console.log(res)
+    //     if (!res.valid) {
+    //       setEmailError(`Invalid email: ${res.reason}`);
+    //     } else {
+    //       setEmailError('');
+    //     }
+    //   } catch (error) {
+    //     console.error('Error validating email:', error);
+    //     setEmailError('Error validating email');
+    //   }
+    // } else {
+    //   setEmailError('');
+    // }
+  };
+
   const formRef = useRef<HTMLFormElement>(null);
   return (
     <div>
@@ -209,12 +238,23 @@ const ModalZakaz = forwardRef<ModalZakazRef, ModalZakazProps>(({ order, file }, 
                       placeholder='ФИО'
                     />
                   </li>
+                  {/* <li className="flex flex-initial items-center mb-2">
+                    <input
+                      type="email"
+                      id="email"
+                      value={currentOrder.customerEmail}
+                      onChange={handleEmailChange}
+                      required
+                      className="border p-1 rounded mx-auto w-full"
+                      placeholder="Ваша почта"
+                    />
+                  </li> */}
                   <li className="flex flex-initial items-center mb-2">
                     <input
                       type="email"
                       id="email"
                       value={currentOrder.customerEmail}
-                      onChange={(e) => setCurrentOrder({ ...currentOrder, customerEmail: e.target.value })}
+                      onChange={handleEmailChange}
                       required
                       className="border p-1 rounded mx-auto w-full"
                       placeholder="Ваша почта"
