@@ -39,7 +39,7 @@ export const Menu: React.FC = () => {
   const isLargeDevice = true; //useMediaQuery('(min-width:782px)');
 
   const getLinkClass = (path: string): string => {
-    return pathname === path ? 'text-blue-500' : '';
+    return pathname === path || (path === '/print3d' && pathname.startsWith('/print3d')) ? 'text-blue-500' : '';
   };
 
   let operationMenu: ReactNode;

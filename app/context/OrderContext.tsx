@@ -1,105 +1,59 @@
 'use client'
 
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import * as THREE from 'three';
-import Cookies from 'js-cookie';
+import React, { createContext, useContext, useState, ReactNode, useRef, RefObject } from 'react';
+import { OrderPrint3dProps } from '@/app/(site)/print3d/interface/zakazProps.interface'; 
 
-interface OrderDetails {
-  dimensions: THREE.Vector3 | null;
-  volume: number;
-  material: string;
-  color: string;
-  fileName: string;
-  summa: number;
-  quantity: number;
-  modelUrl: string;
+interface OrderContextType {
+  file: File | null;
+  setFile: React.Dispatch<React.SetStateAction<File | null>>;
+  currentOrder: OrderPrint3dProps;
+  setCurrentOrder: React.Dispatch<React.SetStateAction<OrderPrint3dProps>>;
+  modalRef: RefObject<any>;
 }
 
-type OrderContextType = {
-  orderDetails: OrderDetails;
-  setDimensions: (newDimensions: THREE.Vector3) => void;
-  setMaterial: (newMaterial: string) => void;
-  setColor: (newColor: string) => void;
-  setSumma: (newSumma: number) => void;
-  setVolume: (newVolume: number) => void;
-  setQuantity: (newQuantity: number) => void;
-  setModelUrl: (newModelUrl: string) => void;
-  setFileName: (newFileName: string) => void;
+const OrderContext = createContext<OrderContextType | undefined>(undefined);
+
+export const useOrder = () => {
+  const context = useContext(OrderContext);
+  if (context === undefined) {
+    throw new Error('useOrder must be used within an OrderProvider');
+  }
+  return context;
 };
 
-// Функция для сохранения деталей заказа в куки
-export function saveOrderDetailsInCookies(orderDetails: OrderDetails) {
-  Cookies.set('orderDetails', JSON.stringify(orderDetails), { expires: 7 });
-}
-
-// Функция для извлечения деталей заказа из кук
-function getOrderDetailsFromCookies(): OrderDetails | null {
-  const details = Cookies.get('orderDetails');
-  return details ? JSON.parse(details) : null;
-}
-
-const OrderContext = createContext<OrderContextType | null>(null);
-
-export const Order3dPrintProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [orderDetails, setOrderDetails] = useState<OrderDetails>({
-    dimensions: null,
-    volume: 0,
-    material: 'ABS',
-    color: '#8A8D8F',
-    fileName: '',
-    summa: 0,
+export const OrderProvider = ({ children }: { children: ReactNode }) => {
+  const [file, setFile] = useState<File | null>(null);
+  const [currentOrder, setCurrentOrder] = useState<OrderPrint3dProps>({
+    id: 1,
+    orderNumber: 12345,
     quantity: 1,
-    modelUrl: ''
+    summa: 0,
+    fileSize: 500,
+    fileName: "model.stl",
+    material: "PETG",
+    width: null,
+    length: null,
+    height: null,
+    volume: 0,
+    color: '#8A8D8F',
+    orderDetails: "Some details",
+    deliveryCity: "",
+    deliveryAddress: "",
+    deliveryPoint: "",
+    customerName: "",
+    customerEmail: "",
+    customerPhone: "",
+    orderStatus: "Регистрация заказа в системе",
+    comment: "",
+    modelUrl: undefined,
+    paymentId: "abc123",
+    cdekEntityUuid: ''
   });
-
-  useEffect(() => {
-    const savedDetails = getOrderDetailsFromCookies();
-    if (savedDetails) {
-      setOrderDetails(savedDetails);
-    }
-  }, []);
-
-  const setDimensions = (newDimensions: THREE.Vector3) => {
-    setOrderDetails(prevDetails => ({ ...prevDetails, dimensions: newDimensions }));
-  };
-
-  const setMaterial = (newMaterial: string) => {
-    setOrderDetails(prevDetails => ({ ...prevDetails, material: newMaterial }));
-  };
-
-  const setColor = (newColor: string) => {
-    setOrderDetails(prevDetails => ({ ...prevDetails, color: newColor }));
-  };
-
-  const setSumma = (newSumma: number) => {
-    setOrderDetails(prevDetails => ({ ...prevDetails, summa: newSumma }));
-  };
-
-  const setVolume = (newVolume: number) => {
-    setOrderDetails(prevDetails => ({ ...prevDetails, volume: newVolume }));
-  };
-
-  const setQuantity = (newQuantity: number) => {
-    setOrderDetails(prevDetails => ({ ...prevDetails, quantity: newQuantity }));
-  };
-
-  const setModelUrl = (newModelUrl: string) => {
-    setOrderDetails(prevDetails => ({ ...prevDetails, modelUrl: newModelUrl }));
-  };
-
-  const setFileName = (newFileName: string) => {
-    setOrderDetails(prevDetails => ({ ...prevDetails, fileName: newFileName }));
-  };
-
-  useEffect(() => {
-    saveOrderDetailsInCookies(orderDetails);
-  }, [orderDetails]);
+  const modalRef = useRef<any>(null);
 
   return (
-    <OrderContext.Provider value={{ orderDetails, setDimensions, setMaterial, setColor, setSumma, setVolume, setQuantity, setModelUrl, setFileName }}>
+    <OrderContext.Provider value={{ file, setFile, currentOrder, setCurrentOrder, modalRef }}>
       {children}
     </OrderContext.Provider>
   );
 };
-
-export const useOrder = () => useContext(OrderContext) as OrderContextType;

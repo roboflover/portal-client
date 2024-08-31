@@ -76,7 +76,7 @@ useEffect(() => {
     if (groupRef.current) {
       groupRef.current.rotation.x = -Math.PI / 2;
     }
-  }, [geometry]);
+  }, [geometry, currentDimensions, setDimensions]);
   
   useFrame(() => {
     if (ref.current) {

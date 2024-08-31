@@ -32,7 +32,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
           <AuthProvider>
           <div className="w-full max-w-5xl mx-auto">
           <Header toggleMenu={toggleMenu}  />
-          <div className="min-h-screen flex">
+          <div className="">
           <main className="shadow-md flex-1 p-4 bg-gray-200 dark:bg-gray-900">{children}</main>
           {/* <div className="w-64 bg-gray-100 dark:bg-gray-800 p-4">
             <SidebarMenu isOpen={isMenuOpen} toggleMenu={toggleMenu} />

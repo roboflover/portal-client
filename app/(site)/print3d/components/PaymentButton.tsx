@@ -1,11 +1,11 @@
-// PaymentButton.tsx
 import { YooCheckout, ICreatePayment } from '@a2seven/yoo-checkout';
 import { useState } from 'react';
 import { OrderPrint3dProps } from '../interface/zakazProps.interface';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import registerCdekOrder from '../utils/registerCdekOrder'
-import { regionStarter } from '../utils/config'
+import registerCdekOrder from '../utils/registerCdekOrder';
+import { regionStarter } from '../utils/config';
+import ErrorPopup from './ErrorPopup'; // Импорт нового компонента
 
 interface PaymentButtonProps {
   currentOrder: OrderPrint3dProps;
@@ -23,25 +23,34 @@ const api = axios.create({
   baseURL: host,
 });
 
-const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, value, isFormValid, file, deliverySum, toLocationCode, selectedDeliveryPoint }) => {
+const PaymentButton: React.FC<PaymentButtonProps> = ({
+  formRef,
+  currentOrder,
+  value,
+  isFormValid,
+  file,
+  deliverySum,
+  toLocationCode,
+  selectedDeliveryPoint,
+}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<any>(null);
 
   const handleCreatePayment = async () => {
     if (!isFormValid) return;
-    //       ,
+
     const requestData: ICreatePayment = {
       amount: {
         value: value.toString(),
-        currency: "RUB",
+        currency: 'RUB',
       },
       payment_method_data: {
-        type: "sbp",
+        type: 'sbp',
       },
       confirmation: {
-        type: "redirect",
-        return_url: "https://robobug.ru/print3d/my-orders",
+        type: 'redirect',
+        return_url: 'https://robobug.ru/print3d/my-orders',
       },
       capture: true,
       receipt: {
@@ -52,23 +61,22 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
         },
         items: [
           {
-            description: "3д печать",
-            quantity: "1.00",
+            description: '3д печать',
+            quantity: '1.00',
             amount: {
               value: value.toString(),
-              currency: "RUB",
+              currency: 'RUB',
             },
             vat_code: 1,
           },
         ],
       },
     };
-  
+
     setLoading(true);
     setError(null);
-  
+
     try {
-      // Псевдоданные для примера
       const orderData = {
         deliveryCost: deliverySum,
         toLocationCode: toLocationCode,
@@ -77,10 +85,10 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
         recipientName: currentOrder.customerName,
         recipientPhone: currentOrder.customerPhone,
         recipientNumber: currentOrder.orderNumber.toString(),
-        deliveryPoint: selectedDeliveryPoint
+        deliveryPoint: selectedDeliveryPoint,
       };
 
-      const cdekEntityUuid:string = await registerCdekOrder(orderData);
+      const cdekEntityUuid: string = await registerCdekOrder(orderData);
 
       const checkoutResponse = await fetch('/api/yookassa/checkout', {
         method: 'POST',
@@ -91,16 +99,16 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
           ...requestData,
         }),
       });
-  
+
       if (!checkoutResponse.ok) {
         throw new Error('Произошла ошибка при создании платежа.');
       }
-  
+
       const checkoutData = await checkoutResponse.json();
       if (!checkoutData) {
         throw new Error('Произошла ошибка при получении данных платежа.');
       }
-  
+
       const formData = new FormData();
       formData.append('orderNumber', currentOrder.orderNumber.toString());
       formData.append('quantity', currentOrder.quantity.toString());
@@ -109,13 +117,13 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
       formData.append('material', currentOrder.material);
       formData.append('volume', currentOrder.volume.toString());
       formData.append('color', currentOrder.color);
-      formData.append('deliveryCity', currentOrder.deliveryCity ?? "Санкт-Петербург");
+      formData.append('deliveryCity', currentOrder.deliveryCity ?? 'Санкт-Петербург');
       formData.append('deliveryAddress', currentOrder.deliveryAddress);
       formData.append('customerName', currentOrder.customerName);
       formData.append('customerEmail', currentOrder.customerEmail);
       formData.append('customerPhone', currentOrder.customerPhone);
       formData.append('orderStatus', currentOrder.orderStatus);
-      formData.append('paymentId', checkoutData.id); 
+      formData.append('paymentId', checkoutData.id);
       formData.append('cdekEntityUuid', cdekEntityUuid); // Добавление paymentId
       if (currentOrder.width !== null) formData.append('width', currentOrder.width.toString());
       if (currentOrder.length !== null) formData.append('length', currentOrder.length.toString());
@@ -123,30 +131,28 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
       if (currentOrder.comment) formData.append('comment', currentOrder.comment);
       if (currentOrder.modelUrl) formData.append('modelUrl', currentOrder.modelUrl);
       if (file) formData.append('file', file);
-  
-      // Затем отправляем данные заказа
+
       const uploadResponse = await fetch(`${host}/order-print3d/upload`, {
         method: 'POST',
         body: formData,
       });
-  
+
       if (!uploadResponse.ok) {
         throw new Error('Произошла ошибка при загрузке данных заказа.');
       }
       const confUrl = checkoutData.confirmation.confirmation_url;
-      console.log(confUrl)
+      console.log(confUrl);
       window.location.href = confUrl;
-  
-    } catch (error) { 
-      // console.error(error);
+    } catch (error) {
       setError('Произошла ошибка при создании платежа.');
     } finally {
       setLoading(false);
     }
   };
-  
+
   return (
-    <div className='w-full'>
+    <div className="w-full">
+      {error && <ErrorPopup message={error} onClose={() => setError(null)} />}
       <button
         onClick={handleCreatePayment}
         disabled={!isFormValid || loading}
@@ -158,9 +164,6 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ formRef, currentOrder, va
       >
         {loading ? 'Создается платеж...' : 'Оплатить по СБП'}
       </button>
-
-      {/* {error && <p style={{ color: 'red' }}>{error}</p>}
-      {response && <pre>{JSON.stringify(response, null, 2)}</pre>} */}
     </div>
   );
 };
