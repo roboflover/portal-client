@@ -13,6 +13,7 @@ import { changeColorName } from '../utils/color';
 import { regionStarter } from '../utils/config';
 import { useOrder } from '@/app/context/OrderContext';  // Правильный импорт
 
+
 const host = process.env.NEXT_PUBLIC_SERVER;
 const api = axios.create({
   baseURL: host,
@@ -103,18 +104,22 @@ const Order = () => {
     setCurrentOrder(prevOrder => ({ ...prevOrder, summa: totalSum }));
   }, [currentOrder.volume, currentOrder.quantity, setCurrentOrder]);
 
+  useEffect(()=>{
+    handleRegionSelect(regionStarter)
+  }, [])
+
   const handleRegionSelect = (region: RegionData) => {
     updateCity(region.region, setCurrentOrder);
     setSelectedRegion(region);
   };
 
   const handleAddressSelect = (address: string) => {
-    updateAdress(address, setCurrentOrder);
     setSelectedAddress(address);
   };
 
   const handleDeliveryPointSelect = (deliveryPoint: string) => {
     updateDeliveryPoint(deliveryPoint, setCurrentOrder);
+    updateAdress(deliveryPoint, setCurrentOrder);
     setSelectedDeliveryPoint(deliveryPoint);
   };
 
@@ -236,9 +241,17 @@ const Order = () => {
         </>
 
       ) : (
-        <h2 className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
-Заказ обновлен
-            </h2>
+<div className="flex flex-col items-center">
+  <h2 className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
+    Заказ зарегистрирован
+  </h2>
+  <button
+    onClick={() => { window.location.href = '/print3d/my-orders' }}
+    className="inline-block text-center m-10 px-6 py-3 h-10 text-sm font-semibold text-gray-500 border border-gray-500 rounded hover:bg-blue-700 hover:text-white transition duration-300 ease-in-out"
+  >
+    Проверить статус заказа
+  </button>
+</div>
       )}
     </div>
   );

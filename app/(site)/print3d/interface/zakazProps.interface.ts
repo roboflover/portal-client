@@ -23,4 +23,5 @@ export interface OrderPrint3dProps {
       modelUrl?: string;
       paymentId?: string;
       cdekEntityUuid?: string;
+      creationTime?: string;
   }

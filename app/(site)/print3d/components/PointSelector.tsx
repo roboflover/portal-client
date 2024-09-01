@@ -84,8 +84,7 @@ const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddres
     if (selectedAdress && selectedRegion) {
       setAdress(`${selectedAdress.location.address}${selectedRegion.region}`);
       onAddressSelect(selectedAdress.location.address)
-      onDeliveryPointSelect(selectedAdress.code)
-      // console.log(selectedAdress)
+      onDeliveryPointSelect(`${selectedAdress.code}, ${selectedAdress.location.address}`)
     }
   };
 

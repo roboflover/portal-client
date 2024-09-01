@@ -117,7 +117,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       formData.append('material', currentOrder.material);
       formData.append('volume', currentOrder.volume.toString());
       formData.append('color', currentOrder.color);
-      formData.append('deliveryCity', currentOrder.deliveryCity ?? 'Санкт-Петербург');
+      formData.append('deliveryCity', currentOrder.deliveryCity);
       formData.append('deliveryAddress', currentOrder.deliveryAddress);
       formData.append('customerName', currentOrder.customerName);
       formData.append('customerEmail', currentOrder.customerEmail);
@@ -141,7 +141,6 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         throw new Error('Произошла ошибка при загрузке данных заказа.');
       }
       const confUrl = checkoutData.confirmation.confirmation_url;
-      console.log(confUrl);
       window.location.href = confUrl;
     } catch (error) {
       setError('Произошла ошибка при создании платежа.');

@@ -257,9 +257,10 @@ export default function Print3dPage() {
         )}
       </div>
       <div className="mt-5 w-9/12 flex flex-col items-center justify-center flex-grow">
-        <p className="text-gray-500 text-xs">Если 3D модель не загружается, отправьте на почту <a href="mailto:zakaz@robobug.ru">zakaz@robobug.ru</a></p>
-        <p className="text-gray-500 text-xs">Техническая поддержка в телеграме: <span className="underline"><a href="http://t.me/StepanGrigorian" target='_blank'>@StepanGrigorian</a></span></p>
-        <p className="text-gray-500 underline text-xs"><a href="/userAgreement">Перед заказом ознакомьтесь с пользователcским соглашением</a></p>
+        <p className="text-gray-500 text-xs">Для загрузки 3D-моделей используйте Chrome, так как Яндекс Браузер не поддерживается в мобильной версии.</p>
+        <p className="text-gray-500 text-xs">При проблемах с загрузкой 3D-модели пишите на <a href="mailto:zakaz@robobug.ru">zakaz@robobug.ru</a></p>
+        <p className="text-gray-500 text-xs">Техподдержка в Telegram:  <span className="underline"><a href="http://t.me/StepanGrigorian" target='_blank'>@StepanGrigorian</a></span></p>
+        <p className="text-gray-500 underline text-xs"><a href="/userAgreement">Ознакомьтесь с пользовательским соглашением перед заказом.</a></p>
         <div className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] relative flex-grow">
           <ResizableCanvas shadows camera={{ position: [5, 5, 10], fov: 50 }} className="mb-50">
             <ambientLight intensity={0.5} />

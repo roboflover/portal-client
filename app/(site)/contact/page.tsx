@@ -39,7 +39,7 @@ export default function ContactPage() {
                     <div>
                         <h3 className="text-xl font-semibold">Социальные сети</h3>
                         <p className="text-gray-500">
-                            <a href="https://vk.com/roboflovers" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                            <a href="https://vk.com/robojuki" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                                 vk.com
                             </a>
                         </p>

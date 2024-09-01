@@ -1,17 +1,19 @@
-// components/OrderList.tsx
+
+// admin/orderPrint3d/components/OrderList.tsx
+
 import React, { useState } from 'react';
-import { OrderPrint3dProps } from '@/app/(site)/print3d/interface/zakazProps.interface'
+import { OrderPrint3dProps } from '@/app/(site)/print3d/interface/zakazProps.interface';
 
 interface OrderListProps {
   orders: OrderPrint3dProps[];
   onDelete: (id: number) => void;
+  isDeleting: boolean;
 }
 
-const OrderList: React.FC<OrderListProps> = ({ orders, onDelete }) => {
+const OrderList: React.FC<OrderListProps> = ({ orders, onDelete, isDeleting }) => {
   const [orderStatuses, setOrderStatuses] = useState<{ [key: number]: string | null }>({});
 
   const handleCheckStatus = async (orderId: number, paymentId?: string) => {
-
     if (paymentId) {
       try {
         const response = await fetch(`/api/yookassa/getPayment?paymentId=${paymentId}`, {
@@ -36,12 +38,13 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onDelete }) => {
       }
     }
   };
-  
+
   return (
     <ul className="space-y-2">
       {orders.map((order) => (
         <li key={order.id} className="flex items-center justify-between p-2 border rounded bg-gray-800 text-white">
           <div className="flex-grow">
+            <span className="block font-bold">Дата создания: {order.creationTime}</span>
             <span className="block font-bold">Файл: {order.fileName}</span>
             <span className="block">Payment ID: {order.paymentId}</span>
             <span className="block">Количество: {order.quantity}</span>
@@ -77,13 +80,14 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onDelete }) => {
               onClick={() => handleCheckStatus(order.id, order.paymentId)}
               className="mt-2 px-3 py-1 bg-blue-500 text-white rounded"
             >
-              Проверить статус заказа
+              Проверить статус платежа
             </button>
           </div>
           <div className="flex space-x-2">
             <button
               onClick={() => onDelete(order.id)}
               className="bg-red-500 text-white p-2 rounded"
+              disabled={isDeleting} // Делаем кнопку неактивной, если идет удаление
             >
               Удалить
             </button>

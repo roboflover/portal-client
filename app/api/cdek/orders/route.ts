@@ -27,10 +27,6 @@ export async function POST(req: NextRequest) {
       "delivery_recipient_cost" : {
         "value" : 50
       },
-      "delivery_recipient_cost_adv" : [ {
-        "sum" : 3000,
-        "threshold" : 200
-      } ],
       "delivery_point" : orderData.delivery_point,
       "shipment_point" : orderData.shipment_point,
       "packages" : [ {
@@ -40,16 +36,16 @@ export async function POST(req: NextRequest) {
         "items" : [ {
           "ware_key" : "00055",
           "payment" : {
-            "value" : 3000
+            "value" : 0
           },
           "name" : "Товар",
           "cost" : 300,
           "amount" : 2,
-          "weight" : 700,
-          "url" : "www.item.ru"
+          "weight" : 500,
+          "url" : "robobug.ru"
         } ],
       "length" : 10,
-      "weight" : 4000,
+      "weight" : 500,
       "width" : 10
       } ],
       "recipient" : {
