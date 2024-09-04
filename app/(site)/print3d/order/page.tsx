@@ -133,11 +133,11 @@ const Order = () => {
   useEffect(() => {
     const totalSum = calculateSummaAndPrice(currentOrder.volume, currentOrder.quantity);
     setCurrentOrder(prevOrder => ({ ...prevOrder, summa: totalSum }));
-  }, [currentOrder.volume, currentOrder.quantity, setCurrentOrder]);
+  }, [currentOrder.volume, currentOrder.quantity]);
 
   useEffect(() => {
     handleRegionSelect(regionStarter);
-  }, []); // Ensure this effect runs only once
+  }, []); 
 
   const handleRegionSelect = (region: RegionData) => {
     updateCity(region.region, setCurrentOrder);
@@ -282,7 +282,7 @@ const Order = () => {
                 />
                 <p>{selectedDeliveryPoint}</p>
                 <div className="inline-block text-center w-full">
-                  <button onClick={openModal} className="border border-blue-300 hover:border-blue-800 rounded p-3 m-3 items-center">
+                  <button type="button" onClick={openModal} className="border border-blue-300 hover:border-blue-800 rounded p-3 m-3 items-center">
                     <p>Выбрать ПВЗ на карте</p>
                   </button>
                   <Modal isVisible={isModalVisible} onClose={closeModal}>
@@ -317,7 +317,7 @@ const Order = () => {
       ) : (
         <div className="flex flex-col items-center ">
           <h2 className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
-            Страница обнулилась. Вы сделали заказ? Тогда можете проверить его статус по кнопке ниже. Если это ошибка можете перейти в раздел 3D печать
+            Страница обнулилась, но это не страшно. Вы сделали заказ? Тогда можете проверить его статус по кнопке ниже. Если это ошибка можете перейти в раздел 3D печать
           </h2>
           <button
             onClick={() => {
