@@ -36,6 +36,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<any>(null);
+  const [payLink, setPaylink] = useState('')
 
   const handleCreatePayment = async () => {
     if (!isFormValid) return;
@@ -141,7 +142,8 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         throw new Error('Произошла ошибка при загрузке данных заказа.');
       }
       const confUrl = checkoutData.confirmation.confirmation_url;
-      window.location.href = confUrl;
+      setPaylink(confUrl)
+      //window.location.href = confUrl;
     } catch (error) {
       setError('Произошла ошибка при создании платежа.');
     } finally {
@@ -150,19 +152,23 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   };
 
   return (
-    <div className="w-full">
-      {error && <ErrorPopup message={error} onClose={() => setError(null)} />}
-      <button
-        onClick={handleCreatePayment}
-        disabled={!isFormValid || loading}
-        className={`py-2 px-4 rounded-xl w-full max-w-xs text-white font-bold transition duration-300 ease-in-out transform active:scale-95 focus:outline-none focus:ring-4 ${
-          !isFormValid || loading
-            ? 'bg-gray-500 cursor-not-allowed'
-            : 'bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300'
-        }`}
-      >
-        {loading ? 'Создается платеж...' : 'Оплатить по СБП'}
+<div className="w-full">
+  {error && <ErrorPopup message={error} onClose={() => setError(null)} />}
+  <button
+    onClick={handleCreatePayment}
+    disabled={!isFormValid || loading}
+    className={`py-2 px-4 rounded-xl w-full max-w-xs text-white font-bold transition duration-300 ease-in-out transform active:scale-95 focus:outline-none focus:ring-4 ${
+      !isFormValid || payLink !== ''
+        ? 'bg-gray-500 cursor-not-allowed'
+        : 'bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300'
+    }`}
+  >
+    <div>
+     </div>
+            {loading ? 'Создается платеж...' : 'Создать ссылку на оплату по СБП'}
       </button>
+      {(payLink !== '') && <a href={payLink} className='underline' target="_blank" rel="noopener noreferrer">Оплатить по ссылке</a>}
+
     </div>
   );
 };
