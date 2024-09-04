@@ -37,17 +37,33 @@ const ResizableCanvas = (props: { children: ReactNode, shadows?: boolean, camera
       }
     };
 
+    const handleContextLost = (event: WebGLContextEvent) => {
+      event.preventDefault();
+      console.warn('WebGL context lost. Attempting to restore it...');
+    };
+
+    const handleContextRestored = () => {
+      console.log('WebGL context restored.');
+      // Optionally, force a re-render or resource reloading here.
+    };
+
     handleResize();
     window.addEventListener('resize', handleResize);
+    canvasRef.current?.removeEventListener('webglcontextlost', handleContextLost as EventListener);
+    canvasRef.current?.addEventListener('webglcontextrestored', handleContextRestored);
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      canvasRef.current?.removeEventListener('webglcontextlost', handleContextLost as EventListener);
+      canvasRef.current?.removeEventListener('webglcontextrestored', handleContextRestored as EventListener);
     };
   }, []);
 
   return (
     <div ref={containerRef} className="canvas-container">
-      <Canvas {...props} />
+      <Canvas ref={canvasRef} {...props}>
+        {props.children}
+      </Canvas>
     </div>
   );
 };
@@ -297,3 +313,4 @@ export default function Print3dPage() {
 function setErrorMessage(arg0: string) {
   throw new Error('Function not implemented.');
 }
+

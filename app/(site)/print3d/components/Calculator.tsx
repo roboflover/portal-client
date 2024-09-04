@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { RegionData } from './RegionSelector';
+import {RegionData} from '../interface/RegionData.interface';
+// import SelectedRegion from '../interface/RegionData.interface';
 
 type UUID = string;
 
@@ -13,13 +14,12 @@ interface DeliveryPoint {
 }
 
 interface SelectedRegion {
-    selectedRegion: RegionData | null;
-    onDeliverySumChange: (sum: number) => void;
+  selectedRegion: RegionData | null;
+  onDeliverySumChange: (sum: number) => void;
 }
 
 const Calculator: React.FC<SelectedRegion> = ({ selectedRegion, onDeliverySumChange }) => {
 
-  const [regions, setRegions] = useState<RegionData[]>([]);
   const [token, setToken] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);

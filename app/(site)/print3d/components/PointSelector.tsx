@@ -1,33 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { RegionData } from './RegionSelector';
+import { RegionData } from '../interface/RegionData.interface';
+import { DeliveryPoint } from '../interface/DeliveryPoint.interface';
 
 type UUID = string;
 
-interface DeliveryPoint {
-    code: string;
-    location: any;
-    name: string;
-    uuid: UUID;
-    nearest_station: string;
-    address: string;
-}
-
 interface RegionSelectorProps {
   selectedRegion: RegionData | null;
-  onAddressSelect: (region: string) => void;
+  onAddressSelect: (address: string) => void;
   onDeliveryPointSelect: (deliveryPoint: string) => void;
+  onDeliveryPointsChange: (deliveryPoints: DeliveryPoint[]) => void;
 }
 
-const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddressSelect, onDeliveryPointSelect }) => {
-
+const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddressSelect, onDeliveryPointSelect, onDeliveryPointsChange }) => {
   const [regions, setRegions] = useState<RegionData[]>([]);
   const [token, setToken] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [deliveryPoints, setDeliveryPoints] = useState<DeliveryPoint[]>([]);
   const [searchText, setSearchText] = useState<string>(''); // Состояние для текста поиска
-  const [address, setAdress] = useState<string>('')
+  const [address, setAddress] = useState<string>('');
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -44,6 +36,12 @@ const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddres
   }, []);
 
   useEffect(() => {
+    if (deliveryPoints.length > 0) {
+      onDeliveryPointsChange(deliveryPoints);
+    }
+  }, [deliveryPoints, onDeliveryPointsChange]);
+
+  useEffect(() => {
     const fetchRegions = async () => {
       if (!token || !selectedRegion || !selectedRegion.region_code) return;
       setLoading(true);
@@ -56,7 +54,7 @@ const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddres
             Authorization: `Bearer ${token}` // Токен авторизации
           }
         });
-        setDeliveryPoints(response.data)
+        setDeliveryPoints(response.data);
       } catch (error) {
         console.error('Error fetching points:', error); // Логирование ошибки
         setError('Failed to fetch points'); // Установка сообщения об ошибке
@@ -66,27 +64,20 @@ const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddres
     };
     fetchRegions();
   }, [token, selectedRegion]); // Зависимости эффекта
-  
-  const prioritizeCities = (regions: RegionData[]) => {
-    const priorityCities = ['Москва', 'Санкт-Петербург'];
-    const priorityRegions = regions.filter(region => priorityCities.includes(region.region));
-    const otherRegions = regions.filter(region => !priorityCities.includes(region.region));
-    return [...priorityRegions, ...otherRegions];
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedAddress = deliveryPoints.find(point => point.uuid === event.target.value);
+    if (selectedAddress && selectedRegion) {
+      setAddress(`${selectedAddress.location.address}, ${selectedRegion.region}`);
+      onAddressSelect(selectedAddress.location.address);
+      onDeliveryPointSelect(`${selectedAddress.code}, ${selectedAddress.location.address}`);
+    }
   };
 
   // Фильтрация точек выдачи на основе текста поиска
   const filteredDeliveryPoints = deliveryPoints.filter(point =>
     point.name.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedAdress = deliveryPoints.find(point => point.uuid === event.target.value);
-    if (selectedAdress && selectedRegion) {
-      setAdress(`${selectedAdress.location.address}${selectedRegion.region}`);
-      onAddressSelect(selectedAdress.location.address)
-      onDeliveryPointSelect(`${selectedAdress.code}, ${selectedAdress.location.address}`)
-    }
-  };
 
   return (
     <div className='border rounded w-64'>
@@ -99,20 +90,18 @@ const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddres
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
-          <select className='border p-2 rounded w-full  text-gray-500' onChange={handleChange}>
+          <select className='border p-2 rounded w-full text-gray-500' onChange={handleChange}>
             {filteredDeliveryPoints.map((point) => (
               <option key={point.uuid} value={point.uuid}>
                 {point.name}
               </option>
             ))}
           </select>
-          <p>{address}</p>
         </>
       )}
-      {/* {error && <p>{error}</p>} */}
+      {error && <p>{error}</p>}
     </div>
   );
 };
 
 export default PointSelector;
-
