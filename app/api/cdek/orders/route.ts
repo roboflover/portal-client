@@ -18,16 +18,17 @@ export async function POST(req: NextRequest) {
     const tokenResponse = await axios.post('https://api.cdek.ru/v2/oauth/token', tokenParams, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
-
     const access_token = tokenResponse.data.access_token;
     const orderData = await req.json(); 
+    const trimmedAddress = orderData.delivery_point.split(',')[0];
+
     const jsonData = {
       "number" : uuidv4(),
       "comment" : "Новый заказ",
       "delivery_recipient_cost" : {
         "value" : 50
       },
-      "delivery_point" : orderData.delivery_point,
+      "delivery_point" : trimmedAddress,
       "shipment_point" : orderData.shipment_point,
       "packages" : [ {
         "number" : "bar-001",

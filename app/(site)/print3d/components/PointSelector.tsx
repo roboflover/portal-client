@@ -80,7 +80,7 @@ const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddres
   );
 
   return (
-    <div className='border rounded w-64'>
+    <div className='border rounded m-auto text-center w-full'>
       {loading ? <p>Загрузка пунктов выдачи...</p> : (
         <>
           <input
@@ -99,7 +99,7 @@ const PointSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onAddres
           </select>
         </>
       )}
-      {error && <p>{error}</p>}
+      {/* {error && <p>{error}</p>} */}
     </div>
   );
 };

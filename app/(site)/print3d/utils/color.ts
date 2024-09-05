@@ -8,4 +8,5 @@ export function changeColorName(name: string) {
     if (name === '#FFFFFF') return 'белый';
     if (name === '#8A8D8F') return 'серый';
     if (name === '#2D2926') return 'черный';
+    return 'неизвестный цвет'; 
   }

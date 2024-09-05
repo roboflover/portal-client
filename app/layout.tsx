@@ -10,9 +10,9 @@ import { OrderProvider } from '@/app/context/OrderContext';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Робожуки',
+  title: 'Робожук сервис 3D печати с доставкой',
   description:
-    'This is a meta description. Welcome to slingacademy.com. Happy coding and have a nice day',
+    'Сервис 3D печати с доставкой',
 };
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
@@ -23,7 +23,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
    
       <Head>
       {/* <script src="https://api-maps.yandex.ru/v3/?apikey=95af15ee-dcb7-4205-af45-90b027553738&lang=ru_RU"></script> */}
-      <title>Робожуки</title>
+      <title>Робожук</title>
       <link rel="icon" href="/favicon.ico" />
      
       </Head>

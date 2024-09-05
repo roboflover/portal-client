@@ -35,7 +35,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
     length: null,
     height: null,
     volume: 0,
-    color: '#8A8D8F',
+    color: '#EF3340',
     orderDetails: "Some details",
     deliveryCity: "",
     deliveryAddress: "",

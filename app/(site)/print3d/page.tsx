@@ -152,7 +152,7 @@ export default function Print3dPage() {
   };
 
   const calculateSummaAndPrice = (volume: number, quantity: number): number => {
-    const pricePerCm3 = 12;
+    const pricePerCm3 = 20;
 
     let newprice = volume * pricePerCm3;
     if (newprice < 45) {
@@ -179,7 +179,7 @@ export default function Print3dPage() {
         Онлайн-сервис 3D-печати FMD
         </h2>
         {!((currentOrder.width && currentOrder.length && currentOrder.height)) && (
-        <p className='text-center'>Выберите цвет и материал, и получите ваш заказ в пункте выдачи CDEK в любой точке страны</p>
+        <p className='text-center'>Выберите цвет и материал, и получите детали в пункте выдачи CDEK в любой точке страны</p>
       )}
         </>
         {!((currentOrder.width && currentOrder.length && currentOrder.height)) && (

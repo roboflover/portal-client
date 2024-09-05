@@ -66,7 +66,7 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ onRegionSelect }) => {
   };
 
   return (
-<div className='border rounded w-64'>
+<div className='border rounded text-center m-auto w-full'>
   {loading ? <p>Загрузка региона...</p> : (
     <select className='border p-2 rounded w-full text-gray-500' onChange={handleChange}>
       <option value="" disabled>Выберите регион</option>

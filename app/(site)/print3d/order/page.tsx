@@ -139,6 +139,11 @@ const Order = () => {
     handleRegionSelect(regionStarter);
   }, []); 
 
+  useEffect(() => {
+    if(!areDimensionsFilled)
+      window.location.href = '/print3d';
+  }, []);
+
   const handleRegionSelect = (region: RegionData) => {
     updateCity(region.region, setCurrentOrder);
     setSelectedRegion(region);
@@ -178,10 +183,9 @@ const Order = () => {
   };
 
   const handleDeliveryPointClick = (point: DeliveryPoint) => {
-    const address = `${point.code}, ${point.location.address}`;
-    console.log(`Selected delivery point from map: ${address}`);
+    const address = point.code//`${point.code}, ${point.location.address}`;
     setSelectedDeliveryPoint(address);
-    updateAdress(address, setCurrentOrder);
+    updateAdress(`${point.code}, ${point.location.address}`, setCurrentOrder);
     setIsModalVisible(false); // закрыть модальное окно
   };
 
@@ -271,19 +275,19 @@ const Order = () => {
                 Доставка
               </h2>
               <ul className="mb-2">
-                <li><label htmlFor="email">Оператор доставки: CDEK</label></li>
+                <li className='m-auto text-center'><label htmlFor="email">Оператор доставки: CDEK</label></li>
                 <RegionSelector onRegionSelect={handleRegionSelect} />
-                <li><label htmlFor="email">Выберите пункт выдачи:</label></li>
+                <li className='m-auto text-center my-4'><label htmlFor="email">Выберите пункт выдачи заказа из списка либо на карте</label></li>
                 <PointSelector
                   selectedRegion={selectedRegion}
                   onAddressSelect={handleAddressSelect}
                   onDeliveryPointSelect={handleDeliveryPointSelect}
                   onDeliveryPointsChange={handleDeliveryPointsChange}
                 />
-                <p>{selectedDeliveryPoint}</p>
                 <div className="inline-block text-center w-full">
-                  <button type="button" onClick={openModal} className="border border-blue-300 hover:border-blue-800 rounded p-3 m-3 items-center">
-                    <p>Выбрать ПВЗ на карте</p>
+                <p className='mt-2'>или</p>
+                  <button type="button" onClick={openModal} className="border w-full border-blue-300 hover:border-blue-800 rounded p-3 my-3 items-center">
+                    <p>Выберите ПВЗ на карте</p>
                   </button>
                   <Modal isVisible={isModalVisible} onClose={closeModal}>
                     <YandexMap
@@ -293,6 +297,10 @@ const Order = () => {
                       onDeliveryPointClick={handleDeliveryPointClick} // передаем обработчик клика
                     />
                   </Modal>
+                  {selectedDeliveryPoint !== '' && (
+    <p className='mb-2 font-bold border border-red-500 rounded animation-blink p-2 '>
+    Ваш ПВЗ: {selectedDeliveryPoint}
+  </p>                  )}
                 </div>
                 <li className="font-semibold relative p-1">
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-pink-500 rounded"></div>
@@ -305,7 +313,7 @@ const Order = () => {
                   currentOrder={currentOrder}
                   value={currentOrder.summa + deliverySum}
                   isFormValid={isFormValid}
-                  file={file}
+                  file={file} 
                   deliverySum={deliverySum}
                   toLocationCode={selectedRegion.country_code}
                   selectedDeliveryPoint={selectedDeliveryPoint}
@@ -316,9 +324,11 @@ const Order = () => {
         </>
       ) : (
         <div className="flex flex-col items-center ">
-          <h2 className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
-            Страница обнулилась, но это не страшно. Вы сделали заказ? Тогда можете проверить его статус по кнопке ниже. Если это ошибка можете перейти в раздел 3D печать
-          </h2>
+    <div>
+    <h2 className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
+      Перенаправление...
+    </h2>
+    </div>
           <button
             onClick={() => {
               window.location.href = '/print3d/my-orders';

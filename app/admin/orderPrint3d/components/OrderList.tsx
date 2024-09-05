@@ -1,7 +1,4 @@
-
-// admin/orderPrint3d/components/OrderList.tsx
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { OrderPrint3dProps } from '@/app/(site)/print3d/interface/zakazProps.interface';
 
 interface OrderListProps {
@@ -10,10 +7,43 @@ interface OrderListProps {
   isDeleting: boolean;
 }
 
-const OrderList: React.FC<OrderListProps> = ({ orders, onDelete, isDeleting }) => {
-  const [orderStatuses, setOrderStatuses] = useState<{ [key: number]: string | null }>({});
+const host = process.env.NEXT_PUBLIC_SERVER;
 
-  const handleCheckStatus = async (orderId: number, paymentId?: string) => {
+const OrderList: React.FC<OrderListProps> = ({ orders, onDelete, isDeleting }) => {
+  const [orderPayStatuses, setOrderPayStatuses] = useState<{ [key: number]: string | null }>({});
+  const [newStatus, setNewStatus] = useState<{ [key: number]: string }>({}); 
+  const [message, setMessage] = useState('');
+
+  useEffect(()=>{
+    // console.log(orders)
+  },[])
+
+  const handleStatus = async (orderId: number, status: string) => {
+    try { // upload`
+      const response = await fetch(`${host}/order-print3d/${orderId}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newStatus: status }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update order status: ${response.statusText}`);
+      }
+
+      setMessage(`Order status updated to ${status}`);
+      setNewStatus((prevStatuses) => ({
+        ...prevStatuses,
+        [orderId]: status,
+      }));
+
+    } catch (error: any) {
+      setMessage(`Failed to update order status: ${error.message}`);
+    }
+  };
+
+  const handleCheckPayStatus = async (orderId: number, paymentId?: string) => {
     if (paymentId) {
       try {
         const response = await fetch(`/api/yookassa/getPayment?paymentId=${paymentId}`, {
@@ -24,14 +54,14 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onDelete, isDeleting }) =
         }
         const data = await response.json();
         const { status } = data;
-        
-        setOrderStatuses((prevStatuses) => ({
+
+        setOrderPayStatuses((prevStatuses) => ({
           ...prevStatuses,
           [orderId]: status,
         }));
       } catch (error) {
         console.error('Error fetching payment information:', error);
-        setOrderStatuses((prevStatuses) => ({
+        setOrderPayStatuses((prevStatuses) => ({
           ...prevStatuses,
           [orderId]: 'Ошибка получения статуса',
         }));
@@ -44,9 +74,11 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onDelete, isDeleting }) =
       {orders.map((order) => (
         <li key={order.id} className="flex items-center justify-between p-2 border rounded bg-gray-800 text-white">
           <div className="flex-grow">
-            <span className="block font-bold">Дата создания: {order.creationTime}</span>
-            <span className="block font-bold">Файл: {order.fileName}</span>
+            <span className="block font-bold text-xl"><h2>{order.customerEmail}</h2></span>
+            <span className="block">Дата создания: {order.creationTime}</span>
+            <span className="block">Файл: {order.fileName}</span>
             <span className="block">Payment ID: {order.paymentId}</span>
+            <span className="block">CDEK UUID: {order.cdekEntityUuid}</span>
             <span className="block">Количество: {order.quantity}</span>
             <span className="block">Сумма: {order.summa} руб.</span>
             <span className="block">Размер файла: {order.fileSize} MB</span>
@@ -57,11 +89,10 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onDelete, isDeleting }) =
             <span className="block">Объем: {order.volume} cм³</span>
             <span className="block">Цвет: {order.color}</span>
             <span className="block">Клиент: {order.customerName}</span>
-            <span className="block">Email клиента: {order.customerEmail}</span>
             <span className="block">Телефон клиента: {order.customerPhone}</span>
             <span className="block">Город доставки: {order.deliveryCity}</span>
             <span className="block">Адрес доставки: {order.deliveryAddress}</span>
-
+            <span className="block">Номер в бд: {order.id}</span>
             {order.orderDetails && (
               <span className="block text-gray-400">Детали заказа: {order.orderDetails}</span>
             )}
@@ -73,11 +104,24 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onDelete, isDeleting }) =
                 Ссылка на модель
               </a>
             )}
-            {orderStatuses[order.id] && (
-              <span className="block text-green-400">Статус: {orderStatuses[order.id]}</span>
+            <span className="block">Статус заказа: { order.orderStatus}</span>
+            <span className="block">Изменить статус: 
+              <select 
+                value={newStatus[order.id] || order.orderStatus}
+                onChange={(e) => handleStatus(order.id, e.target.value)}
+                className="ml-2 p-1 bg-gray-700 text-white rounded"
+              >
+                <option value="формируется на складе">формируется на складе</option>
+                <option value="запуск 3D печати">запуск 3D печати</option>
+                <option value="передаем в доставку">передаем в доставку</option>
+                <option value="отправлен">отправлен</option>
+              </select>
+            </span>
+            {orderPayStatuses[order.id] && (
+              <span className="block text-green-400">Статус платежа: {orderPayStatuses[order.id]}</span>
             )}
             <button
-              onClick={() => handleCheckStatus(order.id, order.paymentId)}
+              onClick={() => handleCheckPayStatus(order.id, order.paymentId)}
               className="mt-2 px-3 py-1 bg-blue-500 text-white rounded"
             >
               Проверить статус платежа
@@ -87,7 +131,7 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onDelete, isDeleting }) =
             <button
               onClick={() => onDelete(order.id)}
               className="bg-red-500 text-white p-2 rounded"
-              disabled={isDeleting} // Делаем кнопку неактивной, если идет удаление
+              disabled={isDeleting} // Делаем кнопку неактивной, если идёт удаление
             >
               Удалить
             </button>

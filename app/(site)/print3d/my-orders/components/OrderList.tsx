@@ -64,19 +64,19 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onDelete }) => {
               Номер заказа: {order.paymentId?.substring(0, 12) || 'Не указан'}
             </span>
             <span className="block">Количество: {order.quantity}</span> 
-            <span className="block">Стоимость одной модели: {order.summa} руб.</span> 
-            <span className="block">Сумма: {order.summa*order.quantity} руб.</span> 
+            <span className="block">Стоимость печати: {order.summa} руб.</span> 
             <span className="block">Материал: {order.material}</span> 
             <span className="block">Ширина: {order.width} мм</span> 
             <span className="block">Длина: {order.length} мм</span> 
             <span className="block">Высота: {order.height} мм</span> 
             <span className="block">Общий объем: {order.volume * order.quantity} cм³</span> 
-            <span className="block">Цвет: {changeColorName(order.color)}</span> 
+            <span className="block">Цвет: {order.color}</span> 
+            <span className="block">Статус заказа: {order.orderStatus}</span> 
             {order.comment && ( 
               <span className="block text-gray-400">Комментарий: {order.comment}</span> 
             )} 
             {orderStatuses[order.id] && ( 
-              <span className="block text-green-400">Статус: {orderStatuses[order.id]}</span> 
+              <span className="block text-green-400">Статус платежа: {orderStatuses[order.id]}</span> 
             )} 
             <button 
               onClick={() => handleCheckStatus(order.id, order.paymentId)} 

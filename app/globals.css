@@ -18,6 +18,19 @@ html, body, #root, .canvas-container {
   padding: 0;
 }
 
+@keyframes blink {
+  0%, 100% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #f56565; /* Это цвета для класса `border-red-500` */
+  }
+}
+
+.animation-blink {
+  animation: blink 1s infinite;
+}
+
 /*
 'woodsmoke': {
   '50': 'hsl(0, 0%, 96%)',
