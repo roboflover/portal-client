@@ -15,6 +15,7 @@ export interface OrderPrint3dProps {
       deliveryCity: string;
       deliveryAddress: string;
       deliveryPoint: string;
+      selfPickup: string;
       customerPhone: string;
       summa: number;
       quantity: number;

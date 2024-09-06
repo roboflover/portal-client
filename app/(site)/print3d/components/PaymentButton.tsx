@@ -17,6 +17,7 @@ interface PaymentButtonProps {
   deliverySum: number;
   toLocationCode: string;
   selectedDeliveryPoint: string;
+  selfPickup: boolean;
 }
 
 const host = process.env.NEXT_PUBLIC_SERVER;
@@ -33,6 +34,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   deliverySum,
   toLocationCode,
   selectedDeliveryPoint,
+  selfPickup
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -88,10 +90,14 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         recipientPhone: currentOrder.customerPhone,
         recipientNumber: currentOrder.orderNumber.toString(),
         deliveryPoint: selectedDeliveryPoint,
+        selfPickup: selfPickup.toString()
       };
 
-      const cdekEntityUuid: string = await registerCdekOrder(orderData);
-      console.log(cdekEntityUuid)
+      let cdekEntityUuid: string = ''
+      if(!selfPickup){
+        cdekEntityUuid = await registerCdekOrder(orderData);
+      }
+      
       const checkoutResponse = await fetch('/api/yookassa/checkout', {
         method: 'POST',
         headers: {
@@ -120,12 +126,15 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       formData.append('color', changeColorName(currentOrder.color));
       formData.append('deliveryCity', currentOrder.deliveryCity);
       formData.append('deliveryAddress', currentOrder.deliveryAddress);
+      formData.append('selfPickup', currentOrder.selfPickup);
       formData.append('customerName', currentOrder.customerName);
       formData.append('customerEmail', currentOrder.customerEmail);
       formData.append('customerPhone', currentOrder.customerPhone);
       formData.append('orderStatus', currentOrder.orderStatus);
       formData.append('paymentId', checkoutData.id);
-      formData.append('cdekEntityUuid', cdekEntityUuid);
+      if(!selfPickup){
+        formData.append('cdekEntityUuid', cdekEntityUuid);
+      }
       if (currentOrder.width !== null) formData.append('width', currentOrder.width.toString());
       if (currentOrder.length !== null) formData.append('length', currentOrder.length.toString());
       if (currentOrder.height !== null) formData.append('height', currentOrder.height.toString());

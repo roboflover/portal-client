@@ -29,3 +29,4 @@ export const updateOrder = async (id: number, data: OrderPrint3dProps): Promise<
 export const deleteOrder = async (id: number): Promise<void> => {
   await api.delete(`/order-print3d/${id}`);
 };
+

@@ -14,12 +14,8 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onDelete, isDeleting }) =
   const [newStatus, setNewStatus] = useState<{ [key: number]: string }>({}); 
   const [message, setMessage] = useState('');
 
-  useEffect(()=>{
-    // console.log(orders)
-  },[])
-
   const handleStatus = async (orderId: number, status: string) => {
-    try { // upload`
+    try {
       const response = await fetch(`${host}/order-print3d/${orderId}/status`, {
         method: 'PATCH',
         headers: {
@@ -27,17 +23,17 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onDelete, isDeleting }) =
         },
         body: JSON.stringify({ newStatus: status }),
       });
-
+  
       if (!response.ok) {
         throw new Error(`Failed to update order status: ${response.statusText}`);
       }
-
+  
       setMessage(`Order status updated to ${status}`);
       setNewStatus((prevStatuses) => ({
         ...prevStatuses,
         [orderId]: status,
       }));
-
+  
     } catch (error: any) {
       setMessage(`Failed to update order status: ${error.message}`);
     }
@@ -68,7 +64,7 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onDelete, isDeleting }) =
       }
     }
   };
-
+  console.log(orders)
   return (
     <ul className="space-y-2">
       {orders.map((order) => (
@@ -93,6 +89,8 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onDelete, isDeleting }) =
             <span className="block">Город доставки: {order.deliveryCity}</span>
             <span className="block">Адрес доставки: {order.deliveryAddress}</span>
             <span className="block">Номер в бд: {order.id}</span>
+            <span className="block">Самовывоз: {order.selfPickup.toString()}</span>
+            
             {order.orderDetails && (
               <span className="block text-gray-400">Детали заказа: {order.orderDetails}</span>
             )}

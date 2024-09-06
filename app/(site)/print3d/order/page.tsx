@@ -17,6 +17,7 @@ import Modal from './components/Modal';
 import YandexMap from './components/YandexMap';
 import { RegionData } from '../interface/RegionData.interface';
 import { DeliveryPoint } from '../interface/DeliveryPoint.interface';
+import { Checkbox } from "@/components/ui/checkbox"
 
 const host = process.env.NEXT_PUBLIC_SERVER;
 const api = axios.create({
@@ -58,28 +59,6 @@ const initialData: DataProps = {
   quantity: 1,
 };
 
-const defaultOrderState: OrderPrint3dProps = {
-  width: 0,
-  length: 0,
-  height: 0,
-  volume: 0,
-  material: '',
-  color: '',
-  quantity: 1,
-  summa: 0,
-  customerName: '',
-  customerEmail: '',
-  customerPhone: '',
-  comment: '',
-  fileName: '',
-  id: 0,
-  orderStatus: '',
-  orderNumber: 0,
-  deliveryCity: '',
-  deliveryAddress: '',
-  deliveryPoint: ''
-};
-
 interface RegionCoord {
   lat: string;
   lon: string;
@@ -97,6 +76,7 @@ const Order = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deliveryPoints, setDeliveryPoints] = useState<DeliveryPoint[]>([]);
+  const [selfPickup, setSelfPickup] = useState(false);
 
   const openModal = () => {
     setIsModalVisible(true);
@@ -109,16 +89,25 @@ const Order = () => {
   const checkFormValidity = useCallback(() => {
     const { customerName, customerEmail, customerPhone } = currentOrder;
     if (
+      !selfPickup &&
       customerName.trim() !== '' &&
       customerEmail.trim() !== '' &&
       customerPhone.trim() !== '' &&
       (selectedAddress.trim() !== '' || selectedDeliveryPoint !== '')
     ) {
+      setDeliverySum(400)
       setIsFormValid(true);
-    } else {
-      setIsFormValid(false);
-    }
-  }, [currentOrder, selectedAddress]);
+    } else if(
+      customerName.trim() !== '' &&
+      customerEmail.trim() !== '' &&
+      customerPhone.trim() !== '' &&
+      selfPickup
+    ) {
+      setDeliverySum(0)
+      setIsFormValid(true);
+    } else {setIsFormValid(false); } 
+    
+  }, [currentOrder, selectedAddress, selfPickup]);
 
   useEffect(() => {
     checkFormValidity();
@@ -127,7 +116,8 @@ const Order = () => {
     currentOrder.customerEmail,
     currentOrder.customerPhone,
     selectedAddress,
-    checkFormValidity
+    checkFormValidity,
+    selfPickup
   ]);
 
   useEffect(() => {
@@ -137,12 +127,17 @@ const Order = () => {
 
   useEffect(() => {
     handleRegionSelect(regionStarter);
-  }, []); 
+  }, []);
 
   useEffect(() => {
-    if(!areDimensionsFilled)
+    if (!areDimensionsFilled) {
       window.location.href = '/print3d';
+    }
   }, []);
+
+  // useEffect(() => {
+  //   console.log(selfPickup)
+  // }, [selfPickup]);
 
   const handleRegionSelect = (region: RegionData) => {
     updateCity(region.region, setCurrentOrder);
@@ -183,19 +178,19 @@ const Order = () => {
   };
 
   const handleDeliveryPointClick = (point: DeliveryPoint) => {
-    const address = point.code//`${point.code}, ${point.location.address}`;
+    const address = point.code; // `${point.code}, ${point.location.address}`;
     setSelectedDeliveryPoint(address);
     updateAdress(`${point.code}, ${point.location.address}`, setCurrentOrder);
-    setIsModalVisible(false); // закрыть модальное окно
+    setIsModalVisible(false);
   };
 
-  const model3dDetail: Model3dDetail = {
-    fileName: currentOrder.fileName,
-    volume: currentOrder.volume,
-    color: changeColorName(currentOrder.color),
-    material: currentOrder.material,
-    dimensions: JSON.stringify(1),
-  };
+  // const model3dDetail: Model3dDetail = {
+  //   fileName: currentOrder.fileName,
+  //   volume: currentOrder.volume,
+  //   color: changeColorName(currentOrder.color),
+  //   material: currentOrder.material,
+  //   dimensions: JSON.stringify(1),
+  // };
 
   const areDimensionsFilled = currentOrder.width && currentOrder.length && currentOrder.height;
 
@@ -272,51 +267,79 @@ const Order = () => {
                 </li>
               </ul>
               <h2 className="text-1xl font-bold italic text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
-                Доставка
+                Самовывоз
               </h2>
-              <ul className="mb-2">
-                <li className='m-auto text-center'><label htmlFor="email">Оператор доставки: CDEK</label></li>
-                <RegionSelector onRegionSelect={handleRegionSelect} />
-                <li className='m-auto text-center my-4'><label htmlFor="email">Выберите пункт выдачи заказа из списка либо на карте</label></li>
-                <PointSelector
-                  selectedRegion={selectedRegion}
-                  onAddressSelect={handleAddressSelect}
-                  onDeliveryPointSelect={handleDeliveryPointSelect}
-                  onDeliveryPointsChange={handleDeliveryPointsChange}
-                />
-                <div className="inline-block text-center w-full">
-                <p className='mt-2'>или</p>
-                  <button type="button" onClick={openModal} className="border w-full border-blue-300 hover:border-blue-800 rounded p-3 my-3 items-center">
-                    <p>Выберите ПВЗ на карте</p>
-                  </button>
-                  <Modal isVisible={isModalVisible} onClose={closeModal}>
-                    <YandexMap
-                      selectedRegion={regionCoord}
-                      onDeliverySumChange={setDeliverySum}
-                      deliveryPoints={deliveryPoints}
-                      onDeliveryPointClick={handleDeliveryPointClick} // передаем обработчик клика
+              <div className="flex items-center justify-center">
+              <input 
+                type="checkbox" 
+                checked={selfPickup}
+                onChange={() => setSelfPickup(prev => !prev)} 
+                id="terms1" 
+      />
+                  <label htmlFor="terms1" className="ml-2 text-center">
+                  </label>
+              </div>
+                <p className="mb-5 text-sm text-muted-foreground text-center mt-2">
+                  По адресу: Санет-Петербург, Среднерогатская ул., д 8к1
+                </p>
+
+              <div className="items-top flex space-x-2">
+              <div className="flex flex-col items-center">
+
+</div>
+    </div>
+              {!selfPickup && (
+                <>
+                  <h2 className="text-1xl font-bold italic text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
+                    Доставка
+                  </h2>
+                  <ul className="mb-2">
+                    <li className='m-auto text-center'><label htmlFor="email">Оператор доставки: CDEK</label></li>
+                    <RegionSelector onRegionSelect={handleRegionSelect} />
+                    <li className='m-auto text-center my-4'><label htmlFor="email">Выберите пункт выдачи заказа из списка либо на карте</label></li>
+                    <PointSelector
+                      selectedRegion={selectedRegion}
+                      onAddressSelect={handleAddressSelect}
+                      onDeliveryPointSelect={handleDeliveryPointSelect}
+                      onDeliveryPointsChange={handleDeliveryPointsChange}
                     />
-                  </Modal>
-                  {selectedDeliveryPoint !== '' && (
-    <p className='mb-2 font-bold border border-red-500 rounded animation-blink p-2 '>
-    Ваш ПВЗ: {selectedDeliveryPoint}
-  </p>                  )}
-                </div>
-                <li className="font-semibold relative p-1">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-pink-500 rounded"></div>
-                  <Calculator selectedRegion={selectedRegion} onDeliverySumChange={setDeliverySum} />
-                </li>
-              </ul>
+                    <div className="inline-block text-center w-full">
+                      <p className='mt-2'>или</p>
+                      <button type="button" onClick={openModal} className="border w-full border-blue-300 hover:border-blue-800 rounded p-3 my-3 items-center">
+                        <p>Выберите ПВЗ на карте</p>
+                      </button>
+                      <Modal isVisible={isModalVisible} onClose={closeModal}>
+                        <YandexMap
+                          selectedRegion={regionCoord}
+                          onDeliverySumChange={setDeliverySum}
+                          deliveryPoints={deliveryPoints}
+                          onDeliveryPointClick={handleDeliveryPointClick}
+                        />
+                      </Modal>
+                      {selectedDeliveryPoint !== '' && (
+                        <p className='mb-2 font-bold border border-red-500 rounded animation-blink p-2 '>
+                          Ваш ПВЗ: {selectedDeliveryPoint}
+                        </p>
+                      )}
+                    </div>
+                    <li className="font-semibold relative p-1">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-pink-500 rounded"></div>
+                      <Calculator selectedRegion={selectedRegion} onDeliverySumChange={setDeliverySum} />
+                    </li>
+                  </ul>
+                </>
+              )}
               <div>
                 <PaymentButton
                   formRef={formRef}
                   currentOrder={currentOrder}
                   value={currentOrder.summa + deliverySum}
                   isFormValid={isFormValid}
-                  file={file} 
+                  file={file}
                   deliverySum={deliverySum}
                   toLocationCode={selectedRegion.country_code}
                   selectedDeliveryPoint={selectedDeliveryPoint}
+                  selfPickup={selfPickup}
                 />
               </div>
             </div>
@@ -324,11 +347,11 @@ const Order = () => {
         </>
       ) : (
         <div className="flex flex-col items-center ">
-    <div>
-    <h2 className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
-      Перенаправление...
-    </h2>
-    </div>
+          <div>
+            <h2 className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-shadow-default">
+              Перенаправление...
+            </h2>
+          </div>
           <button
             onClick={() => {
               window.location.href = '/print3d/my-orders';
