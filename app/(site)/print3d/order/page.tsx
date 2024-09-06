@@ -76,7 +76,7 @@ const Order = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deliveryPoints, setDeliveryPoints] = useState<DeliveryPoint[]>([]);
-  const [selfPickup, setSelfPickup] = useState(false);
+  const [selfPickup, setSelfPickup] = useState<boolean>(false);
 
   const openModal = () => {
     setIsModalVisible(true);
@@ -87,6 +87,7 @@ const Order = () => {
   };
 
   const checkFormValidity = useCallback(() => {
+
     const { customerName, customerEmail, customerPhone } = currentOrder;
     if (
       !selfPickup &&
@@ -134,10 +135,6 @@ const Order = () => {
       window.location.href = '/print3d';
     }
   }, []);
-
-  // useEffect(() => {
-  //   console.log(selfPickup)
-  // }, [selfPickup]);
 
   const handleRegionSelect = (region: RegionData) => {
     updateCity(region.region, setCurrentOrder);

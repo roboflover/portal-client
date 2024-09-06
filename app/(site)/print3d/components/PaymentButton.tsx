@@ -1,5 +1,5 @@
 import { YooCheckout, ICreatePayment } from '@a2seven/yoo-checkout';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { OrderPrint3dProps } from '../interface/zakazProps.interface';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
@@ -40,6 +40,10 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<any>(null);
   const [payLink, setPaylink] = useState('')
+
+  useEffect(()=>{
+    console.log(selfPickup)
+  }, [selfPickup])
 
   const handleCreatePayment = async () => {
     if (!isFormValid) return;
@@ -107,7 +111,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
           ...requestData,
         }),
       });
-
+      console.log(checkoutResponse)
       if (!checkoutResponse.ok) {
         throw new Error('Произошла ошибка при создании платежа.');
       }
@@ -126,7 +130,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       formData.append('color', changeColorName(currentOrder.color));
       formData.append('deliveryCity', currentOrder.deliveryCity);
       formData.append('deliveryAddress', currentOrder.deliveryAddress);
-      formData.append('selfPickup', currentOrder.selfPickup);
+      formData.append('selfPickup', selfPickup.toString());
       formData.append('customerName', currentOrder.customerName);
       formData.append('customerEmail', currentOrder.customerEmail);
       formData.append('customerPhone', currentOrder.customerPhone);

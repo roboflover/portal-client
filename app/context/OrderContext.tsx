@@ -40,6 +40,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
     deliveryCity: "",
     deliveryAddress: "",
     deliveryPoint: "",
+    selfPickup: false,
     customerName: "",
     customerEmail: "",
     customerPhone: "",
