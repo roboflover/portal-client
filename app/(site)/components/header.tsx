@@ -49,7 +49,7 @@ export function Header({ toggleMenu }:ToggleMenuProps) {
         </Link>
       )} */}
       <div className="mr-5 px-4 py-2 font-bold text-white border border-gray-300 rounded transition-colors duration-300 animate-fadeInOut">
-        +7(903)288-82-86
+        <a href="tel:+79032888286">+7(903)288-82-86</a>
       </div>
       <ModeToggle />
     </div>

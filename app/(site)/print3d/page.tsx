@@ -75,6 +75,7 @@ export default function Print3dPage() {
   const [count, setCount] = useState<number>(1); // Инициализация count с текущим количеством
   const [isValid, setIsValid] = useState(false);
   const router = useRouter();
+  const [fileLoaded, setFileLoaded] = useState(false); // Следим за статусом загруженности файла
 
   useEffect(() => {
     const totalSum = calculateSummaAndPrice(currentOrder.volume, currentOrder.quantity || 1);  
@@ -138,6 +139,7 @@ export default function Print3dPage() {
         updateModelUrl(url, setCurrentOrder);
         updateFileName(selectedFile.name, setCurrentOrder);
         updateFile(selectedFile, setCurrentOrder);
+        setFileLoaded(true)
       } catch (error) {
         setErrorMessage(error instanceof Error ? error.message : 'Произошла неизвестная ошибка');
         event.target.value = '';
@@ -277,6 +279,7 @@ export default function Print3dPage() {
         <p className="text-gray-500 text-xs">При проблемах с загрузкой 3D-модели пишите на <a href="mailto:zakaz@robobug.ru">zakaz@robobug.ru</a></p>
         <p className="text-gray-500 text-xs">Техподдержка в Telegram:  <span className="underline"><a href="http://t.me/StepanGrigorian" target='_blank'>@StepanGrigorian</a></span></p>
         <p className="text-gray-500 underline text-xs"><a href="/userAgreement">Ознакомьтесь с пользовательским соглашением перед заказом.</a></p>
+        {fileLoaded && (
         <div className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] relative flex-grow">
           <ResizableCanvas shadows camera={{ position: [5, 5, 10], fov: 50 }} className="mb-50">
             <ambientLight intensity={0.5} />
@@ -297,7 +300,9 @@ export default function Print3dPage() {
             {currentOrder.modelUrl && <STLModel url={currentOrder.modelUrl} setDimensions={handleUpdateDimensions} color={currentOrder.color} />}
             <OrbitControls />
           </ResizableCanvas>
-        </div>
+                  </div>
+                            )}
+
       </div>
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
